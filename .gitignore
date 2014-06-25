@@ -1,0 +1,14 @@
+*.pyc
+.coverage
+cover
+.idea
+gitstats
+*.sublime-project
+*.sublime-workspace
+pylint-report
+*.sqlite3
+*.out
+*.config
+*.log
+*.bck
+pep8-report
