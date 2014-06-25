@@ -22,7 +22,7 @@ reports:
 	make report-gitstats
 	make report-lines-of-code
 
-MODULES = engine
+MODULES = engine bo
 report-pylint:
 	- mkdir pylint-report
 	- $(foreach imod,$(MODULES),pylint $(imod) > pylint-report/$(imod).html;)
