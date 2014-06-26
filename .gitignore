@@ -12,3 +12,4 @@ pylint-report
 *.log
 *.bck
 pep8-report
+.python-version
