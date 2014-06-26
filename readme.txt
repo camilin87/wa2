@@ -8,7 +8,10 @@ Development Dependencies
 Development machines should have these
 - git
 - gnumake
-- python3
+- homebrew
+
+Configure pyenv. Make sure to open a new terminal after the execution finishes
+> make configure-pyenv
 
 Install python packages dependencies
 > make install-dev-dependencies-mac

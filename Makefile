@@ -54,16 +54,30 @@ report-lines-of-test-code:
 report-lines-of-production-code:
 	find . -type f -iname '*.py' ! -path '*/test/*' | xargs wc -l | tail -1
 
+configure-pyenv:
+	echo 'eval "$$(pyenv init -)"' >> ~/.bash_profile
+	sed '$$!N; /^\(.*\)\n\1$$/!P; D' ~/.bash_profile > ~/.temp_profile
+	cat ~/.temp_profile > ~/.bash_profile
+	eval "$$(pyenv init -)"
+
+PYTHON_VERSION = 3.4.0
+configure-python-version:
+	yes N | pyenv install $(PYTHON_VERSION)
+
 install-dev-dependencies:
+	make -i configure-python-version
+	pyenv local $(PYTHON_VERSION)
+
 	sudo pip install nose
 	sudo pip install mock
 	sudo pip install freezegun
 	sudo pip install coverage
 	sudo pip install pylint
 	sudo pip install pep8
+	sudo pip install python-forecastio
 
 install-dev-dependencies-mac:
-	sudo easy_install pip
+	brew install pyenv
 	make install-dev-dependencies
 
 clean:
