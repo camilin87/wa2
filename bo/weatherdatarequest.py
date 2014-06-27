@@ -5,3 +5,6 @@ class WeatherDataRequest(object):
 
         if longitude < -180.0 or longitude > 180.0:
             raise ValueError("longitude out of bounds")
+
+        self.latitude = latitude
+        self.longitude = longitude

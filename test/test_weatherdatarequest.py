@@ -4,7 +4,10 @@ from bo.weatherdatarequest import WeatherDataRequest
 
 class TestWeatherDataRequest(TestCase):
     def test_creation(self):
-        self.assertIsNotNone(WeatherDataRequest(12.34, 56.70))
+        request = WeatherDataRequest(12.34, 56.70)
+
+        self.assertEquals(12.34, request.latitude)
+        self.assertEquals(56.7, request.longitude)
 
     def test_validates_latitude_min_boundary(self):
         with self.assertRaises(ValueError):
