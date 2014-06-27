@@ -1,0 +1,2 @@
+class WeatherDataRequest(object):
+    pass
