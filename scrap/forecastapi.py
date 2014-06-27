@@ -2,6 +2,7 @@ import forecastio
 import datetime
 from datetime import datetime
 
+
 def call_api(lat, lng):
     api_key = "151cfe4d4aed6cd467097090a9250dab"
 
@@ -14,9 +15,10 @@ def call_api(lat, lng):
         if k != "d":
             print(k, " => ", v)
 
-    dict_data = datapoint.__dict__["d"]    
+    dict_data = datapoint.__dict__["d"]
     for k in sorted(dict_data):
         print(str(k).rjust(20), " => ", dict_data[k])
+
 
 def main():
     # 33012 hialeah

@@ -9,8 +9,14 @@ from dateutil.tz import tzlocal
 
 class TestApiCharacterization(TestCase):
     def test_time_param_value_conversion_to_unix_time(self):
-        start_of_time_utc = datetime(1970, 1, 1, hour=0, minute=0, second=0, microsecond=0, tzinfo=timezone.utc)
-        start_of_time_local = datetime(1970, 1, 1, hour=0, minute=0, second=0, microsecond=0, tzinfo=tzlocal())
+        start_of_time_utc = datetime(
+            1970, 1, 1, hour=0, minute=0, second=0, microsecond=0,
+            tzinfo=timezone.utc
+        )
+        start_of_time_local = datetime(
+            1970, 1, 1, hour=0, minute=0, second=0, microsecond=0,
+            tzinfo=tzlocal()
+        )
         expected_difference = (start_of_time_local - start_of_time_utc).total_seconds()
 
         seconds_representation = int(Time.mktime(start_of_time_local.timetuple()))
@@ -23,4 +29,4 @@ class TestApiCharacterization(TestCase):
         current_time = datetime(*strptime("2014-02-02T10:30:00", "%Y-%m-%dT%H:%M:%S")[0:6])
         current_time = current_time.replace(minute=0, second=0, microsecond=0)
 
-        self.assertEquals(expected_datetime, current_time);
+        self.assertEquals(expected_datetime, current_time)
