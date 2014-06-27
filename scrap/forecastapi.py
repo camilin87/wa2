@@ -4,15 +4,11 @@ from datetime import datetime
 
 def call_api(lat, lng):
     api_key = "151cfe4d4aed6cd467097090a9250dab"
-    time = datetime.now().replace(minute=0, second=0, microsecond=0)
 
-    # WARNING the time is not being used, thus the first API call is being made
     forecast = forecastio.load_forecast(api_key, lat, lng)
 
     print("\n=========Current Data=========", lat, ", ", lng)
     datapoint = forecast.currently()
-
-    print("Time:", datapoint.time)
 
     for k, v in datapoint.__dict__.items():
         if k != "d":
