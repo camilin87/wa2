@@ -38,7 +38,9 @@ report-coverage:
 	nosetests -s --with-coverage --cover-html --cover-erase
 
 report-gitstats:
+	make switch-to-git-stats-python-version
 	gitstats ./ ./gitstats > /dev/null
+	make switch-to-dev-python-version
 
 report-pep8:
 	- mkdir pep8-report
@@ -61,12 +63,24 @@ configure-pyenv:
 	eval "$$(pyenv init -)"
 
 PYTHON_VERSION = 3.4.0
+PYTHON_VERSION_GIT_STATS = 2.7.6
 configure-python-version:
 	yes N | pyenv install $(PYTHON_VERSION)
+	yes N | pyenv install $(PYTHON_VERSION_GIT_STATS)
+	make refresh-packages
+
+refresh-packages:
+	pyenv rehash
+
+switch-to-dev-python-version:
+	pyenv local $(PYTHON_VERSION)
+
+switch-to-git-stats-python-version:
+	pyenv local $(PYTHON_VERSION_GIT_STATS)
 
 install-dev-dependencies:
 	make -i configure-python-version
-	pyenv local $(PYTHON_VERSION)
+	make switch-to-dev-python-version
 
 	sudo pip install nose
 	sudo pip install mock
@@ -75,6 +89,8 @@ install-dev-dependencies:
 	sudo pip install pylint
 	sudo pip install pep8
 	sudo pip install python-forecastio
+
+	make refresh-packages
 
 install-dev-dependencies-mac:
 	brew install pyenv
