@@ -21,3 +21,11 @@ class TestWeatherDataRequest(TestCase):
     def test_validates_longitude_max_boundary(self):
         with self.assertRaises(ValueError):
             WeatherDataRequest(12.34, 180.0 + 0.1)
+
+    def test_latitude_should_be_numeric(self):
+        with self.assertRaises(TypeError):
+            WeatherDataRequest("12.34", 180.0)
+
+    def test_longitude_should_be_numeric(self):
+        with self.assertRaises(TypeError):
+            WeatherDataRequest(-90, "180.0")
