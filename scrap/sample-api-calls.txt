@@ -1,0 +1,6 @@
+# utc call for hialeah
+https://api.forecast.io/forecast/151cfe4d4aed6cd467097090a9250dab/25.86,-80.30,1403852031
+
+# this is what should be made
+# local call for hialeah
+https://api.forecast.io/forecast/151cfe4d4aed6cd467097090a9250dab/25.86,-80.30,1403837631
