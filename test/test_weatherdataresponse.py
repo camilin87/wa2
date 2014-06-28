@@ -17,3 +17,9 @@ class TestWeatherDataResponse(TestCase):
         self.assertEquals(summary, response.summary_str)
         self.assertEquals(2.3400, response.precip_probability)
         self.assertEquals(1.3, response.precip_intensity)
+
+    def test_summary_must_be_specified(self):
+        with self.assertRaises(ValueError):
+            WeatherDataResponse(None, 0.0, 0.0)
+        with self.assertRaises(ValueError):
+            WeatherDataResponse("", 0.0, 0.0)
