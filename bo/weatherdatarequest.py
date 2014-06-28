@@ -8,3 +8,10 @@ class WeatherDataRequest(object):
 
         self.latitude = latitude
         self.longitude = longitude
+
+    def __str__(self):
+        description_format = ("latitude={0:.2f}, longitude={1:.2f}")
+        return self.__class__.__name__ + " " + description_format.format(
+            self.latitude,
+            self.longitude
+        )

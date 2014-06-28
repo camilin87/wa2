@@ -32,3 +32,11 @@ class TestWeatherDataRequest(TestCase):
     def test_longitude_should_be_numeric(self):
         with self.assertRaises(TypeError):
             WeatherDataRequest(-90, "180.0")
+
+    def test_str(self):
+        request = WeatherDataRequest(12, -160.1)
+        actual_str = str(request)
+
+        self.assertTrue(request.__class__.__name__ in actual_str)
+        self.assertTrue("latitude=12.00" in actual_str)
+        self.assertTrue("longitude=-160.10" in actual_str)
