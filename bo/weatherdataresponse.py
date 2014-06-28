@@ -3,6 +3,9 @@ class WeatherDataResponse(object):
         if not summary_str:
             raise ValueError("summary_str is required")
 
+        if precip_probability < 0.0 or precip_probability > 1.0:
+            raise ValueError("precip_probability out of bounds")
+
         self.summary_str = summary_str
         self.precip_probability = precip_probability
         self.precip_intensity = precip_intensity
