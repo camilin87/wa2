@@ -1,0 +1,2 @@
+class WeatherDataResponse(object):
+    pass
