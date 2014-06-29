@@ -3,5 +3,5 @@
 # IMPORTANT: do not add enything else to this file
 # once ant is installed everything should be run through it
 brew install ruby
-gem install rake
+yes N | gem install rake
 # ant configure-pyenv
