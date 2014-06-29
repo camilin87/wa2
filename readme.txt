@@ -11,10 +11,7 @@ Development machines should have these
 - homebrew
 
 > sh setup-dev.sh # Make sure to open a new terminal after the execution finishes.
-> ant install-dev-dependencies-mac
-
-Install python packages dependencies
-> ant install-dev-dependencies-mac
+> rake install_dev_dependencies_mac
 
 Deployment Dependencies
 -----------------------
