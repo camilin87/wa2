@@ -6,6 +6,11 @@ $gitstats_path = File.join($gitstats_dir, "gitstats")
 $PYTHON_VERSION = "3.4.0"
 $PYTHON_VERSION_GIT_STATS = "2.7.6"
 
+$cover_report_dir = File.join($basedir, "cover")
+$gitstats_report_dir = File.join($basedir, "gitstats")
+$pylint_report_dir = File.join($basedir, "pylint-report")
+$pep8_report_dir = File.join($basedir, "pep8-report")
+
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"
     if not File.readlines(bash_profile).grep(/pyenv init/).any?
@@ -79,7 +84,13 @@ end
 
 
 task :clean => [:clean_pyc] do
-    puts "clean"
+    report_directories = [
+        $cover_report_dir, $gitstats_report_dir,
+        $pylint_report_dir, $pep8_report_dir
+    ]
+    report_directories.each do |folder|
+        rm_rf folder
+    end
 end
 
 task :clean_pyc do
