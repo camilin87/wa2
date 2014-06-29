@@ -94,6 +94,7 @@ task :clean => [:clean_pyc] do
 end
 
 task :clean_pyc do
+    rm_f FileList.new('*.pyc')
     rm_f FileList.new('**/*.pyc')
     rm_rf FileList.new('**/__pycache__/')
 end
@@ -135,8 +136,8 @@ def get_packages
     Dir.entries($basedir).select { |entry|
         File.directory? entry and !(entry =='.' || entry == '..') 
     }.map {|dir| {
-        :name =>dir,
-        :path=> File.join($basedir, dir)
+        :name => dir,
+        :path => File.join($basedir, dir)
     }}.compact.select { |dir_info|
         File.exists? File.join(dir_info[:path], "__init__.py")
     }
