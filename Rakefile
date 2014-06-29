@@ -1,5 +1,9 @@
 task :default => [:all]
 
+$basedir = File.expand_path "."
+$gitstats_dir = File.join($basedir, ".git-stats-src/")
+$gitstats_path = File.join($gitstats_dir, "gitstats")
+
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"
     if not File.readlines(bash_profile).grep(/pyenv init/).any?
@@ -27,7 +31,10 @@ task :install_dev_dependencies do
 end
 
 def install_gitstats
-    puts "install_gitstats"
+    system "git clone --depth 1 git://github.com/hoxu/gitstats.git #{$gitstats_dir}"
+    Dir.chdir($gitstats_dir){
+        sh %{git pull} 
+    }
 end
 
 def configure_python_version
