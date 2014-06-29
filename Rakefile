@@ -6,7 +6,7 @@ $gitstats_path = File.join($gitstats_dir, "gitstats")
 $PYTHON_VERSION = "3.4.0"
 $PYTHON_VERSION_GIT_STATS = "2.7.6"
 
-$cover_report_dir = File.join($basedir, "cover")
+$cover_report_dir = File.join($basedir, "report-cover")
 $gitstats_report_dir = File.join($basedir, "report-gitstats")
 $pylint_report_dir = File.join($basedir, "report-pylint")
 $pep8_report_dir = File.join($basedir, "report-pep8")
@@ -115,6 +115,9 @@ task :reports => [
 
 task :report_coverage => [:clean_pyc] do
     sh %{nosetests -s --with-coverage --cover-html --cover-erase}
+
+    $cover_report_old = File.join($basedir, "cover")
+    File.rename($cover_report_old, $cover_report_dir)
 end
 
 task :report_pylint do

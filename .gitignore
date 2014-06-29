@@ -17,3 +17,4 @@ gitstats-report
 report-gitstats
 report-pep8
 report-pylint
+report-cover
