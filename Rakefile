@@ -70,9 +70,9 @@ def install_pypi_dev_dependencies
     ]
     pypi_packages.each do |pkg|
         sh "sudo pip install --upgrade #{pkg}"
-    end 
+    end
 end
 
 def refresh_packages
-    puts "refresh_packages"
+    sh %{pyenv rehash}
 end
