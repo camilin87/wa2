@@ -154,7 +154,10 @@ def build_index_with(links)
 end
 
 task :report_pep8 do
-    puts "report_pep8"
+    mkdir $pep8_report_dir unless File.exists? $pep8_report_dir
+
+    report_output = File.join($pep8_report_dir, "report.txt")
+    sh "pep8 --max-line-length=100 */*.py > #{report_output}"
 end
 task :report_gitstats do
     puts "report_gitstats"
