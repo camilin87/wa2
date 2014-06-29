@@ -91,6 +91,23 @@ task :integration do
     puts "integration"
 end
 
-task :reports do
-    puts "reports"
+task :reports => [
+    :report_coverage, :report_pylint, :report_pep8,
+    :report_gitstats, :report_lines_of_code
+]
+
+task :report_coverage do
+    puts "report_coverage"
+end
+task :report_pylint do
+    puts "report_pylint"
+end
+task :report_pep8 do
+    puts "report_pep8"
+end
+task :report_gitstats do
+    puts "report_gitstats"
+end
+task :report_lines_of_code do
+    puts "report_lines_of_code"
 end
