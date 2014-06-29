@@ -28,3 +28,17 @@ class WeatherDataResponse(object):
         if precip_intensity < 0.4:
             return precipitationtype.MODERATE
         return precipitationtype.HEAVY
+
+    def __str__(self):
+        description_format = (
+            "summary_str='{0}', " +
+            "precip_probability={1:.2f}, precip_intensity={2:.2f}" +
+            "pop_percent={3}, precipitation={4}"
+        )
+        return self.__class__.__name__ + " " + description_format.format(
+            self.summary_str,
+            self.precip_probability,
+            self.precip_intensity,
+            self.pop_percent,
+            self.precipitation
+        )

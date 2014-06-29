@@ -71,3 +71,14 @@ class TestWeatherDataResponse(TestCase):
     def test_heavy_precipitation(self):
         self.assertEquals(precipitationtype.HEAVY, self._precip_with_intensity(0.4))
         self.assertEquals(precipitationtype.HEAVY, self._precip_with_intensity(10))
+
+    def test_str(self):
+        response = WeatherDataResponse("some rain", 0.5, 0.9)
+        actual_str = str(response)
+
+        self.assertTrue(response.__class__.__name__ in actual_str)
+        self.assertTrue("summary_str='some rain'" in actual_str)
+        self.assertTrue("precip_probability=0.90" in actual_str)
+        self.assertTrue("precip_intensity=0.50" in actual_str)
+        self.assertTrue("pop_percent=90" in actual_str)
+        self.assertTrue(("precipitation=" + str(precipitationtype.HEAVY)) in actual_str)
