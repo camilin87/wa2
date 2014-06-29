@@ -94,7 +94,8 @@ task :clean => [:clean_pyc] do
 end
 
 task :clean_pyc do
-    puts "clean_pyc"
+    rm_f FileList.new('**/*.pyc')
+    rm_rf FileList.new('**/__pycache__/')
 end
 
 task :all_tests => [:tests, :integration]
