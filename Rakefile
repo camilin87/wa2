@@ -159,9 +159,13 @@ task :report_pep8 do
     report_output = File.join($pep8_report_dir, "report.txt")
     sh "pep8 --max-line-length=100 */*.py > #{report_output}"
 end
+
 task :report_gitstats do
-    puts "report_gitstats"
+    switch_to_git_stats_python_version
+    sh "#{$gitstats_path} #{$basedir} #{$gitstats_report_dir} > /dev/null"
+    switch_to_dev_python_version
 end
+
 task :report_lines_of_code do
     puts "report_lines_of_code"
 end
