@@ -45,3 +45,8 @@ class TestWeatherDataResponse(TestCase):
     def test_validates_precip_intensity_should_be_numeric(self):
         with self.assertRaises(TypeError):
             WeatherDataResponse("NA", "0.0", 0.0)
+
+    def test_pop_percent(self):
+        self.assertEquals(0, WeatherDataResponse("NA", 0, 0).pop_percent)
+        self.assertEquals(50, WeatherDataResponse("NA", 0, 0.5).pop_percent)
+        self.assertEquals(99, WeatherDataResponse("NA", 0, 0.995).pop_percent)

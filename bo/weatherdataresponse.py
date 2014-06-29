@@ -12,3 +12,5 @@ class WeatherDataResponse(object):
         self.summary_str = summary_str
         self.precip_probability = precip_probability
         self.precip_intensity = precip_intensity
+
+        self.pop_percent = int(self.precip_probability * 100)
