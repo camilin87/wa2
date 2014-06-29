@@ -8,18 +8,10 @@ Development Dependencies
 Development machines should have these
 - git
 - xquartz
-- gnumake
 - homebrew
 
-Configure pyenv. Make sure to open a new terminal after the execution finishes
-> make configure-pyenv
-
-Install python packages dependencies
-> make install-dev-dependencies-mac
-
-Install sourceforge dependencies
-- gnuplot # Alternative gnuplot can be installed using homebrew >brew install gnuplot --cairo --png
-- gitstats
+> sh setup-dev.sh # Make sure to open a new terminal after the execution finishes.
+> rake install_dev_dependencies_mac
 
 Deployment Dependencies
 -----------------------
@@ -36,4 +28,4 @@ Coding Standards
 
 Unit Tests and Reports
 ----------------------
-Makefile contains all the necessary documentation on how to execute unit tests and generate reports.
+Rakefile contains all the necessary documentation on how to execute unit tests and generate reports.
