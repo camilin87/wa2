@@ -41,3 +41,7 @@ class TestWeatherDataResponse(TestCase):
     def test_validates_precip_intensity_min_value(self):
         with self.assertRaises(ValueError):
             WeatherDataResponse("NA", 0.0 - 0.1, 0.0)
+
+    def test_validates_precip_intensity_should_be_numeric(self):
+        with self.assertRaises(TypeError):
+            WeatherDataResponse("NA", "0.0", 0.0)
