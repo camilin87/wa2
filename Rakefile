@@ -78,16 +78,20 @@ def refresh_packages
 end
 
 
-task :clean do
+task :clean => [:clean_pyc] do
     puts "clean"
 end
 
+task :clean_pyc do
+    puts "clean_pyc"
+end
+
 task :all_tests => [:tests, :integration]
-task :tests do
+task :tests => [:clean_pyc] do
     puts "tests"
 end
 
-task :integration do
+task :integration => [:clean_pyc] do
     puts "integration"
 end
 
