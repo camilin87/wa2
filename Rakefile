@@ -100,8 +100,8 @@ task :reports => [
     :report_gitstats, :report_lines_of_code
 ]
 
-task :report_coverage do
-    puts "report_coverage"
+task :report_coverage => [:clean_pyc] do
+    sh %{nosetests -s --with-coverage --cover-html --cover-erase}
 end
 task :report_pylint do
     puts "report_pylint"
