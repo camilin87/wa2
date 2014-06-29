@@ -51,7 +51,16 @@ def install_python(python_version)
 end
 
 def switch_to_dev_python_version
-    puts "switch_to_dev_python_version"
+    use_python $PYTHON_VERSION
+end
+
+def switch_to_git_stats_python_version
+    use_python $PYTHON_VERSION_GIT_STATS
+end
+
+def use_python(python_version)
+    puts "use_python" + python_version
+    sh "pyenv local #{python_version}"
 end
 
 def install_pypi_dev_dependencies
