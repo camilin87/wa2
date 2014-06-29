@@ -7,9 +7,10 @@ Development Dependencies
 ------------------------
 Development machines should have these
 - git
-- gnumake
+- ruby
 - homebrew
 
+/*
 Configure pyenv. Make sure to open a new terminal after the execution finishes
 > make configure-pyenv
 
@@ -19,6 +20,7 @@ Install python packages dependencies
 Install sourceforge dependencies
 - gnuplot # Alternative gnuplot can be installed using homebrew >brew install gnuplot --cairo --png
 - gitstats
+*/
 
 Deployment Dependencies
 -----------------------
