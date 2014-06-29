@@ -1,3 +1,6 @@
+from bo import precipitationtype
+
+
 class WeatherDataResponse(object):
     def __init__(self, summary_str, precip_intensity, precip_probability):
         if not summary_str:
@@ -14,3 +17,4 @@ class WeatherDataResponse(object):
         self.precip_intensity = precip_intensity
 
         self.pop_percent = int(self.precip_probability * 100)
+        self.precipitation = precipitationtype.NONE

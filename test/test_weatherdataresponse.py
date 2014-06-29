@@ -1,5 +1,6 @@
 from unittest import TestCase
 from bo.weatherdataresponse import WeatherDataResponse
+from bo import precipitationtype
 
 
 class TestWeatherDataResponse(TestCase):
@@ -50,3 +51,11 @@ class TestWeatherDataResponse(TestCase):
         self.assertEquals(0, WeatherDataResponse("NA", 0, 0).pop_percent)
         self.assertEquals(50, WeatherDataResponse("NA", 0, 0.5).pop_percent)
         self.assertEquals(99, WeatherDataResponse("NA", 0, 0.995).pop_percent)
+
+    def _precip_with_intensity(self, precipitation_intensity):
+        response = WeatherDataResponse("NA", precipitation_intensity, 0.0)
+        return response.precipitation
+
+    def test_no_precipitation(self):
+        self.assertEquals(precipitationtype.NONE, self._precip_with_intensity(0.0))
+        self.assertEquals(precipitationtype.NONE, self._precip_with_intensity(0.002 - 0.0001))
