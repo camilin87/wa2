@@ -4,6 +4,7 @@ from datetime import datetime
 
 
 def call_api(lat, lng):
+    padding = 30
     api_key = "151cfe4d4aed6cd467097090a9250dab"
 
     forecast = forecastio.load_forecast(api_key, lat, lng)
@@ -13,12 +14,17 @@ def call_api(lat, lng):
 
     for k, v in datapoint.__dict__.items():
         if k != "d":
-            print(k, " => ", v)
+            print(k.rjust(padding), " => ", v)
 
+    print("========Data inside d=========")
     dict_data = datapoint.__dict__["d"]
     for k in sorted(dict_data):
-        print(str(k).rjust(20), " => ", dict_data[k])
+        print(str(k).rjust(padding), " => ", dict_data[k])
 
+    print("======Data read directly======")
+    print("summary => ".rjust(padding), datapoint.summary)
+    print("precipIntensity => ".rjust(padding), datapoint.precipIntensity)
+    print("precipProbability => ".rjust(padding), datapoint.precipProbability)
 
 def main():
     # 33012 hialeah
