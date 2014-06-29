@@ -2,14 +2,15 @@ task :default => [:clean, :all_tests, :reports]
 
 $basedir = File.expand_path "."
 $gitstats_dir = File.join($basedir, ".git-stats-src/")
-$gitstats_path = File.join($gitstats_dir, "gitstats")
+
 $PYTHON_VERSION = "3.4.0"
 $PYTHON_VERSION_GIT_STATS = "2.7.6"
 
-$cover_report_dir = File.join($basedir, "report-cover")
-$gitstats_report_dir = File.join($basedir, "report-gitstats")
-$pylint_report_dir = File.join($basedir, "report-pylint")
-$pep8_report_dir = File.join($basedir, "report-pep8")
+$reports_dir = File.join($basedir, "code-reports/")
+$cover_report_dir = File.join($reports_dir, "coverage")
+$gitstats_report_dir = File.join($reports_dir, "gitstats")
+$pylint_report_dir = File.join($reports_dir, "pylint")
+$pep8_report_dir = File.join($reports_dir, "pep8")
 
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"
@@ -84,13 +85,7 @@ end
 
 
 task :clean => [:clean_pyc] do
-    report_directories = [
-        $cover_report_dir, $gitstats_report_dir,
-        $pylint_report_dir, $pep8_report_dir
-    ]
-    report_directories.each do |folder|
-        rm_rf folder
-    end
+    rm_rf $reports_dir
 end
 
 task :clean_pyc do
@@ -108,19 +103,24 @@ task :integration => [:clean_pyc] do
     sh %{nosetests -s -a 'integration'}
 end
 
+task :create_reports_dir do
+    mkdir $reports_dir unless File.exists? $reports_dir 
+end
+
 task :reports => [
+    :create_reports_dir,
     :report_coverage, :report_pylint, :report_pep8,
     :report_gitstats, :report_lines_of_code
 ]
 
-task :report_coverage => [:clean_pyc] do
+task :report_coverage => [:clean_pyc, :create_reports_dir] do
     sh %{nosetests -s --with-coverage --cover-html --cover-erase}
 
     $cover_report_old = File.join($basedir, "cover")
     File.rename($cover_report_old, $cover_report_dir)
 end
 
-task :report_pylint do
+task :report_pylint => :create_reports_dir do
     mkdir $pylint_report_dir unless File.exists? $pylint_report_dir
 
     links = Array.new
@@ -157,16 +157,19 @@ def build_index_with(links)
     end
 end
 
-task :report_pep8 do
+task :report_pep8 => :create_reports_dir do
     mkdir $pep8_report_dir unless File.exists? $pep8_report_dir
 
     report_output = File.join($pep8_report_dir, "report.txt")
     sh "pep8 --max-line-length=100 */*.py > #{report_output}"
 end
 
-task :report_gitstats do
+task :report_gitstats => :create_reports_dir do
     switch_to_git_stats_python_version
-    sh "#{$gitstats_path} #{$basedir} #{$gitstats_report_dir} > /dev/null"
+
+    gitstats_path = File.join($gitstats_dir, "gitstats")
+    sh "#{gitstats_path} #{$basedir} #{$gitstats_report_dir} > /dev/null"
+
     switch_to_dev_python_version
 end
 
