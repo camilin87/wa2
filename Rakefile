@@ -88,11 +88,11 @@ end
 
 task :all_tests => [:tests, :integration]
 task :tests => [:clean_pyc] do
-    puts "tests"
+    sh %{nosetests -s -a '!integration'}
 end
 
 task :integration => [:clean_pyc] do
-    puts "integration"
+    sh %{nosetests -s -a 'integration'}
 end
 
 task :reports => [
