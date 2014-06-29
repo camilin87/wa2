@@ -64,7 +64,13 @@ def use_python(python_version)
 end
 
 def install_pypi_dev_dependencies
-    puts "install_pypi_dev_dependencies"
+    pypi_packages = [
+        "nose", "mock", "freezegun", "coverage",
+        "pylint", "pep8", "python-forecastio"
+    ]
+    pypi_packages.each do |pkg|
+        sh "sudo pip install --upgrade #{pkg}"
+    end 
 end
 
 def refresh_packages
