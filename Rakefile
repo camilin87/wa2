@@ -1,4 +1,4 @@
-task :default => [:all]
+task :default => [:clean, :all_tests, :reports]
 
 $basedir = File.expand_path "."
 $gitstats_dir = File.join($basedir, ".git-stats-src/")
@@ -75,4 +75,22 @@ end
 
 def refresh_packages
     sh %{pyenv rehash}
+end
+
+
+task :clean do
+    puts "clean"
+end
+
+task :all_tests => [:tests, :integration]
+task :tests do
+    puts "tests"
+end
+
+task :integration do
+    puts "integration"
+end
+
+task :reports do
+    puts "reports"
 end
