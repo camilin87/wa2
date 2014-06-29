@@ -59,3 +59,15 @@ class TestWeatherDataResponse(TestCase):
     def test_no_precipitation(self):
         self.assertEquals(precipitationtype.NONE, self._precip_with_intensity(0.0))
         self.assertEquals(precipitationtype.NONE, self._precip_with_intensity(0.002 - 0.0001))
+
+    def test_light_precipitation(self):
+        self.assertEquals(precipitationtype.LIGHT, self._precip_with_intensity(0.002))
+        self.assertEquals(precipitationtype.LIGHT, self._precip_with_intensity(0.1 - 0.0001))
+
+    def test_moderate_precipitation(self):
+        self.assertEquals(precipitationtype.MODERATE, self._precip_with_intensity(0.1))
+        self.assertEquals(precipitationtype.MODERATE, self._precip_with_intensity(0.4 - 0.0001))
+
+    def test_heavy_precipitation(self):
+        self.assertEquals(precipitationtype.HEAVY, self._precip_with_intensity(0.4))
+        self.assertEquals(precipitationtype.HEAVY, self._precip_with_intensity(10))
