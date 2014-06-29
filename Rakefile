@@ -167,5 +167,10 @@ task :report_gitstats do
 end
 
 task :report_lines_of_code do
-    puts "report_lines_of_code"
+    loc_test = `find #{$basedir} -type f -iname '*.py' -path '*/test/*' | xargs wc -l | tail -1`
+    loc_prod = `find #{$basedir} -type f -iname '*.py' ! -path '*/test/*' | xargs wc -l | tail -1`
+
+    puts "Lines of Code"
+    puts "Test:       #{loc_test}"
+    puts "Production: #{loc_prod}"
 end
