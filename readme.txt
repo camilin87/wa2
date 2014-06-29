@@ -42,4 +42,4 @@ Coding Standards
 
 Unit Tests and Reports
 ----------------------
-Makefile contains all the necessary documentation on how to execute unit tests and generate reports.
+Rakefile contains all the necessary documentation on how to execute unit tests and generate reports.
