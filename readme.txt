@@ -7,6 +7,7 @@ Development Dependencies
 ------------------------
 Development machines should have these
 - git
+- xquartz
 - gnumake
 - homebrew
 
