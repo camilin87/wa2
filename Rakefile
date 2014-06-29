@@ -1,5 +1,3 @@
-require "rake"
-
 task :default => [:clean, :all_tests, :reports]
 
 $basedir = File.expand_path "."
@@ -121,17 +119,8 @@ end
 task :report_pylint do
     mkdir $pylint_report_dir unless File.exists? $pylint_report_dir
 
-    packages = Dir.entries($basedir).select { |entry|
-        File.directory? entry and !(entry =='.' || entry == '..') 
-    }.map {|dir| {
-        :name =>dir,
-        :path=> File.join($basedir, dir)
-    }}.compact.select { |dir_info|
-        File.exists? File.join(dir_info[:path], "__init__.py")
-    }
-
     links = Array.new
-    packages.each do |pkg_info|
+    get_packages.each do |pkg_info|
         output_filename = "#{pkg_info[:name]}.html"
         output_path = File.join($pylint_report_dir, output_filename)
         sh "pylint #{pkg_info[:path]} > #{output_path}"
@@ -139,6 +128,21 @@ task :report_pylint do
         links.push %{<a href="#{output_filename}">#{output_filename}</a></br>}
     end
 
+    build_index_with links
+end
+
+def get_packages
+    Dir.entries($basedir).select { |entry|
+        File.directory? entry and !(entry =='.' || entry == '..') 
+    }.map {|dir| {
+        :name =>dir,
+        :path=> File.join($basedir, dir)
+    }}.compact.select { |dir_info|
+        File.exists? File.join(dir_info[:path], "__init__.py")
+    }
+end
+
+def build_index_with(links)
     report_path = File.join($pylint_report_dir, "index.html")
     File.open(report_path, "w") do |file|
         file.write "<html><body>"
