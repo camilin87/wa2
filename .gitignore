@@ -13,3 +13,7 @@ pylint-report
 *.bck
 pep8-report
 .python-version
+gitstats-report
+report-gitstats
+report-pep8
+report-pylint

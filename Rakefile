@@ -7,9 +7,9 @@ $PYTHON_VERSION = "3.4.0"
 $PYTHON_VERSION_GIT_STATS = "2.7.6"
 
 $cover_report_dir = File.join($basedir, "cover")
-$gitstats_report_dir = File.join($basedir, "gitstats")
-$pylint_report_dir = File.join($basedir, "pylint-report")
-$pep8_report_dir = File.join($basedir, "pep8-report")
+$gitstats_report_dir = File.join($basedir, "report-gitstats")
+$pylint_report_dir = File.join($basedir, "report-pylint")
+$pep8_report_dir = File.join($basedir, "report-pep8")
 
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"
