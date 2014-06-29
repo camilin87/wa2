@@ -10,3 +10,4 @@
 *.bck
 .python-version
 code-reports
+.git-stats-src
