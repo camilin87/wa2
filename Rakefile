@@ -127,7 +127,7 @@ task :report_pylint => :create_reports_dir do
     get_packages.each do |pkg_info|
         output_filename = "#{pkg_info[:name]}.html"
         output_path = File.join($pylint_report_dir, output_filename)
-        sh "pylint #{pkg_info[:path]} > #{output_path}"
+        system "pylint #{pkg_info[:path]} > #{output_path}"
 
         links.push %{<a href="#{output_filename}">#{output_filename}</a></br>}
     end
@@ -161,7 +161,7 @@ task :report_pep8 => :create_reports_dir do
     mkdir $pep8_report_dir unless File.exists? $pep8_report_dir
 
     report_output = File.join($pep8_report_dir, "report.txt")
-    sh "pep8 --max-line-length=100 */*.py > #{report_output}"
+    system "pep8 --max-line-length=100 */*.py > #{report_output}"
 end
 
 task :report_gitstats => :create_reports_dir do
