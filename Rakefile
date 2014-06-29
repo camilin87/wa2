@@ -1,3 +1,5 @@
+require "rake"
+
 task :default => [:clean, :all_tests, :reports]
 
 $basedir = File.expand_path "."
@@ -115,9 +117,38 @@ task :reports => [
 task :report_coverage => [:clean_pyc] do
     sh %{nosetests -s --with-coverage --cover-html --cover-erase}
 end
+
 task :report_pylint do
-    puts "report_pylint"
+    mkdir $pylint_report_dir unless File.exists? $pylint_report_dir
+
+    packages = Dir.entries($basedir).select { |entry|
+        File.directory? entry and !(entry =='.' || entry == '..') 
+    }.map {|dir| {
+        :name =>dir,
+        :path=> File.join($basedir, dir)
+    }}.compact.select { |dir_info|
+        File.exists? File.join(dir_info[:path], "__init__.py")
+    }
+
+    links = Array.new
+    packages.each do |pkg_info|
+        output_filename = "#{pkg_info[:name]}.html"
+        output_path = File.join($pylint_report_dir, output_filename)
+        sh "pylint #{pkg_info[:path]} > #{output_path}"
+
+        links.push %{<a href="#{output_filename}">#{output_filename}</a></br>}
+    end
+
+    report_path = File.join($pylint_report_dir, "index.html")
+    File.open(report_path, "w") do |file|
+        file.write "<html><body>"
+        links.each do |l|
+            file.write l
+        end
+        file.write "</body></html>"
+    end
 end
+
 task :report_pep8 do
     puts "report_pep8"
 end
