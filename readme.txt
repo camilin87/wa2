@@ -7,22 +7,11 @@ Development Dependencies
 ------------------------
 Development machines should have these
 - git
+- xquartz
 - homebrew
 
-/*
-Configure pyenv. Make sure to open a new terminal after the execution finishes
-> make configure-pyenv
-
-Install python packages dependencies
-> make install-dev-dependencies-mac
-
-Install sourceforge dependencies
-- gnuplot # Alternative gnuplot can be installed using homebrew >brew install gnuplot --cairo --png
-- gitstats
-*/
-
-Configure environment. Make sure to open a new terminal after the execution finishes.
-> sh setup-dev.sh
+> sh setup-dev.sh # Make sure to open a new terminal after the execution finishes.
+> ant install-dev-dependencies-mac
 
 Install python packages dependencies
 > ant install-dev-dependencies-mac
