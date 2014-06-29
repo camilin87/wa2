@@ -3,6 +3,8 @@ task :default => [:all]
 $basedir = File.expand_path "."
 $gitstats_dir = File.join($basedir, ".git-stats-src/")
 $gitstats_path = File.join($gitstats_dir, "gitstats")
+$PYTHON_VERSION = "3.4.0"
+$PYTHON_VERSION_GIT_STATS = "2.7.6"
 
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"
@@ -38,7 +40,14 @@ def install_gitstats
 end
 
 def configure_python_version
-    puts "configure_python_version"
+    install_python $PYTHON_VERSION
+    install_python $PYTHON_VERSION_GIT_STATS
+    refresh_packages
+end
+
+def install_python(python_version)
+    puts "install_python" + python_version
+    system "yes N | pyenv install #{python_version}"
 end
 
 def switch_to_dev_python_version
