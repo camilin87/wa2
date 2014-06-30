@@ -12,7 +12,7 @@ class ForecastIoRetriever(WeatherDataRetriever):
             self.api_key,
             weather_data_request.latitude,
             weather_data_request.longitude
-        )
+        ).currently()
         return WeatherDataResponse(
             datapoint.summary,
             datapoint.precipIntensity,
