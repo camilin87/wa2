@@ -21,10 +21,16 @@ class TestIntegrationEngine(TestCase):
             "precipProbability": datapoint.precipProbability
         }
 
-    def test_retrieves_correct_data_for_hialeah(self):
-        response = self.data_retriever.retrieve(DataRequest(25.86, -80.30))
-        api_response = self._call_api_directly(25.86, -80.30)
+    def _validate_api_call(self, latitude, longitude):
+        response = self.data_retriever.retrieve(DataRequest(latitude, longitude))
+        api_response = self._call_api_directly(latitude, longitude)
 
         self.assertEquals(api_response["summary"], response.summary_str)
         self.assertEquals(api_response["precipIntensity"], response.precip_intensity)
         self.assertEquals(api_response["precipProbability"], response.precip_probability)
+
+    def test_retrieves_correct_data_for_hialeah_33012(self):
+        self._validate_api_call(25.86, -80.30)
+
+    def test_retrieves_correct_data_for_lax_90045(self):
+        self._validate_api_call(33.96, -118.39)

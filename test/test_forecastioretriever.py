@@ -9,7 +9,6 @@ class TestForecastIoRetriever(TestCase):
     @patch("extapi.forecastioretriever.load_forecast")
     def test_retrieves_weather_data(self, forecast_mock):
         def side_effect_func(api_key, lat, lng):
-            print("side_effect_func")
             if api_key == "api key" and lat == 25.86 and lng == -80.3:
                 seeded_datapoint = MagicMock()
                 seeded_datapoint.summary = "some rain"
