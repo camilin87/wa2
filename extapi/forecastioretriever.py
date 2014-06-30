@@ -1,9 +1,9 @@
-from engine.weatherdataretriever import WeatherDataRetriever
+from engine.dataretriever import DataRetriever
 from forecastio import load_forecast
 from bo.weatherdataresponse import WeatherDataResponse
 
 
-class ForecastIoRetriever(WeatherDataRetriever):
+class ForecastIoRetriever(DataRetriever):
     def __init__(self, api_key):
         self.api_key = api_key
 

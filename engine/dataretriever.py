@@ -1,7 +1,7 @@
 import abc
 
 
-class WeatherDataRetriever(object):
+class DataRetriever(object):
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod

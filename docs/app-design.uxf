@@ -55,7 +55,7 @@ bg=gray</panel_attributes>
       <w>168</w>
       <h>24</h>
     </coordinates>
-    <panel_attributes>/WeatherDataRetriever/</panel_attributes>
+    <panel_attributes>/DataRetriever/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
