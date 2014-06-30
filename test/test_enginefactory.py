@@ -14,3 +14,12 @@ class TestEngineFactory(TestCase):
 
         self.assertIsInstance(retriever, ForecastIoRetriever)
         self.assertEquals("production key", retriever.api_key)
+
+    def test_creates_custom_data_retriever(self):
+        keys_mock = MagicMock()
+        keys_mock.key.return_value = "custom key"
+
+        retriever = EngineFactory.create_data_retriever(keys_mock)
+
+        self.assertIsInstance(retriever, ForecastIoRetriever)
+        self.assertEquals("custom key", retriever.api_key)
