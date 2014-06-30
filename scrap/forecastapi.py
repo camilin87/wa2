@@ -23,8 +23,15 @@ def call_api(lat, lng):
 
     print("======Data read directly======")
     print((datapoint.summary.__class__.__name__ + " summary => ").rjust(padding), datapoint.summary)
-    print((datapoint.precipIntensity.__class__.__name__ + " precipIntensity => ").rjust(padding), datapoint.precipIntensity)
-    print((datapoint.precipProbability.__class__.__name__ + " precipProbability => ").rjust(padding), datapoint.precipProbability)
+    print(
+        (datapoint.precipIntensity.__class__.__name__ + " precipIntensity => ").rjust(padding),
+        datapoint.precipIntensity
+    )
+    print(
+        (datapoint.precipProbability.__class__.__name__ + " precipProbability => ").rjust(padding),
+        datapoint.precipProbability
+    )
+
 
 def main():
     # 33012 hialeah
