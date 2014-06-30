@@ -1,6 +1,6 @@
 from unittest import TestCase
 from extapi.forecastioretriever import ForecastIoRetriever
-from bo.weatherdatarequest import WeatherDataRequest
+from bo.datarequest import DataRequest
 from mock import MagicMock
 from mock import patch
 
@@ -22,7 +22,7 @@ class TestForecastIoRetriever(TestCase):
         forecast_mock.side_effect = side_effect_func
 
         response = ForecastIoRetriever("api key").retrieve(
-            WeatherDataRequest(25.86, -80.30)
+            DataRequest(25.86, -80.30)
         )
 
         self.assertEquals("some rain", response.summary_str)

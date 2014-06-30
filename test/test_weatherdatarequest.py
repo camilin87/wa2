@@ -1,40 +1,40 @@
 from unittest import TestCase
-from bo.weatherdatarequest import WeatherDataRequest
+from bo.datarequest import DataRequest
 
 
 class TestWeatherDataRequest(TestCase):
     def test_creation(self):
-        request = WeatherDataRequest(12.34, 56.70)
+        request = DataRequest(12.34, 56.70)
 
         self.assertEquals(12.34, request.latitude)
         self.assertEquals(56.7, request.longitude)
 
     def test_validates_latitude_min_boundary(self):
         with self.assertRaises(ValueError):
-            WeatherDataRequest(-90.0 - 0.1, 56.70)
+            DataRequest(-90.0 - 0.1, 56.70)
 
     def test_validates_latitude_max_boundary(self):
         with self.assertRaises(ValueError):
-            WeatherDataRequest(90.0 + 0.1, 56.70)
+            DataRequest(90.0 + 0.1, 56.70)
 
     def test_validates_longitude_min_boundary(self):
         with self.assertRaises(ValueError):
-            WeatherDataRequest(12.34, -180.0 - 0.1)
+            DataRequest(12.34, -180.0 - 0.1)
 
     def test_validates_longitude_max_boundary(self):
         with self.assertRaises(ValueError):
-            WeatherDataRequest(12.34, 180.0 + 0.1)
+            DataRequest(12.34, 180.0 + 0.1)
 
     def test_latitude_should_be_numeric(self):
         with self.assertRaises(TypeError):
-            WeatherDataRequest("12.34", 180.0)
+            DataRequest("12.34", 180.0)
 
     def test_longitude_should_be_numeric(self):
         with self.assertRaises(TypeError):
-            WeatherDataRequest(-90, "180.0")
+            DataRequest(-90, "180.0")
 
     def test_str(self):
-        request = WeatherDataRequest(12, -160.1)
+        request = DataRequest(12, -160.1)
         actual_str = str(request)
 
         self.assertTrue(request.__class__.__name__ in actual_str)
