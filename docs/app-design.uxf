@@ -44,7 +44,7 @@ bg=gray</panel_attributes>
       <w>190</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>WeatherDataResponse</panel_attributes>
+    <panel_attributes>DataResponse</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

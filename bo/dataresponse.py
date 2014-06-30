@@ -1,7 +1,7 @@
 from bo import precipitationtype
 
 
-class WeatherDataResponse(object):
+class DataResponse(object):
     def __init__(self, summary_str, precip_intensity, precip_probability):
         if not summary_str:
             raise ValueError("summary_str is required")
@@ -17,7 +17,7 @@ class WeatherDataResponse(object):
         self.precip_intensity = precip_intensity
 
         self.pop_percent = int(self.precip_probability * 100)
-        self.precipitation = WeatherDataResponse._precipitation_type(self.precip_intensity)
+        self.precipitation = DataResponse._precipitation_type(self.precip_intensity)
 
     @staticmethod
     def _precipitation_type(precip_intensity):

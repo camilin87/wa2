@@ -1,6 +1,6 @@
 from engine.dataretriever import DataRetriever
 from forecastio import load_forecast
-from bo.weatherdataresponse import WeatherDataResponse
+from bo.dataresponse import DataResponse
 
 
 class ForecastIoRetriever(DataRetriever):
@@ -13,7 +13,7 @@ class ForecastIoRetriever(DataRetriever):
             weather_data_request.latitude,
             weather_data_request.longitude
         ).currently()
-        return WeatherDataResponse(
+        return DataResponse(
             datapoint.summary,
             datapoint.precipIntensity,
             datapoint.precipProbability
