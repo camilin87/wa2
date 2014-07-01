@@ -1,10 +1,16 @@
+from bo import intensitytype
+
+
 class DataResponse(object):
     def __init__(self, summary_str, pop_percent, intensity):
         if not summary_str:
             raise ValueError("summary_str is required")
 
         if pop_percent < 0.0 or pop_percent > 100.0:
-            raise ValueError("precipProbability out of bounds")
+            raise ValueError("pop_percent out of bounds")
+
+        if intensity not in intensitytype.INTENSITY_TYPES:
+            raise ValueError("unkown intensity type")
 
         self.summary_str = summary_str
         self.pop_percent = int(pop_percent)

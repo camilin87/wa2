@@ -42,6 +42,10 @@ class TestDataResponse(TestCase):
     def test_truncates_pop_percent_value(self):
         self.assertEquals(96, DataResponse("NA", 96.98, 0).pop_percent)
 
+    def test_validates_intensity(self):
+        with self.assertRaises(ValueError):
+            DataResponse("NA", 1.0, 5000)
+
     def test_str(self):
         response = DataResponse("some rain", 90, intensitytype.HEAVY)
         actual_str = str(response)
