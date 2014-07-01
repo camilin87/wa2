@@ -13,7 +13,11 @@ class TestDataResponseBuilder(TestCase):
     def test_creation(self):
         self.assertIsNotNone(self.builder)
 
-    def _data_point(self, summary, precipIntensity, precipProbability, precipType=None):
+    def _data_point(
+        self,
+        summary, precipIntensity, precipProbability,
+        precipType="rain"
+    ):
         seeded_datapoint = MagicMock()
         seeded_datapoint.summary = summary
         seeded_datapoint.precipIntensity = precipIntensity
@@ -95,6 +99,31 @@ class TestDataResponseBuilder(TestCase):
         self.assertEquals(intensitytype.HEAVY, self._precip_with_intensity(10))
 
     def test_does_not_read_precip_type_when_no_intensity(self):
-        seeded_datapoint = self._data_point("some rain", 0, 1, "rain")
+        seeded_datapoint = self._data_point("Windy", 0, 1, "rain")
         response = self.builder.build(seeded_datapoint)
         self.assertEquals(precipitationtype.NONE, response.precipitation)
+
+    def test_precipitation_is_rain(self):
+        seeded_datapoint = self._data_point("Windy", 0.1, 1, "rain")
+        response = self.builder.build(seeded_datapoint)
+        self.assertEquals(precipitationtype.RAIN, response.precipitation)
+
+    def test_precipitation_is_snow(self):
+        seeded_datapoint = self._data_point("Windy", 0.1, 1, "snow")
+        response = self.builder.build(seeded_datapoint)
+        self.assertEquals(precipitationtype.SNOW, response.precipitation)
+
+    def test_precipitation_is_sleet(self):
+        seeded_datapoint = self._data_point("Windy", 0.1, 1, "sleet")
+        response = self.builder.build(seeded_datapoint)
+        self.assertEquals(precipitationtype.SLEET, response.precipitation)
+
+    def test_precipitation_is_hail(self):
+        seeded_datapoint = self._data_point("Windy", 0.1, 1, "hail")
+        response = self.builder.build(seeded_datapoint)
+        self.assertEquals(precipitationtype.HAIL, response.precipitation)
+
+    def test_unknown_precipitation_type(self):
+        seeded_datapoint = self._data_point("Windy", 0.1, 1, "lava")
+        with self.assertRaises(ValueError):
+            self.builder.build(seeded_datapoint)
