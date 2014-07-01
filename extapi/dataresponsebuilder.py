@@ -21,23 +21,27 @@ class DataResponseBuilder(object):
             forecastio_datapoint.summary,
             int(forecastio_datapoint.precipProbability * 100.0),
             DataResponseBuilder.intensity_type(forecastio_datapoint.precipIntensity),
-            DataResponseBuilder.precipitation_type(forecastio_datapoint)
+            DataResponseBuilder._precipitation_type(forecastio_datapoint)
         )
 
     @staticmethod
-    def precipitation_type(forecastio_datapoint):
+    def _precipitation_type(forecastio_datapoint):
         if forecastio_datapoint.precipIntensity > 0.0:
             precipType = forecastio_datapoint.precipType
-            if precipType == "rain":
-                return precipitationtype.RAIN
-            if precipType == "snow":
-                return precipitationtype.SNOW
-            if precipType == "sleet":
-                return precipitationtype.SLEET
-            if precipType == "hail":
-                return precipitationtype.HAIL
-            raise ValueError("Unknown precipType={0}".format(precipType))
+            return DataResponseBuilder.precipitation_type_from_str(precipType)
         return precipitationtype.NONE
+
+    @staticmethod
+    def precipitation_type_from_str(precipType):
+        if precipType == "rain":
+            return precipitationtype.RAIN
+        if precipType == "snow":
+            return precipitationtype.SNOW
+        if precipType == "sleet":
+            return precipitationtype.SLEET
+        if precipType == "hail":
+            return precipitationtype.HAIL
+        raise ValueError("Unknown precipType={0}".format(precipType))
 
     @staticmethod
     def intensity_type(precip_intensity):
