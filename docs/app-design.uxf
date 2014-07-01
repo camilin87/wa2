@@ -228,4 +228,49 @@ bg=gray</panel_attributes>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>30;30;100;80</additional_attributes>
   </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1680</x>
+      <y>1690</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>IntensityType
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1810</x>
+      <y>1690</y>
+      <w>130</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>PrecipitationType</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1690</x>
+      <y>1580</y>
+      <w>130</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;110;110;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1800</x>
+      <y>1580</y>
+      <w>100</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>80;110;30;30</additional_attributes>
+  </element>
 </diagram>
