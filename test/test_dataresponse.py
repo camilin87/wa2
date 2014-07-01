@@ -35,7 +35,7 @@ class TestDataResponse(TestCase):
         with self.assertRaises(ValueError):
             DataResponse("NA", 0.0, 1.0 + 0.1)
 
-    def test_validates_pop_max_value_should_be_numeric(self):
+    def test_validates_pop_value_should_be_numeric(self):
         with self.assertRaises(TypeError):
             DataResponse("NA", 0.0, "1.0")
 
