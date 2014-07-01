@@ -1,4 +1,5 @@
 from bo import intensitytype
+from bo import precipitationtype
 
 
 class DataResponse(object):
@@ -11,6 +12,9 @@ class DataResponse(object):
 
         if intensity not in intensitytype.INTENSITY_TYPES:
             raise ValueError("unkown intensity")
+
+        if precipitation not in precipitationtype.PRECIPITATION_TYPES:
+            raise ValueError("unkown precipitation")
 
         self.summary_str = summary_str
         self.pop_percent = int(pop_percent)

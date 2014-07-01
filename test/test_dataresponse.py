@@ -50,6 +50,10 @@ class TestDataResponse(TestCase):
         with self.assertRaises(ValueError):
             DataResponse("NA", 1.0, 5000, precipitationtype.RAIN)
 
+    def test_validates_precipitation(self):
+        with self.assertRaises(ValueError):
+            DataResponse("NA", 1.0, intensitytype.HEAVY, 10000)
+
     def test_str(self):
         response = DataResponse("some rain", 90, intensitytype.HEAVY, precipitationtype.SNOW)
         actual_str = str(response)
