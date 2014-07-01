@@ -3,3 +3,11 @@ RAIN = 100
 SNOW = 200
 SLEET = 300
 HAIL = 400
+
+PRECIPITATION_TYPES = [
+    NONE,
+    RAIN,
+    SNOW,
+    SLEET,
+    HAIL
+]
