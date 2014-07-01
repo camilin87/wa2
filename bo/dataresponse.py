@@ -1,4 +1,4 @@
-from bo import precipitationtype
+from bo import intensitytype
 
 
 class DataResponse(object):
@@ -22,12 +22,12 @@ class DataResponse(object):
     @staticmethod
     def _precipitation_type(precip_intensity):
         if precip_intensity < 0.002:
-            return precipitationtype.NONE
+            return intensitytype.NONE
         if precip_intensity < 0.1:
-            return precipitationtype.LIGHT
+            return intensitytype.LIGHT
         if precip_intensity < 0.4:
-            return precipitationtype.MODERATE
-        return precipitationtype.HEAVY
+            return intensitytype.MODERATE
+        return intensitytype.HEAVY
 
     def __str__(self):
         description_format = (
