@@ -1,8 +1,5 @@
 class DataResponse(object):
-    def __init__(
-        self,
-        summary_str, pop_percent, intensity
-    ):
+    def __init__(self, summary_str, pop_percent, intensity):
         if not summary_str:
             raise ValueError("summary_str is required")
 
