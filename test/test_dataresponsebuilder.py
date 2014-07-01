@@ -4,16 +4,22 @@ from mock import MagicMock
 
 
 class TestDataResponseBuilder(TestCase):
+    def setUp(self):
+        self.builder = DataResponseBuilder()
+
     def test_creation(self):
-        self.assertIsNotNone(DataResponseBuilder())
+        self.assertIsNotNone(self.builder)
+
+    def _data_point(self, summary, precipIntensity, precipProbability):
+        seeded_datapoint = MagicMock()
+        seeded_datapoint.summary = summary
+        seeded_datapoint.precipIntensity = float(precipIntensity)
+        seeded_datapoint.precipProbability = float(precipProbability)
 
     def test_builds_response(self):
-        seeded_datapoint = MagicMock()
-        seeded_datapoint.summary = "some rain"
-        seeded_datapoint.precipIntensity = float(0.8)
-        seeded_datapoint.precipProbability = int(1)
+        seeded_datapoint = self._data_point("some rain", 0.8, 1)
 
-        response = DataResponseBuilder().build(seeded_datapoint)
+        response = self.builder.build(seeded_datapoint)
 
         self.assertEquals("some rain", response.summary_str)
         self.assertEquals(1.0, response.precip_probability)
