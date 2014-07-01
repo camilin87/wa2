@@ -28,7 +28,7 @@ class TestIntegrationEngine(TestCase):
 
         self.assertEquals(api_response["summary"], response.summary_str)
         self.assertEquals(
-            DataResponseBuilder.precipitation_type(api_response["precipIntensity"]),
+            DataResponseBuilder.intensity_type(api_response["precipIntensity"]),
             response.intensity
         )
         self.assertEquals(

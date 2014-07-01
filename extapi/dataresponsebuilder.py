@@ -20,12 +20,12 @@ class DataResponseBuilder(object):
         return DataResponse(
             forecastio_datapoint.summary,
             int(forecastio_datapoint.precipProbability * 100.0),
-            DataResponseBuilder.precipitation_type(forecastio_datapoint.precipIntensity),
+            DataResponseBuilder.intensity_type(forecastio_datapoint.precipIntensity),
             precipitationtype.NONE
         )
 
     @staticmethod
-    def precipitation_type(precip_intensity):
+    def intensity_type(precip_intensity):
         if precip_intensity < 0.002:
             return intensitytype.NONE
         if precip_intensity < 0.1:
