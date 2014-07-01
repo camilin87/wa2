@@ -6,8 +6,11 @@ class DataResponse(object):
         if not summary_str:
             raise ValueError("summary_str is required")
 
+        if pop_percent < 0.0 or pop_percent > 100.0:
+            raise ValueError("precipProbability out of bounds")
+
         self.summary_str = summary_str
-        self.pop_percent = pop_percent
+        self.pop_percent = int(pop_percent)
         self.intensity = intensity
 
     def __str__(self):

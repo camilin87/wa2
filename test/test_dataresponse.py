@@ -27,6 +27,21 @@ class TestDataResponse(TestCase):
         with self.assertRaises(ValueError):
             DataResponse("", 0.0, 0.0)
 
+    def test_validates_pop_percent_min_value(self):
+        with self.assertRaises(ValueError):
+            DataResponse("NA", 0.0 - 0.1, 0)
+
+    def test_validates_pop_percent_max_value(self):
+        with self.assertRaises(ValueError):
+            DataResponse("NA", 100 + 0.1, 0)
+
+    def test_validates_pop_percent_value_should_be_numeric(self):
+        with self.assertRaises(TypeError):
+            DataResponse("NA", "1.0", 0)
+
+    def test_truncates_pop_percent_value(self):
+        self.assertEquals(96, DataResponse("NA", 96.98, 0).pop_percent)
+
     def test_str(self):
         response = DataResponse("some rain", 90, intensitytype.HEAVY)
         actual_str = str(response)

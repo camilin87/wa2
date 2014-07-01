@@ -18,7 +18,7 @@ class DataResponseBuilder(object):
 
         return DataResponse(
             forecastio_datapoint.summary,
-            int(forecastio_datapoint.precipProbability * 100),
+            int(forecastio_datapoint.precipProbability * 100.0),
             DataResponseBuilder.precipitation_type(forecastio_datapoint.precipIntensity)
         )
 
