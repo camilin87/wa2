@@ -3,6 +3,7 @@ from extapi.dataresponsebuilder import DataResponseBuilder
 from mock import MagicMock
 from mock import patch
 from bo import intensitytype
+from bo import precipitationtype
 
 
 class TestDataResponseBuilder(TestCase):
@@ -93,7 +94,7 @@ class TestDataResponseBuilder(TestCase):
         self.assertEquals(intensitytype.HEAVY, self._precip_with_intensity(0.4))
         self.assertEquals(intensitytype.HEAVY, self._precip_with_intensity(10))
 
-    # def test_does_not_read_precip_type(self):
-    #     seeded_datapoint = self._data_point("some rain", 0, 1, "rain")
-    #     response = self.builder.build(seeded_datapoint)
-    #     self.assertEquals(response.precipitation)
+    def test_does_not_read_precip_type_when_no_intensity(self):
+        seeded_datapoint = self._data_point("some rain", 0, 1, "rain")
+        response = self.builder.build(seeded_datapoint)
+        self.assertEquals(precipitationtype.NONE, response.precipitation)
