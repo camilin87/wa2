@@ -29,8 +29,8 @@ class TestDataResponseBuilder(TestCase):
         response = self.builder.build(seeded_datapoint)
 
         self.assertEquals("some rain", response.summary_str)
-        self.assertEquals(1.0, response.precip_probability)
-        self.assertEquals(0.8, response.precip_intensity)
+        self.assertEquals(100, response.pop_percent)
+        self.assertEquals(intensitytype.HEAVY, response.precipitation)
 
     @patch("extapi.dataresponsebuilder.DataResponse")
     def test_summary_cannot_be_none(self, data_response_mock):

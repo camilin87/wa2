@@ -1,4 +1,5 @@
 from bo.dataresponse import DataResponse
+from bo import intensitytype
 
 
 class DataResponseBuilder(object):
@@ -17,6 +18,16 @@ class DataResponseBuilder(object):
 
         return DataResponse(
             forecastio_datapoint.summary,
-            forecastio_datapoint.precipIntensity,
-            forecastio_datapoint.precipProbability
+            int(forecastio_datapoint.precipProbability * 100),
+            DataResponseBuilder.precipitation_type(forecastio_datapoint.precipIntensity)
         )
+
+    @staticmethod
+    def precipitation_type(precip_intensity):
+        if precip_intensity < 0.002:
+            return intensitytype.NONE
+        if precip_intensity < 0.1:
+            return intensitytype.LIGHT
+        if precip_intensity < 0.4:
+            return intensitytype.MODERATE
+        return intensitytype.HEAVY

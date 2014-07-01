@@ -4,6 +4,7 @@ from extapi.citkeys import CitKeys
 from factory.enginefactory import EngineFactory
 from bo.datarequest import DataRequest
 from forecastio import load_forecast
+from extapi.dataresponsebuilder import DataResponseBuilder
 
 
 @attr("integration")
@@ -26,8 +27,14 @@ class TestIntegrationEngine(TestCase):
         api_response = self._call_api_directly(latitude, longitude)
 
         self.assertEquals(api_response["summary"], response.summary_str)
-        self.assertEquals(api_response["precipIntensity"], response.precip_intensity)
-        self.assertEquals(api_response["precipProbability"], response.precip_probability)
+        self.assertEquals(
+            DataResponseBuilder.precipitation_type(api_response["precipIntensity"]),
+            response.precipitation
+        )
+        self.assertEquals(
+            api_response["precipProbability"] * 100,
+            response.pop_percent
+        )
 
     def test_retrieves_correct_data_for_hialeah_33012(self):
         self._validate_api_call(25.86, -80.30)
