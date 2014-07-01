@@ -32,44 +32,37 @@ class TestDataResponseBuilder(TestCase):
         self.assertEquals(100, response.pop_percent)
         self.assertEquals(intensitytype.HEAVY, response.intensity)
 
-    @patch("extapi.dataresponsebuilder.DataResponse")
-    def test_summary_cannot_be_none(self, data_response_mock):
+    def test_summary_cannot_be_none(self):
         with self.assertRaises(ValueError):
             seeded_datapoint = self._data_point(None, 0.0, 0.0)
             self.builder.build(seeded_datapoint)
 
-    @patch("extapi.dataresponsebuilder.DataResponse")
-    def test_summary_cannot_be_empty(self, data_response_mock):
+    def test_summary_cannot_be_empty(self):
         with self.assertRaises(ValueError):
             seeded_datapoint = self._data_point("", 0.0, 0.0)
             self.builder.build(seeded_datapoint)
 
-    @patch("extapi.dataresponsebuilder.DataResponse")
-    def test_validates_pop_min_value(self, data_response_mock):
+    def test_validates_pop_min_value(self):
         with self.assertRaises(ValueError):
             seeded_datapoint = self._data_point("NA", 0.0, 0.0 - 0.1)
             self.builder.build(seeded_datapoint)
 
-    @patch("extapi.dataresponsebuilder.DataResponse")
-    def test_validates_pop_max_value(self, data_response_mock):
+    def test_validates_pop_max_value(self):
         with self.assertRaises(ValueError):
             seeded_datapoint = self._data_point("NA", 0.0, 1.0 + 0.1)
             self.builder.build(seeded_datapoint)
 
-    @patch("extapi.dataresponsebuilder.DataResponse")
-    def test_validates_pop_value_should_be_numeric(self, data_response_mock):
+    def test_validates_pop_value_should_be_numeric(self):
         with self.assertRaises(TypeError):
             seeded_datapoint = self._data_point("NA", 0.0, "1.0")
             self.builder.build(seeded_datapoint)
 
-    @patch("extapi.dataresponsebuilder.DataResponse")
-    def test_validates_precip_intensity_min_value(self, data_response_mock):
+    def test_validates_precip_intensity_min_value(self):
         with self.assertRaises(ValueError):
             seeded_datapoint = self._data_point("NA", 0.0 - 0.1, 0.0)
             self.builder.build(seeded_datapoint)
 
-    @patch("extapi.dataresponsebuilder.DataResponse")
-    def test_validates_precip_intensity_should_be_numeric(self, data_response_mock):
+    def test_validates_precip_intensity_should_be_numeric(self):
         with self.assertRaises(TypeError):
             seeded_datapoint = self._data_point("NA", "0.0", 0.0)
             self.builder.build(seeded_datapoint)
