@@ -3,7 +3,7 @@ from bo.dataresponse import DataResponse
 from bo import intensitytype
 
 
-class TestWeatherDataResponse(TestCase):
+class TestDataResponse(TestCase):
     def test_creation(self):
         precipitation_probability = 0.234
         precipitation_intensity = 1.3

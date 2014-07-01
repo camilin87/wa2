@@ -2,7 +2,7 @@ from unittest import TestCase
 from bo.datarequest import DataRequest
 
 
-class TestWeatherDataRequest(TestCase):
+class TestDataRequest(TestCase):
     def test_creation(self):
         request = DataRequest(12.34, 56.70)
 
