@@ -15,6 +15,7 @@ class TestDataResponseBuilder(TestCase):
         seeded_datapoint.summary = summary
         seeded_datapoint.precipIntensity = float(precipIntensity)
         seeded_datapoint.precipProbability = float(precipProbability)
+        return seeded_datapoint
 
     def test_builds_response(self):
         seeded_datapoint = self._data_point("some rain", 0.8, 1)

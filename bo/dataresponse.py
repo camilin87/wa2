@@ -2,7 +2,11 @@ from bo import intensitytype
 
 
 class DataResponse(object):
-    def __init__(self, summary_str, precip_intensity, precip_probability):
+    def __init__(
+        self,
+        summary_str, precip_intensity, precip_probability,
+        pop_percent=None, precipitation=None
+    ):
         if not summary_str:
             raise ValueError("summary_str is required")
 
