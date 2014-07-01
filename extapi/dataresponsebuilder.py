@@ -11,10 +11,10 @@ class DataResponseBuilder(object):
             forecastio_datapoint.precipProbability < 0.0 or
             forecastio_datapoint.precipProbability > 1.0
         ):
-            raise ValueError("precip_probability out of bounds")
+            raise ValueError("precipProbability out of bounds")
 
         if forecastio_datapoint.precipIntensity < 0.0:
-            raise ValueError("precip_intensity out of bounds")
+            raise ValueError("precipIntensity out of bounds")
 
         return DataResponse(
             forecastio_datapoint.summary,
