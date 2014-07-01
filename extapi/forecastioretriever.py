@@ -1,11 +1,12 @@
 from engine.dataretriever import DataRetriever
 from forecastio import load_forecast
-from bo.dataresponse import DataResponse
+from extapi.dataresponsebuilder import DataResponseBuilder
 
 
 class ForecastIoRetriever(DataRetriever):
     def __init__(self, api_key):
         self.api_key = api_key
+        self.builder = DataResponseBuilder()
 
     def retrieve(self, data_request):
         datapoint = load_forecast(
@@ -13,8 +14,4 @@ class ForecastIoRetriever(DataRetriever):
             data_request.latitude,
             data_request.longitude
         ).currently()
-        return DataResponse(
-            datapoint.summary,
-            datapoint.precipIntensity,
-            datapoint.precipProbability
-        )
+        return self.builder.build(datapoint)
