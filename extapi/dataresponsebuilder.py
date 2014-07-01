@@ -1,5 +1,6 @@
 from bo.dataresponse import DataResponse
 from bo import intensitytype
+from bo import precipitationtype
 
 
 class DataResponseBuilder(object):
@@ -19,7 +20,8 @@ class DataResponseBuilder(object):
         return DataResponse(
             forecastio_datapoint.summary,
             int(forecastio_datapoint.precipProbability * 100.0),
-            DataResponseBuilder.precipitation_type(forecastio_datapoint.precipIntensity)
+            DataResponseBuilder.precipitation_type(forecastio_datapoint.precipIntensity),
+            precipitationtype.NONE
         )
 
     @staticmethod

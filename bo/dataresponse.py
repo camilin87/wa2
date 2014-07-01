@@ -2,7 +2,7 @@ from bo import intensitytype
 
 
 class DataResponse(object):
-    def __init__(self, summary_str, pop_percent, intensity):
+    def __init__(self, summary_str, pop_percent, intensity, precipitation):
         if not summary_str:
             raise ValueError("summary_str is required")
 
@@ -15,14 +15,16 @@ class DataResponse(object):
         self.summary_str = summary_str
         self.pop_percent = int(pop_percent)
         self.intensity = intensity
+        self.precipitation = precipitation
 
     def __str__(self):
         description_format = (
             "summary_str='{0}', " +
-            "pop_percent={1}, intensity={2}"
+            "pop_percent={1}, intensity={2}, precipitation={3}"
         )
         return self.__class__.__name__ + " " + description_format.format(
             self.summary_str,
             self.pop_percent,
-            self.intensity
+            self.intensity,
+            self.precipitation
         )

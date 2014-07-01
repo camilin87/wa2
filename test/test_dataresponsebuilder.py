@@ -12,11 +12,12 @@ class TestDataResponseBuilder(TestCase):
     def test_creation(self):
         self.assertIsNotNone(self.builder)
 
-    def _data_point(self, summary, precipIntensity, precipProbability):
+    def _data_point(self, summary, precipIntensity, precipProbability, precipType=None):
         seeded_datapoint = MagicMock()
         seeded_datapoint.summary = summary
         seeded_datapoint.precipIntensity = precipIntensity
         seeded_datapoint.precipProbability = precipProbability
+        seeded_datapoint.precipType = precipType
         return seeded_datapoint
 
     def _build_response(self, summary, precipIntensity, precipProbability):
@@ -91,3 +92,8 @@ class TestDataResponseBuilder(TestCase):
     def test_heavy_precipitation(self):
         self.assertEquals(intensitytype.HEAVY, self._precip_with_intensity(0.4))
         self.assertEquals(intensitytype.HEAVY, self._precip_with_intensity(10))
+
+    # def test_does_not_read_precip_type(self):
+    #     seeded_datapoint = self._data_point("some rain", 0, 1, "rain")
+    #     response = self.builder.build(seeded_datapoint)
+    #     self.assertEquals(response.precipitation)
