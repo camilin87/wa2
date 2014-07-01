@@ -29,7 +29,7 @@ class TestIntegrationEngine(TestCase):
         self.assertEquals(api_response["summary"], response.summary_str)
         self.assertEquals(
             DataResponseBuilder.precipitation_type(api_response["precipIntensity"]),
-            response.precipitation
+            response.intensity
         )
         self.assertEquals(
             api_response["precipProbability"] * 100,

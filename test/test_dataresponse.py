@@ -17,7 +17,7 @@ class TestDataResponse(TestCase):
 
         self.assertEquals(summary, response.summary_str)
         self.assertEquals(45, response.pop_percent)
-        self.assertEquals(intensitytype.LIGHT, response.precipitation)
+        self.assertEquals(intensitytype.LIGHT, response.intensity)
 
     def test_summary_cannot_be_none(self):
         with self.assertRaises(ValueError):
@@ -34,4 +34,4 @@ class TestDataResponse(TestCase):
         self.assertTrue(response.__class__.__name__ in actual_str)
         self.assertTrue("summary_str='some rain'" in actual_str)
         self.assertTrue("pop_percent=90" in actual_str)
-        self.assertTrue(("precipitation=" + str(intensitytype.HEAVY)) in actual_str)
+        self.assertTrue(("intensity=" + str(intensitytype.HEAVY)) in actual_str)

@@ -30,7 +30,7 @@ class TestDataResponseBuilder(TestCase):
 
         self.assertEquals("some rain", response.summary_str)
         self.assertEquals(100, response.pop_percent)
-        self.assertEquals(intensitytype.HEAVY, response.precipitation)
+        self.assertEquals(intensitytype.HEAVY, response.intensity)
 
     @patch("extapi.dataresponsebuilder.DataResponse")
     def test_summary_cannot_be_none(self, data_response_mock):
@@ -81,7 +81,7 @@ class TestDataResponseBuilder(TestCase):
 
     def _precip_with_intensity(self, precipitation_intensity):
         response = self._build_response("NA", precipitation_intensity, 0.0)
-        return response.precipitation
+        return response.intensity
 
     def test_no_precipitation(self):
         self.assertEquals(intensitytype.NONE, self._precip_with_intensity(0.0))
