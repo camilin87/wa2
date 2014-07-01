@@ -8,10 +8,8 @@ class DataResponseBuilder(object):
         if not forecastio_datapoint.summary:
             raise ValueError("summary_str is required")
 
-        if (
-            forecastio_datapoint.precipProbability < 0.0 or
-            forecastio_datapoint.precipProbability > 1.0
-        ):
+        if (forecastio_datapoint.precipProbability < 0.0 or
+                forecastio_datapoint.precipProbability > 1.0):
             raise ValueError("precipProbability out of bounds")
 
         if forecastio_datapoint.precipIntensity < 0.0:
@@ -27,21 +25,22 @@ class DataResponseBuilder(object):
     @staticmethod
     def _precipitation_type(forecastio_datapoint):
         if forecastio_datapoint.precipIntensity > 0.0:
-            precipType = forecastio_datapoint.precipType
-            return DataResponseBuilder.precipitation_type_from_str(precipType)
+            return DataResponseBuilder.precipitation_type_from_str(
+                forecastio_datapoint.precipType
+            )
         return precipitationtype.NONE
 
     @staticmethod
-    def precipitation_type_from_str(precipType):
-        if precipType == "rain":
+    def precipitation_type_from_str(precip_type):
+        if precip_type == "rain":
             return precipitationtype.RAIN
-        if precipType == "snow":
+        if precip_type == "snow":
             return precipitationtype.SNOW
-        if precipType == "sleet":
+        if precip_type == "sleet":
             return precipitationtype.SLEET
-        if precipType == "hail":
+        if precip_type == "hail":
             return precipitationtype.HAIL
-        raise ValueError("Unknown precipType={0}".format(precipType))
+        raise ValueError("Unknown precip_type={0}".format(precip_type))
 
     @staticmethod
     def intensity_type(precip_intensity):
