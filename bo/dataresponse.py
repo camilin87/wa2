@@ -10,7 +10,7 @@ class DataResponse(object):
             raise ValueError("pop_percent out of bounds")
 
         if intensity not in intensitytype.INTENSITY_TYPES:
-            raise ValueError("unkown intensity type")
+            raise ValueError("unkown intensity")
 
         self.summary_str = summary_str
         self.pop_percent = int(pop_percent)
