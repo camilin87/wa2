@@ -1,8 +1,8 @@
 from unittest import TestCase
 from factory.enginefactory import EngineFactory
 from extapi.forecastioretriever import ForecastIoRetriever
-from mock import MagicMock
-from mock import patch
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 
 class TestEngineFactory(TestCase):

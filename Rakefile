@@ -71,7 +71,7 @@ end
 
 def install_pypi_dev_dependencies
     pypi_packages = [
-        "nose", "mock", "freezegun", "coverage",
+        "nose", "freezegun", "coverage",
         "pylint", "pep8", "python-forecastio"
     ]
     pypi_packages.each do |pkg|
