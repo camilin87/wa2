@@ -1,2 +1,12 @@
 class ApiResponse(object):
-    pass
+    def __init__(
+        self,
+        return_code, error_msg, summary,
+        pop_percent, intensity_type, precipitation_type
+    ):
+        self.result = str(return_code)
+        self.errormsg = error_msg
+        self.summary = summary
+        self.pop = str(pop_percent)
+        self.intensity = str(intensity_type)
+        self.precip = str(precipitation_type)
