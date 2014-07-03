@@ -27,3 +27,7 @@ class TestApiRequest(TestCase):
 
     def test_valid_request(self):
         self._error_code_should_be(returncode.OK, ApiRequest("abc", "90.30", "4.99"))
+
+    def test_invalid_api_key(self):
+        self._error_code_should_be(returncode.PARAM_KEY_ERROR, ApiRequest(None, "90.30", "4.99"))
+        self._error_code_should_be(returncode.PARAM_KEY_ERROR, ApiRequest("", "90.30", "4.99"))

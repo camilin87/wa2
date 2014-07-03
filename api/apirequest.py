@@ -8,6 +8,8 @@ class ApiRequest(object):
         self.longitude_str = long_str
 
     def validate(self):
+        if not self.api_key:
+            return returncode.PARAM_KEY_ERROR
         return returncode.OK
 
     def __str__(self):
