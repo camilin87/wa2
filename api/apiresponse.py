@@ -1,7 +1,7 @@
 class ApiResponse(object):
     def __init__(
         self,
-        return_code, error_msg, summary,
+        return_code, error_msg, summary_str,
         pop_percent, intensity_type, precipitation_type
     ):
         if not isinstance(return_code, int):
@@ -10,9 +10,12 @@ class ApiResponse(object):
         if not error_msg:
             error_msg = ""
 
+        if not summary_str:
+            raise ValueError("summary_str is required")
+
         self.result = str(return_code)
         self.errormsg = str(error_msg)
-        self.summary = summary
+        self.summary = str(summary_str)
         self.pop = str(pop_percent)
         self.intensity = str(intensity_type)
         self.precip = str(precipitation_type)
