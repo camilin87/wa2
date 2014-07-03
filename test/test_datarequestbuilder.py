@@ -14,3 +14,11 @@ class TestDataRequestBuilder(TestCase):
         request = ApiRequest(None, None, None)
         with self.assertRaises(ValueError):
             self.builder.build(request)
+
+    def test_creates_data_request(self):
+        request = ApiRequest("123", "80.12", "-110.30")
+    
+        data_request = self.builder.build(request)
+
+        self.assertEquals(80.12, data_request.latitude)
+        self.assertEquals(-110.3, data_request.longitude)
