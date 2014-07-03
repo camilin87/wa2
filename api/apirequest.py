@@ -3,3 +3,14 @@ class ApiRequest(object):
         self.api_key = api_key
         self.latitude_str = lat_str
         self.longitude_str = long_str
+
+    def __str__(self):
+        description_format = (
+            "api_key='{0}'" +
+            "latitude_str='{1}', longitude_str='{2}'"
+        )
+        return self.__class__.__name__ + " " + description_format.format(
+            self.api_key,
+            self.latitude_str,
+            self.longitude_str
+        )
