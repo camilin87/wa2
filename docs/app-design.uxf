@@ -6,22 +6,10 @@
     <coordinates>
       <x>896</x>
       <y>1056</y>
-      <w>384</w>
+      <w>680</w>
       <h>336</h>
     </coordinates>
     <panel_attributes>engine
-bg=gray</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Package</type>
-    <coordinates>
-      <x>1320</x>
-      <y>1056</y>
-      <w>256</w>
-      <h>336</h>
-    </coordinates>
-    <panel_attributes>bo
 bg=gray</panel_attributes>
     <additional_attributes/>
   </element>
