@@ -7,6 +7,9 @@ class ApiResponse(object):
         if not isinstance(return_code, int):
             raise ValueError("return_code should be an int value")
 
+        if not error_msg:
+            error_msg = ""
+
         self.result = str(return_code)
         self.errormsg = error_msg
         self.summary = summary

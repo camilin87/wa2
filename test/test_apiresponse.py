@@ -35,3 +35,7 @@ class TestApiResponse(TestCase):
             response = ApiResponse(3.3, "", "", 50, 0, 0)
         with self.assertRaises(ValueError):
             response = ApiResponse(3.0, "", "", 50, 0, 0)
+
+    def test_error_message_assumes_a_default_value(self):
+        response = ApiResponse(3, None, "", 50, 0, 0)
+        self.assertEquals("", response.errormsg)
