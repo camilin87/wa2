@@ -11,6 +11,8 @@ class TestDataRequestController(TestCase):
         self.assertIsNotNone(DataRequestController(None, None))
 
     def _verify_no_data(self, api_response):
+        self.assertIsNotNone(api_response.errormsg)
+        self.assertNotEquals("", api_response.errormsg)
         self.assertEquals("NA", api_response.summary)
         self.assertEquals("-1", api_response.pop)
         self.assertEquals("-1", api_response.intensity)
