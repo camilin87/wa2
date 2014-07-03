@@ -78,3 +78,15 @@ class TestApiResponse(TestCase):
         with self.assertRaises(ValueError):
             response = ApiResponse(3, "", "NA", 50, "0", 0)
 
+    def test_precipitation_type_is_required(self):
+        with self.assertRaises(ValueError):
+            ApiResponse(3, 3.1415, 40, 45, 0, None)
+
+    def test_precipitation_type_should_be_an_int(self):
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", 50, 0, 0.3)
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", 50, 0, 4.0)
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", 50, 0, "0")
+
