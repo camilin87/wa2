@@ -1,5 +1,6 @@
 from unittest import TestCase
 from api.apirequest import ApiRequest
+from api import returncode
 
 
 class TestApiRequest(TestCase):
@@ -20,3 +21,9 @@ class TestApiRequest(TestCase):
         self.assertTrue("api_key='api key'" in actual_str)
         self.assertTrue("latitude_str='90.30'" in actual_str)
         self.assertTrue("longitude_str='4.99'" in actual_str)
+
+    def _error_code_should_be(self, expected_error_code, for_request):
+        self.assertEquals(expected_error_code, for_request.validate())
+
+    def test_valid_request(self):
+        self._error_code_should_be(returncode.OK, ApiRequest("abc", "90.30", "4.99"))
