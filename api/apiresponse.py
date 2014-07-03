@@ -4,23 +4,16 @@ class ApiResponse(object):
         return_code, error_msg, summary_str,
         pop_percent, intensity_type, precipitation_type
     ):
-        if not isinstance(return_code, int):
-            raise ValueError("return_code should be an int value")
-
-        if not error_msg:
-            error_msg = ""
-
         if not summary_str:
             raise ValueError("summary_str is required")
 
-        if not isinstance(pop_percent, int):
-            raise ValueError("pop_percent should be an int value")
+        ApiResponse._should_be_int("return_code", return_code)
+        ApiResponse._should_be_int("pop_percent", pop_percent)
+        ApiResponse._should_be_int("intensity_type", intensity_type)
+        ApiResponse._should_be_int("precipitation_type", precipitation_type)
 
-        if not isinstance(intensity_type, int):
-            raise ValueError("intensity_type should be an int value")
-
-        if not isinstance(precipitation_type, int):
-            raise ValueError("precipitation_type should be an int value")
+        if not error_msg:
+            error_msg = ""
 
         self.result = str(return_code)
         self.errormsg = str(error_msg)
@@ -28,3 +21,8 @@ class ApiResponse(object):
         self.pop = str(pop_percent)
         self.intensity = str(intensity_type)
         self.precip = str(precipitation_type)
+
+    @staticmethod
+    def _should_be_int(param_name, param_value):
+        if not isinstance(param_value, int):
+            raise ValueError("{0} should be an int value".format(param_name))

@@ -89,4 +89,3 @@ class TestApiResponse(TestCase):
             response = ApiResponse(3, "", "NA", 50, 0, 4.0)
         with self.assertRaises(ValueError):
             response = ApiResponse(3, "", "NA", 50, 0, "0")
-
