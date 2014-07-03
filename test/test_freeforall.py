@@ -3,14 +3,14 @@ from api.freeforall import FreeForAll
 
 
 class TestFreeForAll(TestCase):
+    def _key_should_be(self, api_key, expected_valid_value):
+        self.assertEquals(expected_valid_value, FreeForAll().is_valid(api_key))
+
     def test_any_key_is_valid(self):
-        self.assertTrue(FreeForAll().is_valid("my key"))
-        self.assertEquals(True, FreeForAll().is_valid("my key"))
+        self._key_should_be("my key", True)
 
     def test_null_keys_are_not_valid(self):
-        self.assertFalse(FreeForAll().is_valid(None))
-        self.assertEquals(False, FreeForAll().is_valid(None))
+        self._key_should_be(None, False)
 
     def test_empty_keys_are_not_valid(self):
-        self.assertFalse(FreeForAll().is_valid(""))
-        self.assertEquals(False, FreeForAll().is_valid(""))
+        self._key_should_be("", False)
