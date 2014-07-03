@@ -34,3 +34,13 @@ class TestApiRequest(TestCase):
                 returncode.PARAM_KEY_ERROR,
                 ApiRequest(api_key, "90.30", "4.99")
             )
+
+    def test_invalid_latitude(self):
+        invalid_coordinates = [
+            None, "", "a", "2"*101, "-2", "-90.211", "99.0", "3.99.99", "-6.9"
+        ]
+        for latitude in invalid_coordinates:
+            self._error_code_should_be(
+                returncode.PARAM_LAT_ERROR,
+                ApiRequest("abc", latitude, "4.99")
+            )

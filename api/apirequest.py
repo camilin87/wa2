@@ -1,4 +1,5 @@
 from api import returncode
+from re import match
 
 
 class ApiRequest(object):
@@ -10,6 +11,10 @@ class ApiRequest(object):
     def validate(self):
         if not self.api_key or len(self.api_key) > __MAX_PARAM_LENGTH__:
             return returncode.PARAM_KEY_ERROR
+
+        if not self.latitude_str or not match(r"^\-?\d{1,2}\.{1}\d{2}$", self.latitude_str):
+            return returncode.PARAM_LAT_ERROR
+
         return returncode.OK
 
     def __str__(self):
