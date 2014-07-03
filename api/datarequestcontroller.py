@@ -19,19 +19,11 @@ class DataRequestController(object):
         self._intensity_type = -1
         self._precipitation_type = -1
 
-        self._api_key_str = None
-        self._latitude_str = None
-        self._longitude_str = None
-
     def get(self, api_key_str, latitude_str, longitude_str):
         self._reset_state()
 
-        self._api_key_str = api_key_str
-        self._latitude_str = latitude_str
-        self._longitude_str = longitude_str
-
         try:
-            self._get_internal()
+            self._get_internal(api_key_str, latitude_str, longitude_str)
         except Exception as err:
             self._return_error(returncode.UNEXPECTED_ERROR, str(err))
 
@@ -47,30 +39,24 @@ class DataRequestController(object):
             self._precipitation_type
         )
 
-    def _get_internal(self):
-        request = ApiRequest(
-            self._api_key_str,
-            self._latitude_str,
-            self._longitude_str
-        )
+    def _get_internal(self, api_key_str, latitude_str, longitude_str):
+        request = ApiRequest(api_key_str, latitude_str, longitude_str)
         validation_result = request.validate()
 
         if validation_result != returncode.OK:
             self._return_error(validation_result, "Invalid Request Parameters")
             return
 
-        data_request = None
         try:
             data_request = self.builder.build(request)
         except ValueError as err:
             self._return_error(returncode.ERROR_BUILDING_REQUEST, str(err))
             return
 
-        if not self.validator.is_valid(self._api_key_str):
+        if not self.validator.is_valid(api_key_str):
             self._return_error(returncode.INVALID_API_KEY, "Invalid Api Key")
             return
 
-        data_response = None
         try:
             data_response = self.retriever.retrieve(data_request)
         except TransmissionError as err:
