@@ -26,3 +26,17 @@ class ApiResponse(object):
     def _should_be_int(param_name, param_value):
         if not isinstance(param_value, int):
             raise ValueError("{0} should be an int value".format(param_name))
+
+    def __str__(self):
+        description_format = (
+            "result={0}, errormsg='{1}', summary='{2}'" +
+            "pop={3}, intensity={4}, precip={5}"
+        )
+        return self.__class__.__name__ + " " + description_format.format(
+            self.result,
+            self.errormsg,
+            self.summary,
+            self.pop,
+            self.intensity,
+            self.precip
+        )

@@ -24,6 +24,26 @@ class TestApiResponse(TestCase):
         self.assertEquals(str(intensitytype.LIGHT), response.intensity)
         self.assertEquals(str(precipitationtype.SNOW), response.precip)
 
+    def test_str(self):
+        response = ApiResponse(
+            returncode.OK,
+            "No error",
+            "Rainy day",
+            50,
+            intensitytype.LIGHT,
+            precipitationtype.SNOW
+        )
+
+        actual_str = str(response)
+
+        self.assertTrue(response.__class__.__name__ in actual_str)
+        self.assertTrue("result={0}".format(returncode.OK) in actual_str)
+        self.assertTrue("errormsg='No error'" in actual_str)
+        self.assertTrue("summary='Rainy day'" in actual_str)
+        self.assertTrue("pop=50" in actual_str)
+        self.assertTrue("intensity={0}".format(intensitytype.LIGHT) in actual_str)
+        self.assertTrue("precip={0}".format(precipitationtype.SNOW) in actual_str)
+
     def test_return_code_is_required(self):
         with self.assertRaises(ValueError):
             response = ApiResponse(None, "", "NA", 50, 0, 0)
