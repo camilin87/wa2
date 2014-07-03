@@ -15,6 +15,9 @@ class ApiRequest(object):
         if not self.latitude_str or not match(r"^\-?\d{1,2}\.{1}\d{2}$", self.latitude_str):
             return returncode.PARAM_LAT_ERROR
 
+        if not self.longitude_str or not match(r"^\-?1?\d{1,2}\.{1}\d{2}$", self.longitude_str):
+            return returncode.PARAM_LONG_ERROR
+
         return returncode.OK
 
     def __str__(self):

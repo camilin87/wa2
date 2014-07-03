@@ -37,10 +37,20 @@ class TestApiRequest(TestCase):
 
     def test_invalid_latitude(self):
         invalid_coordinates = [
-            None, "", "a", "2"*101, "-2", "-90.211", "99.0", "3.99.99", "-6.9"
+            None, "", "a", "2"*101, "-2", "-90.211", "99.0", "3.99.99", "-6.9", "-101.00"
         ]
         for latitude in invalid_coordinates:
             self._error_code_should_be(
                 returncode.PARAM_LAT_ERROR,
                 ApiRequest("abc", latitude, "4.99")
+            )
+
+    def test_invalid_longitude(self):
+        invalid_coordinates = [
+            None, "", "a", "2"*101, "-2", "-90.211", "99.0", "3.99.99", "-6.9", "-201.00"
+        ]
+        for longitude in invalid_coordinates:
+            self._error_code_should_be(
+                returncode.PARAM_LONG_ERROR,
+                ApiRequest("abc", "4.99", longitude)
             )
