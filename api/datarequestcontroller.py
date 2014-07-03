@@ -67,11 +67,21 @@ class DataRequestController(object):
             self._return_error(returncode.INVALID_API_KEY, "Invalid Api Key")
             return
 
+        data_response = None
         try:
-            self.retriever.retrieve(None)
+            data_response = self.retriever.retrieve(data_request)            
         except TransmissionError as err:
             self._return_error(returncode.EXTERNAL_API_ERROR, str(err))
             return
+
+        self._read_data_response_data(data_response)
+        self._return_code = returncode.OK
+
+    def _read_data_response_data(self, data_response):
+        self._summary_str = data_response.summary_str
+        self._pop_percent = data_response.pop_percent
+        self._intensity_type = data_response.intensity
+        self._precipitation_type = data_response.precipitation
 
     def _return_error(self, return_code, error_message):
         self._return_code = return_code

@@ -6,6 +6,8 @@ from api.apirequest import ApiRequest
 from api.datarequestbuilder import DataRequestBuilder
 from engine.transmissionerror import TransmissionError
 from api.freeforall import FreeForAll
+from engine import intensitytype
+from engine import precipitationtype
 
 
 class TestDataRequestController(TestCase):
@@ -98,3 +100,33 @@ class TestDataRequestController(TestCase):
         self.assertEquals(str(returncode.UNEXPECTED_ERROR), response.result)
         self.assertEquals("Unexpected Error", response.errormsg)
         self._verify_no_data(response)
+
+    def test_returns_retriever_result(self):
+        seeded_data_request = MagicMock()
+
+        builder_mock = MagicMock()
+        builder_mock.build.return_value = seeded_data_request
+
+        data_response = MagicMock()
+        data_response.summary_str = "Hail day"
+        data_response.pop_percent = 32
+        data_response.intensity = intensitytype.MODERATE
+        data_response.precipitation = precipitationtype.HAIL
+
+        def retrieve_func(data_req):
+            if data_req == seeded_data_request:
+                return data_response
+            raise NotImplementedError("Calling retrieve with invalid arguments")
+
+        retriever_mock = MagicMock()
+        retriever_mock.retrieve = MagicMock(side_effect=retrieve_func)
+        controller = DataRequestController(retriever_mock, builder_mock, FreeForAll())
+
+        response = controller.get("123456", "-69.23", "-130.45")
+
+        self.assertEquals(str(returncode.OK), response.result)
+        self.assertEquals("", response.errormsg)
+        self.assertEquals("Hail day", response.summary)
+        self.assertEquals("32", response.pop)
+        self.assertEquals(str(intensitytype.MODERATE), response.intensity)
+        self.assertEquals(str(precipitationtype.HAIL), response.precip)
