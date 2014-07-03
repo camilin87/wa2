@@ -9,7 +9,7 @@ class ApiRequest(object):
         self.longitude_str = long_str
 
     def validate(self):
-        if not self.api_key or len(self.api_key) > __MAX_PARAM_LENGTH__:
+        if not self.api_key or not match(r"^[a-zA-Z0-9]{1,100}$", self.api_key):
             return returncode.PARAM_KEY_ERROR
 
         if not self.latitude_str or not match(r"^\-?\d{1,2}\.{1}\d{2}$", self.latitude_str):
@@ -30,5 +30,3 @@ class ApiRequest(object):
             self.latitude_str,
             self.longitude_str
         )
-
-__MAX_PARAM_LENGTH__ = 100

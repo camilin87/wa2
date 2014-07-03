@@ -35,13 +35,16 @@ class TestApiRequest(TestCase):
             ApiRequest("a"*100, "90.30", "184.99"),
             ApiRequest("123", "-90.30", "184.99"),
             ApiRequest("a", "-90.30", "-184.99"),
-            ApiRequest("a", "-0.30", "1.99")
+            ApiRequest("aAb4Rf", "-0.30", "1.99")
         ]
         for request in l_requests:
             self._should_be_valid(request)
 
     def test_invalid_api_key(self):
-        for api_key in [None, "", "a"*101]:
+        invalid_keys = [
+            None, "", "a"*101, "-", "#$%#$%@"
+        ]
+        for api_key in invalid_keys:
             self._error_code_should_be(
                 returncode.PARAM_KEY_ERROR,
                 ApiRequest(api_key, "90.30", "4.99")
