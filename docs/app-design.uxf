@@ -75,8 +75,8 @@ returns</panel_attributes>
     <coordinates>
       <x>322</x>
       <y>1519</y>
-      <w>1995</w>
-      <h>42</h>
+      <w>1994</w>
+      <h>41</h>
     </coordinates>
     <panel_attributes>lt=:</panel_attributes>
     <additional_attributes>21;28;1981;21</additional_attributes>
@@ -120,8 +120,8 @@ bg=gray</panel_attributes>
     <coordinates>
       <x>322</x>
       <y>0</y>
-      <w>41</w>
-      <h>1560</h>
+      <w>35</w>
+      <h>1554</h>
     </coordinates>
     <panel_attributes>lt=:</panel_attributes>
     <additional_attributes>28;21;21;1547</additional_attributes>
@@ -244,8 +244,8 @@ bg=gray</panel_attributes>
     <coordinates>
       <x>1183</x>
       <y>1106</y>
-      <w>91</w>
-      <h>91</h>
+      <w>90</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>21;77;77;21</additional_attributes>
@@ -255,8 +255,8 @@ bg=gray</panel_attributes>
     <coordinates>
       <x>1260</x>
       <y>1106</y>
-      <w>70</w>
-      <h>91</h>
+      <w>69</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>56;77;21;21</additional_attributes>
@@ -333,8 +333,8 @@ bg=gray</panel_attributes>
     <coordinates>
       <x>1085</x>
       <y>1288</y>
-      <w>35</w>
-      <h>105</h>
+      <w>34</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>21;21;21;91</additional_attributes>
