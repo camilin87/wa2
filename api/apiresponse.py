@@ -16,6 +16,9 @@ class ApiResponse(object):
         if not isinstance(pop_percent, int):
             raise ValueError("pop_percent should be an int value")
 
+        if not isinstance(intensity_type, int):
+            raise ValueError("intensity_type should be an int value")
+
         self.result = str(return_code)
         self.errormsg = str(error_msg)
         self.summary = str(summary_str)

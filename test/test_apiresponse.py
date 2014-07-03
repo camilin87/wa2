@@ -65,3 +65,16 @@ class TestApiResponse(TestCase):
             response = ApiResponse(3, "", "NA", 50.0, 0, 0)
         with self.assertRaises(ValueError):
             response = ApiResponse(3, "", "NA", 50.3, 0, 0)
+
+    def test_intensity_type_is_required(self):
+        with self.assertRaises(ValueError):
+            ApiResponse(3, 3.1415, 40, 45, None, 0)
+
+    def test_intensity_type_should_be_an_int(self):
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", 50, 0.3, 0)
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", 50, 4.0, 0)
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", 50, "0", 0)
+
