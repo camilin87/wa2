@@ -11,7 +11,7 @@ class ApiResponse(object):
             error_msg = ""
 
         self.result = str(return_code)
-        self.errormsg = error_msg
+        self.errormsg = str(error_msg)
         self.summary = summary
         self.pop = str(pop_percent)
         self.intensity = str(intensity_type)

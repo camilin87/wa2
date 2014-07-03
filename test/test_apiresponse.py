@@ -39,3 +39,7 @@ class TestApiResponse(TestCase):
     def test_error_message_assumes_a_default_value(self):
         response = ApiResponse(3, None, "", 50, 0, 0)
         self.assertEquals("", response.errormsg)
+
+    def test_error_message_becomes_a_string(self):
+        response = ApiResponse(3, 3.1415, "", 50, 0, 0)
+        self.assertEquals("3.1415", response.errormsg)
