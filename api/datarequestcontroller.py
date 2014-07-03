@@ -19,3 +19,5 @@ class DataRequestController(object):
             data_request = self.builder.build(request)
         except ValueError as err:
             return ApiResponse(returncode.ERROR_BUILDING_REQUEST, str(err), "NA", -1, -1, -1)
+
+        return ApiResponse(returncode.INVALID_API_KEY, "Invalid Api Key", "NA", -1, -1, -1)

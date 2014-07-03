@@ -63,3 +63,14 @@ class TestDataRequestController(TestCase):
 
         self.assertEquals(str(returncode.ERROR_BUILDING_REQUEST), response.result)
         self._verify_no_data(response)
+
+    def test_invalid_api_key(self):
+        key_validator = MagicMock()
+        key_validator.is_valid.return_value = False;
+        controller = DataRequestController(DataRequestBuilder(), key_validator)
+
+        response = controller.get("123456", "69.23", "130.45")
+
+        self.assertEquals(str(returncode.INVALID_API_KEY), response.result)
+        self.assertEquals("Invalid Api Key", response.errormsg)
+        self._verify_no_data(response)
