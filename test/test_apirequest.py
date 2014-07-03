@@ -25,8 +25,20 @@ class TestApiRequest(TestCase):
     def _error_code_should_be(self, expected_error_code, for_request):
         self.assertEquals(expected_error_code, for_request.validate())
 
+    def _should_be_valid(self, request):
+        self._error_code_should_be(returncode.OK, request)
+
     def test_valid_request(self):
-        self._error_code_should_be(returncode.OK, ApiRequest("abc", "90.30", "4.99"))
+        l_requests = [
+            ApiRequest("abc", "90.30", "4.99"),
+            ApiRequest("abc", "90.30", "184.99"),
+            ApiRequest("a"*100, "90.30", "184.99"),
+            ApiRequest("123", "-90.30", "184.99"),
+            ApiRequest("a", "-90.30", "-184.99"),
+            ApiRequest("a", "-0.30", "1.99")
+        ]
+        for request in l_requests:
+            self._should_be_valid(request)
 
     def test_invalid_api_key(self):
         for api_key in [None, "", "a"*101]:
