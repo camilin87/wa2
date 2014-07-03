@@ -1,5 +1,6 @@
 from api.apirequest import ApiRequest
 from api.apiresponse import ApiResponse
+from api import returncode
 
 
 class DataRequestController(object):
@@ -9,4 +10,6 @@ class DataRequestController(object):
     def get(self, api_key_str, latitude_str, longitude_str):
         request = ApiRequest(api_key_str, latitude_str, longitude_str)
         validation_result = request.validate()
-        return ApiResponse(validation_result, "Invalid Request Parameters", "NA", -1, -1, -1)
+
+        if validation_result != returncode.OK:
+            return ApiResponse(validation_result, "Invalid Request Parameters", "NA", -1, -1, -1)
