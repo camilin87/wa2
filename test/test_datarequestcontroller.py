@@ -20,3 +20,8 @@ class TestDataRequestController(TestCase):
         response = self.controller.get("", "12.23", "23.45")
 
         self.assertEquals(expected_returncode, response.result)
+        self.assertEquals("Invalid Request Parameters", response.errormsg)
+        self.assertEquals("NA", response.summary)
+        self.assertEquals("-1", response.pop)
+        self.assertEquals("-1", response.intensity)
+        self.assertEquals("-1", response.precip)

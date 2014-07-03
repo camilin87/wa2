@@ -9,4 +9,4 @@ class DataRequestController(object):
     def get(self, api_key_str, latitude_str, longitude_str):
         request = ApiRequest(api_key_str, latitude_str, longitude_str)
         validation_result = request.validate()
-        return ApiResponse(validation_result, "", "NA", -1, -1, -1)
+        return ApiResponse(validation_result, "Invalid Request Parameters", "NA", -1, -1, -1)
