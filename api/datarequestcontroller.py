@@ -1,11 +1,14 @@
 from api.apirequest import ApiRequest
 from api.apiresponse import ApiResponse
 from api import returncode
+from engine.transmissionerror import TransmissionError
 
 
 class DataRequestController(object):
     def __init__(self, data_retriever, data_request_builder, key_validator):
+        self.retriever = data_retriever
         self.builder = data_request_builder
+        self.validator = key_validator
         self._reset_state()
 
     def _reset_state(self):
@@ -58,7 +61,14 @@ class DataRequestController(object):
             self._return_error(returncode.ERROR_BUILDING_REQUEST, str(err))
             return
 
-        self._return_error(returncode.INVALID_API_KEY, "Invalid Api Key")
+        if not self.validator.is_valid(self._api_key_str):
+            self._return_error(returncode.INVALID_API_KEY, "Invalid Api Key")
+
+        try:
+            self.retriever.retrieve(None)
+        except TransmissionError as err:
+            self._return_error(returncode.EXTERNAL_API_ERROR, str(err))
+            return
 
     def _return_error(self, return_code, error_message):
         self._return_code = return_code

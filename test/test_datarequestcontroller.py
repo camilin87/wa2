@@ -4,6 +4,8 @@ from api.datarequestcontroller import DataRequestController
 from api import returncode
 from api.apirequest import ApiRequest
 from api.datarequestbuilder import DataRequestBuilder
+from engine.transmissionerror import TransmissionError
+from api.freeforall import FreeForAll
 
 
 class TestDataRequestController(TestCase):
@@ -73,4 +75,15 @@ class TestDataRequestController(TestCase):
 
         self.assertEquals(str(returncode.INVALID_API_KEY), response.result)
         self.assertEquals("Invalid Api Key", response.errormsg)
+        self._verify_no_data(response)
+
+    def test_returns_external_api_error_on_transmission_error(self):
+        transmitter = MagicMock()
+        transmitter.retrieve.side_effect = TransmissionError("Transmission Timeout") 
+        controller = DataRequestController(transmitter, DataRequestBuilder(), FreeForAll())
+
+        response = controller.get("123456", "69.23", "130.45")
+
+        self.assertEquals(str(returncode.EXTERNAL_API_ERROR), response.result)
+        self.assertEquals("Transmission Timeout", response.errormsg)
         self._verify_no_data(response)
