@@ -32,6 +32,8 @@ class DataRequestController(object):
 
         try:
             self._get_internal()
+        except Exception as err:
+            self._return_error(returncode.UNEXPECTED_ERROR, str(err))
         finally:
             return ApiResponse(
                 self._return_code,
@@ -63,6 +65,7 @@ class DataRequestController(object):
 
         if not self.validator.is_valid(self._api_key_str):
             self._return_error(returncode.INVALID_API_KEY, "Invalid Api Key")
+            return
 
         try:
             self.retriever.retrieve(None)

@@ -87,3 +87,14 @@ class TestDataRequestController(TestCase):
         self.assertEquals(str(returncode.EXTERNAL_API_ERROR), response.result)
         self.assertEquals("Transmission Timeout", response.errormsg)
         self._verify_no_data(response)
+
+    def test_gracefully_returns_unexpected_error(self):
+        transmitter = MagicMock()
+        transmitter.retrieve.side_effect = NotImplementedError("Unexpected Error") 
+        controller = DataRequestController(transmitter, DataRequestBuilder(), FreeForAll())
+
+        response = controller.get("123456", "69.23", "130.45")
+
+        self.assertEquals(str(returncode.UNEXPECTED_ERROR), response.result)
+        self.assertEquals("Unexpected Error", response.errormsg)
+        self._verify_no_data(response)
