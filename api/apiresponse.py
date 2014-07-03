@@ -4,6 +4,9 @@ class ApiResponse(object):
         return_code, error_msg, summary,
         pop_percent, intensity_type, precipitation_type
     ):
+        if not isinstance(return_code, int):
+            raise ValueError("return_code should be an int value")
+
         self.result = str(return_code)
         self.errormsg = error_msg
         self.summary = summary

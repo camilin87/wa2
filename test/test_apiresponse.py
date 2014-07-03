@@ -23,3 +23,15 @@ class TestApiResponse(TestCase):
         self.assertEquals("50", response.pop)
         self.assertEquals(str(intensitytype.LIGHT), response.intensity)
         self.assertEquals(str(precipitationtype.SNOW), response.precip)
+
+    def test_return_code_is_required(self):
+        with self.assertRaises(ValueError):
+            response = ApiResponse(None, "", "", 50, 0, 0)
+
+    def test_return_code_should_be_an_int(self):
+        with self.assertRaises(ValueError):
+            response = ApiResponse("3", "", "", 50, 0, 0)
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3.3, "", "", 50, 0, 0)
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3.0, "", "", 50, 0, 0)
