@@ -59,7 +59,7 @@ class TestDataRequestController(TestCase):
     def test_returns_error_building_request_error_code_invalid_longitude(self):
         controller = DataRequestController(DataRequestBuilder(), None)
 
-        response = controller.get("apikey", "99.23", "190.45")
+        response = controller.get("apikey", "79.23", "190.45")
 
         self.assertEquals(str(returncode.ERROR_BUILDING_REQUEST), response.result)
         self._verify_no_data(response)
