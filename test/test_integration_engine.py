@@ -2,10 +2,10 @@ from unittest import TestCase
 from nose.plugins.attrib import attr
 from extapi.citkeys import CitKeys
 from factory.enginefactory import EngineFactory
-from bo.datarequest import DataRequest
+from engine.datarequest import DataRequest
 from forecastio import load_forecast
 from extapi.dataresponsebuilder import DataResponseBuilder
-from bo import precipitationtype
+from engine import precipitationtype
 
 
 @attr("integration")

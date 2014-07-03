@@ -1,5 +1,5 @@
-from bo import intensitytype
-from bo import precipitationtype
+from engine import intensitytype
+from engine import precipitationtype
 
 
 class DataResponse(object):

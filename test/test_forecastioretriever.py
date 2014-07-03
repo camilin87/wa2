@@ -1,6 +1,6 @@
 from unittest import TestCase
 from extapi.forecastioretriever import ForecastIoRetriever
-from bo.datarequest import DataRequest
+from engine.datarequest import DataRequest
 from unittest.mock import MagicMock
 from unittest.mock import patch
 

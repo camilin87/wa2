@@ -1,7 +1,7 @@
 from unittest import TestCase
-from bo.dataresponse import DataResponse
-from bo import intensitytype
-from bo import precipitationtype
+from engine.dataresponse import DataResponse
+from engine import intensitytype
+from engine import precipitationtype
 
 
 class TestDataResponse(TestCase):

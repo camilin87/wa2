@@ -2,8 +2,8 @@ from unittest import TestCase
 from extapi.dataresponsebuilder import DataResponseBuilder
 from unittest.mock import MagicMock
 from unittest.mock import patch
-from bo import intensitytype
-from bo import precipitationtype
+from engine import intensitytype
+from engine import precipitationtype
 
 
 class TestDataResponseBuilder(TestCase):
