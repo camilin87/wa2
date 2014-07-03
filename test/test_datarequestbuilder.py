@@ -17,7 +17,7 @@ class TestDataRequestBuilder(TestCase):
 
     def test_creates_data_request(self):
         request = ApiRequest("123", "80.12", "-110.30")
-    
+
         data_request = self.builder.build(request)
 
         self.assertEquals(80.12, data_request.latitude)

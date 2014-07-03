@@ -70,7 +70,7 @@ class TestDataRequestController(TestCase):
 
     def test_invalid_api_key(self):
         key_validator = MagicMock()
-        key_validator.is_valid.return_value = False;
+        key_validator.is_valid.return_value = False
         controller = DataRequestController(None, DataRequestBuilder(), key_validator)
 
         response = controller.get("123456", "69.23", "130.45")
@@ -81,7 +81,7 @@ class TestDataRequestController(TestCase):
 
     def test_returns_external_api_error_on_transmission_error(self):
         transmitter = MagicMock()
-        transmitter.retrieve.side_effect = TransmissionError("Transmission Timeout") 
+        transmitter.retrieve.side_effect = TransmissionError("Transmission Timeout")
         controller = DataRequestController(transmitter, DataRequestBuilder(), FreeForAll())
 
         response = controller.get("123456", "69.23", "130.45")
@@ -92,7 +92,7 @@ class TestDataRequestController(TestCase):
 
     def test_gracefully_returns_unexpected_error(self):
         transmitter = MagicMock()
-        transmitter.retrieve.side_effect = NotImplementedError("Unexpected Error") 
+        transmitter.retrieve.side_effect = NotImplementedError("Unexpected Error")
         controller = DataRequestController(transmitter, DataRequestBuilder(), FreeForAll())
 
         response = controller.get("123456", "69.23", "130.45")

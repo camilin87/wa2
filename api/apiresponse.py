@@ -1,8 +1,7 @@
 class ApiResponse(object):
     def __init__(
-        self,
-        return_code, error_msg, summary_str,
-        pop_percent, intensity_type, precipitation_type
+            self, return_code, error_msg, summary_str, pop_percent,
+            intensity_type, precipitation_type
     ):
         if not summary_str:
             raise ValueError("summary_str is required")

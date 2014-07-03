@@ -34,15 +34,18 @@ class DataRequestController(object):
             self._get_internal()
         except Exception as err:
             self._return_error(returncode.UNEXPECTED_ERROR, str(err))
-        finally:
-            return ApiResponse(
-                self._return_code,
-                self._error_msg,
-                self._summary_str,
-                self._pop_percent,
-                self._intensity_type,
-                self._precipitation_type
-            )
+
+        return self._result()
+
+    def _result(self):
+        return ApiResponse(
+            self._return_code,
+            self._error_msg,
+            self._summary_str,
+            self._pop_percent,
+            self._intensity_type,
+            self._precipitation_type
+        )
 
     def _get_internal(self):
         request = ApiRequest(
@@ -69,7 +72,7 @@ class DataRequestController(object):
 
         data_response = None
         try:
-            data_response = self.retriever.retrieve(data_request)            
+            data_response = self.retriever.retrieve(data_request)
         except TransmissionError as err:
             self._return_error(returncode.EXTERNAL_API_ERROR, str(err))
             return
