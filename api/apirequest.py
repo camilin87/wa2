@@ -8,7 +8,7 @@ class ApiRequest(object):
         self.longitude_str = long_str
 
     def validate(self):
-        if not self.api_key:
+        if not self.api_key or len(self.api_key) > __MAX_PARAM_LENGTH__:
             return returncode.PARAM_KEY_ERROR
         return returncode.OK
 
@@ -22,3 +22,5 @@ class ApiRequest(object):
             self.latitude_str,
             self.longitude_str
         )
+
+__MAX_PARAM_LENGTH__ = 100
