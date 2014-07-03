@@ -8,7 +8,7 @@ from api.datarequestbuilder import DataRequestBuilder
 
 class TestDataRequestController(TestCase):
     def test_can_be_created(self):
-        self.assertIsNotNone(DataRequestController(None, None))
+        self.assertIsNotNone(DataRequestController(None, None, None))
 
     def _verify_no_data(self, api_response):
         self.assertIsNotNone(api_response.errormsg)
@@ -20,7 +20,7 @@ class TestDataRequestController(TestCase):
 
     def test_returns_invalid_request_validation_error_code_for_api(self):
         expected_returncode = str(ApiRequest("", "12.23", "23.45").validate())
-        controller = DataRequestController(None, None)
+        controller = DataRequestController(None, None, None)
 
         response = controller.get("", "12.23", "23.45")
 
@@ -30,7 +30,7 @@ class TestDataRequestController(TestCase):
 
     def test_returns_invalid_request_validation_error_code_for_latitude(self):
         expected_returncode = str(ApiRequest("API", "", "23.45").validate())
-        controller = DataRequestController(None, None)
+        controller = DataRequestController(None, None, None)
 
         response = controller.get("API", "", "23.45")
 
@@ -40,7 +40,7 @@ class TestDataRequestController(TestCase):
 
     def test_returns_invalid_request_validation_error_code_for_longitude(self):
         expected_returncode = str(ApiRequest("API", "50.00", "23").validate())
-        controller = DataRequestController(None, None)
+        controller = DataRequestController(None, None, None)
 
         response = controller.get("API", "50.00", "23")
 
@@ -49,7 +49,7 @@ class TestDataRequestController(TestCase):
         self._verify_no_data(response)
 
     def test_returns_error_building_request_error_code_invalid_latitude(self):
-        controller = DataRequestController(DataRequestBuilder(), None)
+        controller = DataRequestController(None, DataRequestBuilder(), None)
 
         response = controller.get("apikey", "99.23", "23.45")
 
@@ -57,7 +57,7 @@ class TestDataRequestController(TestCase):
         self._verify_no_data(response)
 
     def test_returns_error_building_request_error_code_invalid_longitude(self):
-        controller = DataRequestController(DataRequestBuilder(), None)
+        controller = DataRequestController(None, DataRequestBuilder(), None)
 
         response = controller.get("apikey", "79.23", "190.45")
 
@@ -67,7 +67,7 @@ class TestDataRequestController(TestCase):
     def test_invalid_api_key(self):
         key_validator = MagicMock()
         key_validator.is_valid.return_value = False;
-        controller = DataRequestController(DataRequestBuilder(), key_validator)
+        controller = DataRequestController(None, DataRequestBuilder(), key_validator)
 
         response = controller.get("123456", "69.23", "130.45")
 

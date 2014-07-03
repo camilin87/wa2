@@ -4,7 +4,7 @@ from api import returncode
 
 
 class DataRequestController(object):
-    def __init__(self, data_request_builder, key_validator):
+    def __init__(self, data_retriever, data_request_builder, key_validator):
         self.builder = data_request_builder
         self._reset_state()
 
