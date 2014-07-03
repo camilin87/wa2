@@ -18,8 +18,8 @@ class TestDataRequestController(TestCase):
 
     def test_returns_invalid_request_validation_error_code(self):
         expected_returncode = str(ApiRequest("", "12.23", "23.45").validate())
-
         controller = DataRequestController(None, None)
+
         response = controller.get("", "12.23", "23.45")
 
         self.assertEquals(expected_returncode, response.result)
@@ -28,8 +28,8 @@ class TestDataRequestController(TestCase):
 
     def test_returns_invalid_request_validation_error_code(self):
         expected_returncode = str(ApiRequest("API", "", "23.45").validate())
-
         controller = DataRequestController(None, None)
+
         response = controller.get("API", "", "23.45")
 
         self.assertEquals(expected_returncode, response.result)
@@ -38,12 +38,16 @@ class TestDataRequestController(TestCase):
 
     def test_returns_error_building_request_error_code_invalid_latitude(self):
         controller = DataRequestController(DataRequestBuilder(), None)
+
         response = controller.get("apikey", "99.23", "23.45")
+
         self.assertEquals(str(returncode.ERROR_BUILDING_REQUEST), response.result)
         self._verify_no_data(response)
 
     def test_returns_error_building_request_error_code_invalid_longitude(self):
         controller = DataRequestController(DataRequestBuilder(), None)
+
         response = controller.get("apikey", "99.23", "190.45")
+
         self.assertEquals(str(returncode.ERROR_BUILDING_REQUEST), response.result)
         self._verify_no_data(response)
