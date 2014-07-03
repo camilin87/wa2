@@ -53,3 +53,15 @@ class TestApiResponse(TestCase):
     def test_summary_becomes_a_string(self):
         response = ApiResponse(3, 3.1415, 40, 50, 0, 0)
         self.assertEquals("40", response.summary)
+
+    def test_pop_percent_is_required(self):
+        with self.assertRaises(ValueError):
+            ApiResponse(3, 3.1415, 40, None, 0, 0)
+
+    def test_pop_percent_should_be_an_int(self):
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", "50", 0, 0)
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", 50.0, 0, 0)
+        with self.assertRaises(ValueError):
+            response = ApiResponse(3, "", "NA", 50.3, 0, 0)
