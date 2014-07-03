@@ -18,7 +18,7 @@ class TestDataRequestController(TestCase):
         self.assertEquals("-1", api_response.intensity)
         self.assertEquals("-1", api_response.precip)
 
-    def test_returns_invalid_request_validation_error_code(self):
+    def test_returns_invalid_request_validation_error_code_for_api(self):
         expected_returncode = str(ApiRequest("", "12.23", "23.45").validate())
         controller = DataRequestController(None, None)
 
@@ -28,11 +28,21 @@ class TestDataRequestController(TestCase):
         self.assertEquals("Invalid Request Parameters", response.errormsg)
         self._verify_no_data(response)
 
-    def test_returns_invalid_request_validation_error_code(self):
+    def test_returns_invalid_request_validation_error_code_for_latitude(self):
         expected_returncode = str(ApiRequest("API", "", "23.45").validate())
         controller = DataRequestController(None, None)
 
         response = controller.get("API", "", "23.45")
+
+        self.assertEquals(expected_returncode, response.result)
+        self.assertEquals("Invalid Request Parameters", response.errormsg)
+        self._verify_no_data(response)
+
+    def test_returns_invalid_request_validation_error_code_for_longitude(self):
+        expected_returncode = str(ApiRequest("API", "50.00", "23").validate())
+        controller = DataRequestController(None, None)
+
+        response = controller.get("API", "50.00", "23")
 
         self.assertEquals(expected_returncode, response.result)
         self.assertEquals("Invalid Request Parameters", response.errormsg)
