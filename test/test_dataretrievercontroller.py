@@ -1,6 +1,6 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
-from api.datarequestcontroller import DataRequestController
+from api.dataretrievercontroller import DataRetrieverController
 from api import returncode
 from api.apirequest import ApiRequest
 from api.datarequestbuilder import DataRequestBuilder
@@ -10,9 +10,9 @@ from engine import intensitytype
 from engine import precipitationtype
 
 
-class TestDataRequestController(TestCase):
+class TestDataRetrieverController(TestCase):
     def test_can_be_created(self):
-        self.assertIsNotNone(DataRequestController(None, None, None))
+        self.assertIsNotNone(DataRetrieverController(None, None, None))
 
     def _verify_no_data(self, api_response):
         self.assertIsNotNone(api_response.errormsg)
@@ -24,7 +24,7 @@ class TestDataRequestController(TestCase):
 
     def test_returns_invalid_request_validation_error_code_for_api(self):
         expected_returncode = str(ApiRequest("", "12.23", "23.45").validate())
-        controller = DataRequestController(None, None, None)
+        controller = DataRetrieverController(None, None, None)
 
         response = controller.get("", "12.23", "23.45")
 
@@ -34,7 +34,7 @@ class TestDataRequestController(TestCase):
 
     def test_returns_invalid_request_validation_error_code_for_latitude(self):
         expected_returncode = str(ApiRequest("API", "", "23.45").validate())
-        controller = DataRequestController(None, None, None)
+        controller = DataRetrieverController(None, None, None)
 
         response = controller.get("API", "", "23.45")
 
@@ -44,7 +44,7 @@ class TestDataRequestController(TestCase):
 
     def test_returns_invalid_request_validation_error_code_for_longitude(self):
         expected_returncode = str(ApiRequest("API", "50.00", "23").validate())
-        controller = DataRequestController(None, None, None)
+        controller = DataRetrieverController(None, None, None)
 
         response = controller.get("API", "50.00", "23")
 
@@ -53,7 +53,7 @@ class TestDataRequestController(TestCase):
         self._verify_no_data(response)
 
     def test_returns_error_building_request_error_code_invalid_latitude(self):
-        controller = DataRequestController(None, DataRequestBuilder(), None)
+        controller = DataRetrieverController(None, DataRequestBuilder(), None)
 
         response = controller.get("apikey", "99.23", "23.45")
 
@@ -61,7 +61,7 @@ class TestDataRequestController(TestCase):
         self._verify_no_data(response)
 
     def test_returns_error_building_request_error_code_invalid_longitude(self):
-        controller = DataRequestController(None, DataRequestBuilder(), None)
+        controller = DataRetrieverController(None, DataRequestBuilder(), None)
 
         response = controller.get("apikey", "79.23", "190.45")
 
@@ -71,7 +71,7 @@ class TestDataRequestController(TestCase):
     def test_invalid_api_key(self):
         key_validator = MagicMock()
         key_validator.is_valid.return_value = False
-        controller = DataRequestController(None, DataRequestBuilder(), key_validator)
+        controller = DataRetrieverController(None, DataRequestBuilder(), key_validator)
 
         response = controller.get("123456", "69.23", "130.45")
 
@@ -82,7 +82,7 @@ class TestDataRequestController(TestCase):
     def test_returns_external_api_error_on_transmission_error(self):
         transmitter = MagicMock()
         transmitter.retrieve.side_effect = TransmissionError("Transmission Timeout")
-        controller = DataRequestController(transmitter, DataRequestBuilder(), FreeForAll())
+        controller = DataRetrieverController(transmitter, DataRequestBuilder(), FreeForAll())
 
         response = controller.get("123456", "69.23", "130.45")
 
@@ -93,7 +93,7 @@ class TestDataRequestController(TestCase):
     def test_gracefully_returns_unexpected_error(self):
         transmitter = MagicMock()
         transmitter.retrieve.side_effect = NotImplementedError("Unexpected Error")
-        controller = DataRequestController(transmitter, DataRequestBuilder(), FreeForAll())
+        controller = DataRetrieverController(transmitter, DataRequestBuilder(), FreeForAll())
 
         response = controller.get("123456", "69.23", "130.45")
 
@@ -120,7 +120,7 @@ class TestDataRequestController(TestCase):
 
         retriever_mock = MagicMock()
         retriever_mock.retrieve = MagicMock(side_effect=retrieve_func)
-        controller = DataRequestController(retriever_mock, builder_mock, FreeForAll())
+        controller = DataRetrieverController(retriever_mock, builder_mock, FreeForAll())
 
         response = controller.get("123456", "-69.23", "-130.45")
 

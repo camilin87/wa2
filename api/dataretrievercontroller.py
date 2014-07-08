@@ -4,7 +4,7 @@ from api import returncode
 from engine.transmissionerror import TransmissionError
 
 
-class DataRequestController(object):
+class DataRetrieverController(object):
     def __init__(self, data_retriever, data_request_builder, key_validator):
         self.retriever = data_retriever
         self.builder = data_request_builder
