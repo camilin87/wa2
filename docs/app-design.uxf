@@ -120,8 +120,8 @@ bg=gray</panel_attributes>
     <coordinates>
       <x>322</x>
       <y>0</y>
-      <w>35</w>
-      <h>1554</h>
+      <w>41</w>
+      <h>1560</h>
     </coordinates>
     <panel_attributes>lt=:</panel_attributes>
     <additional_attributes>28;21;21;1547</additional_attributes>
@@ -481,5 +481,27 @@ bg=gray</panel_attributes>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>21;21;21;91</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>623</x>
+      <y>1435</y>
+      <w>84</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>HarcodedKeys</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>686</x>
+      <y>1379</y>
+      <w>90</w>
+      <h>76</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>77;21;21;63</additional_attributes>
   </element>
 </diagram>
