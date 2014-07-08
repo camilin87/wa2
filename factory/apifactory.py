@@ -5,9 +5,7 @@ from api.hardcodedkeys import HardcodedKeys
 
 class ApiFactory(object):
     @staticmethod
-    def create_data_retriever_controller(data_retriever):
-        return DataRetrieverController(
-            data_retriever,
-            DataRequestBuilder(),
-            HardcodedKeys()
-        )
+    def create_data_retriever_controller(data_retriever, key_validator=None):
+        if not key_validator:
+            key_validator = HardcodedKeys()
+        return DataRetrieverController(data_retriever, DataRequestBuilder(), key_validator)

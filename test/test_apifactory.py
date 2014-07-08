@@ -16,3 +16,11 @@ class TestEngineFactory(TestCase):
         self.assertEquals(data_retriever_mock, controller.retriever)
         self.assertIsInstance(controller.builder, DataRequestBuilder)
         self.assertIsInstance(controller.validator, HardcodedKeys)
+
+    def test_creates_custom_data_retriever_controller(self):
+        key_validator_mock = MagicMock()
+
+        controller = ApiFactory.create_data_retriever_controller(MagicMock(), key_validator_mock)
+
+        self.assertIsInstance(controller, DataRetrieverController)
+        self.assertEquals(key_validator_mock, controller.validator)
