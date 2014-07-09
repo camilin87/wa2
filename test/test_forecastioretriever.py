@@ -37,6 +37,7 @@ class TestForecastIoRetriever(TestCase):
     @patch("extapi.forecastioretriever.load_forecast")
     def test_wraps_ext_api_errors_with_transmission_error(self, forecast_mock):
         seeded_exception = RequestException("connection error")
+
         def fake_load_forecast(key, lat, lng):
             raise seeded_exception
         forecast_mock.side_effect = fake_load_forecast
