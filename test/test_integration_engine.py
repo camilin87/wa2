@@ -3,9 +3,9 @@ from nose.plugins.attrib import attr
 from extapi.citkeys import CitKeys
 from factory.enginefactory import EngineFactory
 from engine.datarequest import DataRequest
-from forecastio import load_forecast
 from extapi.dataresponsebuilder import DataResponseBuilder
 from engine import precipitationtype
+from forecastiohelper import ForecastIoHelper
 
 
 @attr("integration")
@@ -15,21 +15,9 @@ class TestIntegrationEngine(TestCase):
         self.api_key = key_retriever.key()
         self.data_retriever = EngineFactory.create_data_retriever(key_retriever)
 
-    def _call_api_directly(self, lat, lng):
-        datapoint = load_forecast(self.api_key, lat, lng).currently()
-        result = {
-            "summary": datapoint.summary,
-            "precipIntensity": datapoint.precipIntensity,
-            "precipProbability": datapoint.precipProbability,
-            "precipType": None
-        }
-        if datapoint.precipIntensity > 0:
-            result["precipType"] = datapoint.precipType
-        return result
-
     def _validate_api_call(self, latitude, longitude):
         response = self.data_retriever.retrieve(DataRequest(latitude, longitude))
-        api_response = self._call_api_directly(latitude, longitude)
+        api_response = ForecastIoHelper.call_api_directly(latitude, longitude)
 
         self.assertEquals(api_response["summary"], response.summary_str)
         self.assertEquals(
