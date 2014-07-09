@@ -4,3 +4,6 @@ branch = True
 [report]
 include =
     ./*
+
+omit =
+    ./test/*
