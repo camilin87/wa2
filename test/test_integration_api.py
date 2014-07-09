@@ -6,6 +6,7 @@ from extapi.citkeys import CitKeys
 from api.freeforall import FreeForAll
 from api import returncode 
 from forecastiohelper import ForecastIoHelper
+from engine import intensitytype
 
 
 @attr("integration")
@@ -19,8 +20,9 @@ class TestIntegrationApi(TestCase):
         )
 
     def test_retrieves_hialeah_33012_data(self):
-        response = self.controller.get("123abc", "25.86", "-80.30")
         api_response = ForecastIoHelper.call_api_directly(25.86, -80.30)
+
+        response = self.controller.get("123abc", "25.86", "-80.30")
 
         self.assertEquals(str(returncode.OK), response.result)
         self.assertEquals(api_response["summary"], response.summary)
@@ -28,3 +30,7 @@ class TestIntegrationApi(TestCase):
             str(int(float(api_response["precipProbability"]) * 100)),
             response.pop
         )
+        if float(api_response["precipIntensity"]) < 0.002:
+            self.assertEquals(str(intensitytype.NONE), response.intensity)
+        else:
+            self.assertTrue(int(response.intensity) > intensitytype.NONE)
