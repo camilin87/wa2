@@ -19,10 +19,12 @@ class TestIntegrationApi(TestCase):
             data_retriever, key_validator
         )
 
-    def test_retrieves_hialeah_33012_data(self):
-        api_response = ForecastIoHelper.call_api_directly(25.86, -80.30)
+    def _validate_api_call(self, latitude_str, longitude_str):
+        api_response = ForecastIoHelper.call_api_directly(
+            float(latitude_str), float(longitude_str)
+        )
 
-        response = self.controller.get("123abc", "25.86", "-80.30")
+        response = self.controller.get("123abc", latitude_str, longitude_str)
 
         self.assertEquals(str(returncode.OK), response.result)
         self.assertEquals(api_response["summary"], response.summary)
@@ -34,3 +36,10 @@ class TestIntegrationApi(TestCase):
             self.assertEquals(str(intensitytype.NONE), response.intensity)
         else:
             self.assertTrue(int(response.intensity) > intensitytype.NONE)
+
+
+    def test_retrieves_hialeah_33012_data(self):
+        self._validate_api_call("25.86", "-80.30")
+
+    def test_retrieves_seattle_98045_data(self):
+        self._validate_api_call("47.43", "-121.80")
