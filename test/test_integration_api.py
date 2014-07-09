@@ -4,7 +4,7 @@ from factory.apifactory import ApiFactory
 from factory.enginefactory import EngineFactory
 from extapi.citkeys import CitKeys
 from api.freeforall import FreeForAll
-from api import returncode 
+from api import returncode
 from forecastiohelper import ForecastIoHelper
 from engine import intensitytype
 
@@ -36,7 +36,6 @@ class TestIntegrationApi(TestCase):
             self.assertEquals(str(intensitytype.NONE), response.intensity)
         else:
             self.assertTrue(int(response.intensity) > intensitytype.NONE)
-
 
     def test_retrieves_hialeah_33012_data(self):
         self._validate_api_call("25.86", "-80.30")
