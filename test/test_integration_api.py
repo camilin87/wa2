@@ -4,8 +4,8 @@ from factory.apifactory import ApiFactory
 from factory.enginefactory import EngineFactory
 from extapi.citkeys import CitKeys
 from api.freeforall import FreeForAll
-from forecastio import load_forecast
 from api import returncode 
+from forecastiohelper import ForecastIoHelper
 
 
 @attr("integration")
@@ -18,22 +18,9 @@ class TestIntegrationApi(TestCase):
             data_retriever, key_validator
         )
 
-    def _call_api_directly(self, lat, lng):
-        api_key = CitKeys().key()
-        datapoint = load_forecast(api_key, lat, lng).currently()
-        result = {
-            "summary": datapoint.summary,
-            "precipIntensity": datapoint.precipIntensity,
-            "precipProbability": datapoint.precipProbability,
-            "precipType": None
-        }
-        if datapoint.precipIntensity > 0:
-            result["precipType"] = datapoint.precipType
-        return result
-
     def test_retrieves_hialeah_33012_data(self):
         response = self.controller.get("123abc", "25.86", "-80.30")
-        api_response = self._call_api_directly(25.86, -80.30)
+        api_response = ForecastIoHelper.call_api_directly(25.86, -80.30)
 
         self.assertEquals(str(returncode.OK), response.result)
         self.assertEquals(api_response["summary"], response.summary)
