@@ -3,6 +3,8 @@ from extapi.forecastioretriever import ForecastIoRetriever
 from engine.datarequest import DataRequest
 from unittest.mock import MagicMock
 from unittest.mock import patch
+from requests.exceptions import RequestException
+from engine.transmissionerror import TransmissionError
 
 
 class TestForecastIoRetriever(TestCase):
@@ -31,3 +33,16 @@ class TestForecastIoRetriever(TestCase):
         response = retriever.retrieve(DataRequest(25.86, -80.30))
 
         self.assertEquals(seeded_response, response)
+
+    @patch("extapi.forecastioretriever.load_forecast")
+    def test_wraps_ext_api_errors_with_transmission_error(self, forecast_mock):
+        seeded_exception = RequestException("connection error")
+        def fake_load_forecast(key, lat, lng):
+            raise seeded_exception
+        forecast_mock.side_effect = fake_load_forecast
+
+        with self.assertRaises(TransmissionError) as context:
+            ForecastIoRetriever("api key").retrieve(DataRequest(25.86, -80.30))
+
+        self.assertEquals(seeded_exception, context.exception.__cause__)
+        self.assertEquals("TransmissionError: connection error", str(context.exception))
