@@ -182,3 +182,8 @@ task :report_lines_of_code do
     puts "Test:       #{loc_test}"
     puts "Production: #{loc_prod}"
 end
+
+
+task :run_debug do
+    `python -m bottle --bind 0.0.0.0:8080 --debug --reload webapp.app`
+end
