@@ -72,7 +72,8 @@ end
 def install_pypi_dev_dependencies
     pypi_packages = [
         "nose", "freezegun", "coverage",
-        "pylint", "pep8", "python-forecastio"
+        "pylint", "pep8", "python-forecastio",
+        "bottle"
     ]
     pypi_packages.each do |pkg|
         sh "sudo pip install --upgrade #{pkg}"
