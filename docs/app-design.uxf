@@ -512,7 +512,7 @@ bg=gray</panel_attributes>
       <w>246</w>
       <h>180</h>
     </coordinates>
-    <panel_attributes>webapi
+    <panel_attributes>webapp
 bg=gray</panel_attributes>
     <additional_attributes/>
   </element>
@@ -557,7 +557,7 @@ bg=gray</panel_attributes>
       <w>114</w>
       <h>18</h>
     </coordinates>
-    <panel_attributes>WebApiFactory</panel_attributes>
+    <panel_attributes>WebAppFactory</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
