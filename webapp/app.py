@@ -22,4 +22,4 @@ def retrieve_data(api_key, latitude, longitude):
         "longitude": longitude
     }
 
-run(host='0.0.0.0', port=8080, debug=True)
+run(host='0.0.0.0', port=8080, debug=True, reloader=True)
