@@ -54,6 +54,7 @@ end
 task :install_prod_dependencies do
     system %{curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash}
     system %{pyenv update}
+    system %{sudo apt-get install -y gnumake}
     system %{sudo apt-get install -y gcc}
 
     configure_python_version
