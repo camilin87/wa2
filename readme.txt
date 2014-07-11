@@ -15,7 +15,7 @@ Development machines should have these
 
 Deployment Dependencies
 -----------------------
-- not deployed yet
+> wget -q https://gist.githubusercontent.com/camilin87/d4f99972a912142a43b3/raw/0077b261c0f57f91f10fa4c0fd16020b78341dba/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh
 
 Coding Standards
 ----------------
