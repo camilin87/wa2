@@ -40,6 +40,15 @@ task :install_dev_dependencies do
     refresh_packages
 end
 
+task :install_prod_dependencies do
+    system %{apt-get install -y pyenv}
+
+    configure_python_version
+    switch_to_dev_python_version
+    install_pypi_prod_dependencies
+    refresh_packages
+end
+
 def install_gitstats
     system "git clone --depth 1 git://github.com/hoxu/gitstats.git #{$gitstats_dir}"
     Dir.chdir($gitstats_dir){
@@ -72,11 +81,22 @@ def use_python(python_version)
 end
 
 def install_pypi_dev_dependencies
-    pypi_packages = [
+    dev_packages = [
         "nose", "freezegun", "coverage",
         "pylint", "pep8", "python-forecastio",
         "bottle"
     ]
+    install_pypi_packages dev_packages
+end
+
+def install_pypi_prod_dependencies
+    prod_packages = [
+        "python-forecastio", "bottle"
+    ]
+    install_pypi_packages prod_packages
+end
+
+def install_pypi_packages(pypi_packages)
     pypi_packages.each do |pkg|
         sh "sudo pip install --upgrade #{pkg}"
     end

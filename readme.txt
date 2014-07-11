@@ -15,7 +15,8 @@ Development machines should have these
 
 Deployment Dependencies
 -----------------------
-> wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh && cd wa2
+> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/wf-bottle && cd wa2 # Make sure to open a new terminal after the first execution finishes.
+> rake install_prod_dependencies
 
 Coding Standards
 ----------------
