@@ -15,7 +15,7 @@ Development machines should have these
 
 Deployment Dependencies
 -----------------------
-> wget -q https://gist.githubusercontent.com/camilin87/d4f99972a912142a43b3/raw/0077b261c0f57f91f10fa4c0fd16020b78341dba/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh
+> wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh && cd wa2
 
 Coding Standards
 ----------------
