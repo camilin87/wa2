@@ -41,7 +41,8 @@ task :install_dev_dependencies do
 end
 
 task :install_prod_dependencies do
-    system %{sudo apt-get install -y pyenv}
+    `curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash`
+    `pyenv update`
 
     configure_python_version
     switch_to_dev_python_version
