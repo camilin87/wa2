@@ -14,11 +14,22 @@ $pep8_report_dir = File.join($reports_dir, "pep8")
 
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"
-    bash_profile = File.expand_path "~/.profile" unless File.exists? bash_profile
 
     if not File.readlines(bash_profile).grep(/pyenv init/).any?
         File.open(bash_profile, "a") do |f|
             f.puts 'eval "$(pyenv init -)"'
+        end
+    end
+end
+
+task :configure_pyenv_linux do
+    bash_profile = File.expand_path "~/.profile"
+
+    if not File.readlines(bash_profile).grep(/pyenv init/).any?
+        File.open(bash_profile, "a") do |f|            
+            f.puts 'export PATH="$HOME/.pyenv/bin:$PATH"'
+            f.puts 'eval "$(pyenv init -)"'
+            f.puts 'eval "$(pyenv virtualenv-init -)"'
         end
     end
 end
