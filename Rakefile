@@ -41,7 +41,7 @@ task :install_dev_dependencies do
 end
 
 task :install_prod_dependencies do
-    system %{apt-get install -y pyenv}
+    system %{sudo apt-get install -y pyenv}
 
     configure_python_version
     switch_to_dev_python_version
