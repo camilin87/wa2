@@ -35,14 +35,9 @@ def install_prod_system_packages
         "libreadline-dev", "libsqlite3-dev",
         "wget", "curl", "llvm",
 
-        "python", "python-dev", "python-pip"
-    ]
-    install_system_dependencies_linux pkg_dependencies
-
-    pypi_global_packages = [
         "uwsgi"
     ]
-    sudo_install_pypi_packages pypi_global_packages
+    install_system_dependencies_linux pkg_dependencies
 end
 
 def install_system_dependencies_linux(packages)
