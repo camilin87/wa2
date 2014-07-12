@@ -13,6 +13,8 @@ end
 task :install_prod_dependencies do
     install_prod_system_packages
     install_pypi_prod_dependencies
+
+    Rake::Task["configure_uwsgi"].execute
 end
 
 def install_prod_system_packages
@@ -33,4 +35,20 @@ def install_pypi_prod_dependencies
         "python-forecastio", "bottle"
     ]
     sudo_install_pypi_packages prod_packages
+end
+
+task :configure_uwsgi do
+    app_available_config = "/etc/uwsgi/apps-available/bottle.ini"
+    app_path = File.join($basedir, "webapp/")
+
+    File.open(app_available_config, "w") do |f|
+        f.puts "[uwsgi]"
+        f.puts "socket = /run/uwsgi/app/bottle/socket"
+        f.puts "chdir = #{app_path}"
+        f.puts "master = true"
+        f.puts "plugins = python"
+        f.puts "file = app.py"
+        f.puts "uid = www-data"
+        f.puts "gid = www-data"
+    end
 end
