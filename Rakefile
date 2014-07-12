@@ -57,11 +57,11 @@ end
 task :install_prod_dependencies do
     system %{curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash}
     system %{pyenv update}
-    pckg_dependencies = [
+    pkg_dependencies = [
         "make", "gcc", "libssl-dev", "openssl",
-        "libreadline-dev", "libbz2-dev", "libsqlite3-dev"
+        "libreadline-dev", "libbz2-dev", "libsqlite3-dev", "python-pip"
     ]
-    pckg_dependencies.each do |pkg|
+    pkg_dependencies.each do |pkg|
         sh "sudo apt-get install -y #{pkg}"
     end
 
