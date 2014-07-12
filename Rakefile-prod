@@ -28,11 +28,5 @@ def install_pypi_prod_dependencies
     prod_packages = [
         "python-forecastio", "bottle", "uwsgi"
     ]
-    install_pypi_packages prod_packages
-end
-
-def install_pypi_packages(pypi_packages)
-    pypi_packages.each do |pkg|
-        sh "pip install --upgrade #{pkg}"
-    end
+    sudo_install_pypi_packages prod_packages
 end

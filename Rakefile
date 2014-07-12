@@ -34,41 +34,6 @@ task :configure_pyenv_linux do
     end
 end
 
-task :install_dev_dependencies_mac do
-    pkg_dependencies = [
-        "pyenv", "xz", "gnuplot --cairo --png"
-    ]
-    install_system_dependencies_mac pkg_dependencies
-
-    system %{sudo easy_install pip}
-
-    Rake::Task["install_dev_dependencies"].execute
-end
-
-def install_system_dependencies_mac(packages)
-    packages.each do |pkg|
-        system "brew install #{pkg}"
-    end
-end
-
-task :install_dev_dependencies do
-    install_gitstats
-
-    install_python $PYTHON_VERSION
-    install_python $PYTHON_VERSION_GIT_STATS
-
-    switch_to_dev_python_version
-    install_pypi_dev_dependencies
-    refresh_packages
-end
-
-def install_gitstats
-    system "git clone --depth 1 git://github.com/hoxu/gitstats.git #{$gitstats_dir}"
-    Dir.chdir($gitstats_dir){
-        sh %{git pull} 
-    }
-end
-
 def install_python(python_version)
     puts "install_python" + python_version
     system "yes N | pyenv install #{python_version}"
@@ -87,13 +52,8 @@ def use_python(python_version)
     sh "pyenv local #{python_version}"
 end
 
-def install_pypi_dev_dependencies
-    dev_packages = [
-        "nose", "freezegun", "coverage",
-        "pylint", "pep8", "python-forecastio",
-        "bottle"
-    ]
-    sudo_install_pypi_packages dev_packages
+def refresh_packages
+    sh %{pyenv rehash}
 end
 
 def sudo_install_pypi_packages(pypi_packages)
@@ -101,11 +61,6 @@ def sudo_install_pypi_packages(pypi_packages)
         sh "sudo pip install --upgrade #{pkg}"
     end
 end
-
-def refresh_packages
-    sh %{pyenv rehash}
-end
-
 
 task :clean => [:clean_pyc] do
     rm_rf $reports_dir

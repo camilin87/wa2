@@ -11,7 +11,7 @@ Development machines should have these
 - homebrew
 
 > sh setup-dev.sh # Make sure to open a new terminal after the execution finishes.
-> rake install_dev_dependencies_mac
+> rake -f Rakefile-setup-dev install_dev_dependencies_mac
 
 Deployment Dependencies
 -----------------------
