@@ -9,6 +9,11 @@ def refresh_packages
 end
 
 def install_python(python_version)
-    puts "install_python" + python_version
-    system "yes N | pyenv install #{python_version}"
+    puts "install_python " + python_version
+    installed_versions = `pyenv versions`
+
+    if not installed_versions.include? python_version
+        sh "pyenv install #{python_version}"
+        puts "WARNING: close this shell before proceeding"
+    end
 end

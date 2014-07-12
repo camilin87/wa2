@@ -10,13 +10,15 @@ Development machines should have these
 - xquartz
 - homebrew
 
-> sh setup-dev.sh # Make sure to open a new terminal after the execution finishes.
-> rake -f Rakefile-setup-dev install_dev_dependencies_mac
+> sh setup-dev.sh
+> rake -f Rakefile-setup-dev install_dev_system_dependencies_mac
+> rake -f Rakefile-setup-dev install_dev_python_dependencies_mac
 
 Deployment Dependencies
 -----------------------
-> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/wf-bottle && cd wa2 # Make sure to open a new terminal after the first execution finishes.
-> cd ~/wa2 && rake -f Rakefile-prod install_prod_dependencies
+> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/wf-bottle && cd wa2
+> cd ~/wa2 && rake -f Rakefile-prod install_prod_system_dependencies
+> cd ~/wa2 && rake -f Rakefile-prod install_prod_python_dependencies
 
 Coding Standards
 ----------------

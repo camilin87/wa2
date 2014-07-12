@@ -10,14 +10,19 @@ task :configure_pyenv_linux do
             f.puts 'eval "$(pyenv init -)"'
             f.puts 'eval "$(pyenv virtualenv-init -)"'
         end
+
+        puts "WARNING: close this shell before proceeding"
     end
 end
 
-task :install_prod_dependencies do
+task :install_prod_system_dependencies do
     system %{curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash}
     system %{pyenv update}
     install_prod_system_packages
     install_python $PYTHON_VERSION
+end
+
+task :install_prod_python_dependencies do
     switch_to_dev_python_version
     install_pypi_prod_dependencies
     refresh_packages

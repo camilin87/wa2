@@ -11,7 +11,7 @@ task :configure_pyenv do
     end
 end
 
-task :install_dev_dependencies_mac do
+task :install_dev_system_dependencies_mac do
     pkg_dependencies = [
         "pyenv", "xz", "gnuplot --cairo --png"
     ]
@@ -19,7 +19,10 @@ task :install_dev_dependencies_mac do
 
     system %{sudo easy_install pip}
 
-    Rake::Task["install_dev_dependencies"].execute
+    install_gitstats
+
+    install_python $PYTHON_VERSION
+    install_python $PYTHON_VERSION_GIT_STATS
 end
 
 def install_system_dependencies_mac(packages)
@@ -28,12 +31,7 @@ def install_system_dependencies_mac(packages)
     end
 end
 
-task :install_dev_dependencies do
-    install_gitstats
-
-    install_python $PYTHON_VERSION
-    install_python $PYTHON_VERSION_GIT_STATS
-
+task :install_dev_python_dependencies_mac do
     switch_to_dev_python_version
     install_pypi_dev_dependencies
     refresh_packages
