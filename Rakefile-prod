@@ -26,7 +26,7 @@ end
 def install_prod_system_packages
     pkg_dependencies = [
         "make", "gcc", "libssl-dev", "openssl", "build-essential",
-        "libreadline-dev", "libbz2-dev", "libsqlite3-dev", "python-pip"
+        "libreadline-dev", "libbz2-dev", "libsqlite3-dev", "python-pip", "python-dev"
     ]
     install_system_dependencies_linux pkg_dependencies
 end
