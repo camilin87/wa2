@@ -35,7 +35,7 @@ def install_prod_system_packages
         "libreadline-dev", "libsqlite3-dev",
         "wget", "curl", "llvm",
 
-        "python-pip", "python-dev"
+        "python-dev"
     ]
     install_system_dependencies_linux pkg_dependencies
 end
@@ -50,5 +50,5 @@ def install_pypi_prod_dependencies
     prod_packages = [
         "python-forecastio", "bottle", "uwsgi"
     ]
-    sudo_install_pypi_packages prod_packages
+    install_pypi_packages prod_packages
 end

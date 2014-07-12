@@ -4,6 +4,12 @@ def sudo_install_pypi_packages(pypi_packages)
     end
 end
 
+def install_pypi_packages(pypi_packages)
+    pypi_packages.each do |pkg|
+        sh "pip install --upgrade #{pkg}"
+    end
+end
+
 def refresh_packages
     sh %{pyenv rehash}
 end
