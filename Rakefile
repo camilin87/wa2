@@ -103,7 +103,7 @@ def install_pypi_dev_dependencies
         "pylint", "pep8", "python-forecastio",
         "bottle"
     ]
-    install_pypi_packages dev_packages
+    sudo_install_pypi_packages dev_packages
 end
 
 def install_pypi_prod_dependencies
@@ -113,11 +113,18 @@ def install_pypi_prod_dependencies
     install_pypi_packages prod_packages
 end
 
-def install_pypi_packages(pypi_packages)
+def sudo_install_pypi_packages(pypi_packages)
     pypi_packages.each do |pkg|
         sh "sudo pip install --upgrade #{pkg}"
     end
 end
+
+def install_pypi_packages(pypi_packages)
+    pypi_packages.each do |pkg|
+        sh "pip install --upgrade #{pkg}"
+    end
+end
+
 
 def refresh_packages
     sh %{pyenv rehash}
