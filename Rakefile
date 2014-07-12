@@ -45,7 +45,10 @@ end
 
 task :install_dev_dependencies do
     install_gitstats
-    configure_python_version
+
+    install_python $PYTHON_VERSION
+    install_python $PYTHON_VERSION_GIT_STATS
+
     switch_to_dev_python_version
     install_pypi_dev_dependencies
     refresh_packages
@@ -54,9 +57,16 @@ end
 task :install_prod_dependencies do
     system %{curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash}
     system %{pyenv update}
-    system %{sudo apt-get install -y make gcc libssl-dev openssl }
+    pckg_dependencies = [
+        "make", "gcc", "libssl-dev", "openssl",
+        "libreadline-dev", "libbz2-dev", "libsqlite3-dev"
+    ]
+    pckg_dependencies.each do |pkg|
+        sh "sudo apt-get install -y #{pkg}"
+    end
 
-    configure_python_version
+    install_python $PYTHON_VERSION
+
     switch_to_dev_python_version
     install_pypi_prod_dependencies
     refresh_packages
@@ -67,12 +77,6 @@ def install_gitstats
     Dir.chdir($gitstats_dir){
         sh %{git pull} 
     }
-end
-
-def configure_python_version
-    install_python $PYTHON_VERSION
-    install_python $PYTHON_VERSION_GIT_STATS
-    refresh_packages
 end
 
 def install_python(python_version)
