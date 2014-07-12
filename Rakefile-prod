@@ -39,7 +39,7 @@ def install_pypi_prod_dependencies
 end
 
 task :configure_uwsgi do
-    import 'sudo'
+    require 'sudo'
 
     app_available_config = "/etc/uwsgi/apps-available/bottle.ini"
     app_path = File.join($basedir, "webapp/")
