@@ -54,4 +54,5 @@ task :configure_uwsgi do
     end
 
     sh "sudo mv #{temp_path} #{app_available_config}"
+    sh "sudo ln -s #{app_available_config} /etc/uwsgi/apps-enabled/bottle.ini"
 end
