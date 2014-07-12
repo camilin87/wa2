@@ -16,7 +16,7 @@ Development machines should have these
 
 Deployment Dependencies
 -----------------------
-> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/install-uwsgi && cd wa2
+> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/no-pyenv-prod && cd wa2
 > cd ~/wa2 && rake -f Rakefile-prod install_prod_system_dependencies
 > cd ~/wa2 && rake -f Rakefile-prod install_prod_python_dependencies
 
