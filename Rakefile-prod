@@ -2,14 +2,13 @@ import 'Rakefile'
 import 'Rakefile-setup-common'
 
 task :configure_pyenv_linux do
-    bash_profile = File.expand_path "~/.bash_aliases"
+    alias_filename = "~/.bash_aliases"
+    bash_profile = File.expand_path alias_filename
 
     if not File.readlines(bash_profile).grep(/pyenv init/).any?
-        File.open(bash_profile, "a") do |f|
-            f.puts 'alias python=python3'
-        end
+        f.puts "echo alias python=python3 >> #{alias_filename}"
 
-        `source ~/.bash_aliases`
+        `source #{alias_filename}`
     end
 end
 
