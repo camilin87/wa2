@@ -6,8 +6,7 @@ task :configure_pyenv_linux do
     bash_profile = File.expand_path alias_filename
 
     if not File.exists? bash_profile or not File.readlines(bash_profile).grep(/pyenv init/).any?
-        f.puts "echo alias python=python3 >> #{alias_filename}"
-
+        `echo alias python=python3 >> #{alias_filename}`
         `source #{alias_filename}`
     end
 end
