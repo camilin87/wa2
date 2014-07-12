@@ -2,39 +2,24 @@ import 'Rakefile'
 import 'Rakefile-setup-common'
 
 task :configure_pyenv_linux do
-    bash_profile = File.expand_path "~/.profile"
+    bash_profile = File.expand_path "~/.bash_aliases"
 
     if not File.readlines(bash_profile).grep(/pyenv init/).any?
-        File.open(bash_profile, "a") do |f|            
-            f.puts 'export PATH="$HOME/.pyenv/bin:$PATH"'
-            f.puts 'eval "$(pyenv init -)"'
-            f.puts 'eval "$(pyenv virtualenv-init -)"'
+        File.open(bash_profile, "a") do |f|
+            f.puts 'alias python=python3'
         end
 
-        puts "WARNING: close this shell before proceeding"
+        `source ~/.bash_aliases`
     end
 end
 
-task :install_prod_system_dependencies do
-    system %{curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash}
-    system %{pyenv update}
+task :install_prod_dependencies do
     install_prod_system_packages
-    install_python $PYTHON_VERSION
-end
-
-task :install_prod_python_dependencies do
-    switch_to_dev_python_version
     install_pypi_prod_dependencies
-    refresh_packages
 end
 
 def install_prod_system_packages
     pkg_dependencies = [
-        "make", "build-essential",
-        "libssl-dev", "zlib1g-dev", "libbz2-dev",
-        "libreadline-dev", "libsqlite3-dev",
-        "wget", "curl", "llvm",
-
         "uwsgi"
     ]
     install_system_dependencies_linux pkg_dependencies
