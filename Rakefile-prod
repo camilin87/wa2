@@ -33,5 +33,5 @@ def install_pypi_prod_dependencies
     prod_packages = [
         "python-forecastio", "bottle"
     ]
-    install_pypi_packages prod_packages
+    sudo_install_pypi_packages prod_packages
 end
