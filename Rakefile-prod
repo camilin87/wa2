@@ -40,25 +40,29 @@ end
 task :configure_uwsgi do
     app_available_config = "/etc/uwsgi/apps-available/bottle.ini"
     app_path = File.join($basedir, "webapp/")
+    lines = [
+        "[uwsgi]",
+        "socket = /run/uwsgi/app/bottle/socket",
+        "chdir = #{app_path}",
+        "master = true",
+        "plugins = python",
+        "file = app.py",
+        "uid = www-data",
+        "gid = www-data"
+    ]
+    sudo_write_config app_available_config, lines
+    sh "sudo ln -s #{app_available_config} /etc/uwsgi/apps-enabled/bottle.ini"
+    sh "sudo service uwsgi restart"    
+end
+
+def sudo_write_config(file_path, lines)
     temp_path = File.join($basedir, "temp_file.txt")
 
     File.open(temp_path, "w") do |f|
-        lines = [
-            "[uwsgi]",
-            "socket = /run/uwsgi/app/bottle/socket",
-            "chdir = #{app_path}",
-            "master = true",
-            "plugins = python",
-            "file = app.py",
-            "uid = www-data",
-            "gid = www-data"
-        ]
         lines.each do |l|
             f.puts l
         end
     end
 
-    sh "sudo mv #{temp_path} #{app_available_config}"
-    sh "sudo ln -s #{app_available_config} /etc/uwsgi/apps-enabled/bottle.ini"
-    sh "sudo service uwsgi restart"
+    sh "sudo mv #{temp_path} #{file_path}"
 end
