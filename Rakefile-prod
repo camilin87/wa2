@@ -43,14 +43,19 @@ task :configure_uwsgi do
     temp_path = File.join($basedir, "temp_file.txt")
 
     File.open(temp_path, "w") do |f|
-        f.puts "[uwsgi]"
-        f.puts "socket = /run/uwsgi/app/bottle/socket"
-        f.puts "chdir = #{app_path}"
-        f.puts "master = true"
-        f.puts "plugins = python"
-        f.puts "file = app.py"
-        f.puts "uid = www-data"
-        f.puts "gid = www-data"
+        lines = [
+            "[uwsgi]",
+            "socket = /run/uwsgi/app/bottle/socket",
+            "chdir = #{app_path}",
+            "master = true",
+            "plugins = python",
+            "file = app.py",
+            "uid = www-data",
+            "gid = www-data"
+        ]
+        lines.each do |l|
+            f.puts l
+        end
     end
 
     sh "sudo mv #{temp_path} #{app_available_config}"
