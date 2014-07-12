@@ -1,5 +1,4 @@
 import 'Rakefile'
-import 'Rakefile-setup-common'
 
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"
@@ -23,6 +22,10 @@ task :install_dev_system_dependencies_mac do
 
     install_python $PYTHON_VERSION
     install_python $PYTHON_VERSION_GIT_STATS
+end
+
+def refresh_packages
+    sh %{pyenv rehash}
 end
 
 def install_system_dependencies_mac(packages)
@@ -51,4 +54,19 @@ def install_pypi_dev_dependencies
         "bottle"
     ]
     sudo_install_pypi_packages dev_packages
+end
+
+def install_python(python_version)
+    puts "install_python " + python_version
+    installed_versions = `pyenv versions`
+
+    if not installed_versions.include? python_version
+        sh "pyenv install #{python_version}"
+        puts "WARNING: close this shell before proceeding"
+    end
+end
+
+def switch_to_dev_python_version
+    use_python $PYTHON_VERSION
+    ensure_python_is $PYTHON_VERSION
 end
