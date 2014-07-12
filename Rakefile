@@ -62,30 +62,6 @@ task :install_dev_dependencies do
     refresh_packages
 end
 
-task :install_prod_dependencies do
-    system %{curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash}
-    system %{pyenv update}
-    install_prod_system_packages
-    install_python $PYTHON_VERSION
-    switch_to_dev_python_version
-    install_pypi_prod_dependencies
-    refresh_packages
-end
-
-def install_prod_system_packages
-    pkg_dependencies = [
-        "make", "gcc", "libssl-dev", "openssl",
-        "libreadline-dev", "libbz2-dev", "libsqlite3-dev", "python-pip"
-    ]
-    install_system_dependencies_linux pkg_dependencies
-end
-
-def install_system_dependencies_linux(packages)
-    packages.each do |pkg|
-        sh "sudo apt-get install -y #{pkg}"
-    end
-end
-
 def install_gitstats
     system "git clone --depth 1 git://github.com/hoxu/gitstats.git #{$gitstats_dir}"
     Dir.chdir($gitstats_dir){
@@ -120,25 +96,11 @@ def install_pypi_dev_dependencies
     sudo_install_pypi_packages dev_packages
 end
 
-def install_pypi_prod_dependencies
-    prod_packages = [
-        "python-forecastio", "bottle", "uwsgi"
-    ]
-    install_pypi_packages prod_packages
-end
-
 def sudo_install_pypi_packages(pypi_packages)
     pypi_packages.each do |pkg|
         sh "sudo pip install --upgrade #{pkg}"
     end
 end
-
-def install_pypi_packages(pypi_packages)
-    pypi_packages.each do |pkg|
-        sh "pip install --upgrade #{pkg}"
-    end
-end
-
 
 def refresh_packages
     sh %{pyenv rehash}
