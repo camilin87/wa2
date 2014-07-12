@@ -12,18 +12,12 @@ $gitstats_report_dir = File.join($reports_dir, "gitstats")
 $pylint_report_dir = File.join($reports_dir, "pylint")
 $pep8_report_dir = File.join($reports_dir, "pep8")
 
-def switch_to_dev_python_version
-    use_python $PYTHON_VERSION
-end
-
-def switch_to_git_stats_python_version
-    use_python $PYTHON_VERSION_GIT_STATS
-end
-
 def use_python(python_version)
     puts "use_python" + python_version
     sh "pyenv local #{python_version}"
+end
 
+def ensure_python_is(python_version)
     current_version = `python -V`
     error_msg = "Error using python version. Expected: #{python_version} Actual: #{current_version}"
     fail error_msg unless current_version.include? python_version
@@ -110,12 +104,12 @@ task :report_pep8 => :create_reports_dir do
 end
 
 task :report_gitstats => :create_reports_dir do
-    switch_to_git_stats_python_version
+    use_python $PYTHON_VERSION_GIT_STATS
 
     gitstats_path = File.join($gitstats_dir, "gitstats")
     sh "#{gitstats_path} #{$basedir} #{$gitstats_report_dir} > /dev/null"
 
-    switch_to_dev_python_version
+    use_python $PYTHON_VERSION
 end
 
 task :report_lines_of_code do

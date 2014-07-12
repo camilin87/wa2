@@ -23,3 +23,8 @@ def install_python(python_version)
         puts "WARNING: close this shell before proceeding"
     end
 end
+
+def switch_to_dev_python_version
+    use_python $PYTHON_VERSION
+    ensure_python_is $PYTHON_VERSION
+end
