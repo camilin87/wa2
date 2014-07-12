@@ -12,33 +12,6 @@ $gitstats_report_dir = File.join($reports_dir, "gitstats")
 $pylint_report_dir = File.join($reports_dir, "pylint")
 $pep8_report_dir = File.join($reports_dir, "pep8")
 
-task :configure_pyenv do
-    bash_profile = File.expand_path "~/.bash_profile"
-
-    if not File.readlines(bash_profile).grep(/pyenv init/).any?
-        File.open(bash_profile, "a") do |f|
-            f.puts 'eval "$(pyenv init -)"'
-        end
-    end
-end
-
-task :configure_pyenv_linux do
-    bash_profile = File.expand_path "~/.profile"
-
-    if not File.readlines(bash_profile).grep(/pyenv init/).any?
-        File.open(bash_profile, "a") do |f|            
-            f.puts 'export PATH="$HOME/.pyenv/bin:$PATH"'
-            f.puts 'eval "$(pyenv init -)"'
-            f.puts 'eval "$(pyenv virtualenv-init -)"'
-        end
-    end
-end
-
-def install_python(python_version)
-    puts "install_python" + python_version
-    system "yes N | pyenv install #{python_version}"
-end
-
 def switch_to_dev_python_version
     use_python $PYTHON_VERSION
 end
@@ -50,16 +23,6 @@ end
 def use_python(python_version)
     puts "use_python" + python_version
     sh "pyenv local #{python_version}"
-end
-
-def refresh_packages
-    sh %{pyenv rehash}
-end
-
-def sudo_install_pypi_packages(pypi_packages)
-    pypi_packages.each do |pkg|
-        sh "sudo pip install --upgrade #{pkg}"
-    end
 end
 
 task :clean => [:clean_pyc] do
@@ -159,7 +122,6 @@ task :report_lines_of_code do
     puts "Test:       #{loc_test}"
     puts "Production: #{loc_prod}"
 end
-
 
 task :run_debug do
     `python -m bottle --bind 0.0.0.0:8080 --debug --reload webapp.app`
