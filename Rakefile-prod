@@ -5,7 +5,7 @@ task :configure_pyenv_linux do
     alias_filename = "~/.bash_aliases"
     bash_profile = File.expand_path alias_filename
 
-    if not File.exists? bash_profile or not File.readlines(bash_profile).grep(/pyenv init/).any?
+    if not File.exists? bash_profile or not File.readlines(bash_profile).grep(/python=python3/).any?
         `echo alias python=python3 >> #{alias_filename}`
         puts "WARNING: close this shell before proceeding"
     end
