@@ -23,6 +23,10 @@ end
 def use_python(python_version)
     puts "use_python" + python_version
     sh "pyenv local #{python_version}"
+
+    current_version = `python -V`
+    error_msg = "Error using python version. Expected: #{python_version} Actual: #{current_version}"
+    fail error_msg unless current_version.include? python_version
 end
 
 task :clean => [:clean_pyc] do
