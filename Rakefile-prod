@@ -11,7 +11,6 @@ task :configure_pyenv_linux do
 end
 
 task :install_prod_dependencies do
-    system "sudo gem install sudo"
     install_prod_system_packages
     install_pypi_prod_dependencies
 
@@ -39,21 +38,20 @@ def install_pypi_prod_dependencies
 end
 
 task :configure_uwsgi do
-    require 'sudo'
-
     app_available_config = "/etc/uwsgi/apps-available/bottle.ini"
     app_path = File.join($basedir, "webapp/")
+    temp_path = File.join($basedir, "temp_file.txt")
 
-    Sudo::Wrapper.run do |sudo|
-        sudo[File].open(app_available_config, "w") do |f|
-            f.puts "[uwsgi]"
-            f.puts "socket = /run/uwsgi/app/bottle/socket"
-            f.puts "chdir = #{app_path}"
-            f.puts "master = true"
-            f.puts "plugins = python"
-            f.puts "file = app.py"
-            f.puts "uid = www-data"
-            f.puts "gid = www-data"
-        end
+    File.open(temp_path, "w") do |f|
+        f.puts "[uwsgi]"
+        f.puts "socket = /run/uwsgi/app/bottle/socket"
+        f.puts "chdir = #{app_path}"
+        f.puts "master = true"
+        f.puts "plugins = python"
+        f.puts "file = app.py"
+        f.puts "uid = www-data"
+        f.puts "gid = www-data"
     end
+
+    sh "sudo mv #{temp_path} #{app_available_config}"
 end
