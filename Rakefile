@@ -35,12 +35,20 @@ task :configure_pyenv_linux do
 end
 
 task :install_dev_dependencies_mac do
-    system %{brew install pyenv}
-    system %{brew install xz}
-    system %{brew install gnuplot --cairo --png}
+    pkg_dependencies = [
+        "pyenv", "xz", "gnuplot --cairo --png"
+    ]
+    install_system_dependencies_mac pkg_dependencies
+
     system %{sudo easy_install pip}
 
     Rake::Task["install_dev_dependencies"].execute
+end
+
+def install_system_dependencies_mac(packages)
+    packages.each do |pkg|
+        system "brew install #{pkg}"
+    end
 end
 
 task :install_dev_dependencies do
@@ -57,19 +65,25 @@ end
 task :install_prod_dependencies do
     system %{curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash}
     system %{pyenv update}
+    install_prod_system_packages
+    install_python $PYTHON_VERSION
+    switch_to_dev_python_version
+    install_pypi_prod_dependencies
+    refresh_packages
+end
+
+def install_prod_system_packages
     pkg_dependencies = [
         "make", "gcc", "libssl-dev", "openssl",
         "libreadline-dev", "libbz2-dev", "libsqlite3-dev", "python-pip"
     ]
-    pkg_dependencies.each do |pkg|
+    install_system_dependencies_linux pkg_dependencies
+end
+
+def install_system_dependencies_linux(packages)
+    packages.each do |pkg|
         sh "sudo apt-get install -y #{pkg}"
     end
-
-    install_python $PYTHON_VERSION
-
-    switch_to_dev_python_version
-    install_pypi_prod_dependencies
-    refresh_packages
 end
 
 def install_gitstats
@@ -108,7 +122,7 @@ end
 
 def install_pypi_prod_dependencies
     prod_packages = [
-        "python-forecastio", "bottle"
+        "python-forecastio", "bottle", "uwsgi"
     ]
     install_pypi_packages prod_packages
 end
