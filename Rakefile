@@ -125,7 +125,7 @@ task :report_lines_of_code do
 end
 
 task :run_debug do
-    `python -m bottle --bind 0.0.0.0:8080 --debug --reload webapp.app`
+    # `python -m bottle --bind 0.0.0.0:8080 --debug --reload webapp.app`
 end
 
 def sudo_install_pypi_packages(pypi_packages)
