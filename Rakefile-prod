@@ -44,32 +44,32 @@ def install_pypi_prod_dependencies
 end
 
 task :configure_uwsgi do
-    # app_available_config = "/etc/uwsgi/apps-available/bottle.ini"
-    # lines = [
-    #     "[uwsgi]",
-    #     "socket = /run/uwsgi/app/bottle/socket",
-    #     "chdir = #{webapp_path}",
-    #     "master = true",
-    #     "plugins = python",
-    #     "file = app.py",
-    #     "uid = www-data",
-    #     "gid = www-data"
-    # ]
-    # sudo_write_config app_available_config, lines
-    # system "sudo ln -s #{app_available_config} /etc/uwsgi/apps-enabled/bottle.ini"
-    # sh "sudo service uwsgi restart"    
+    app_py_path = File.join(webapp_path, "app.py")
+    uwsgi_config = File.join(basedir, "uwsgi_config.ini")
+    lines = [
+        "[uwsgi]",
+        "socket = 127.0.0.1:3031",
+        "wsgi-file = #{app_py_path}",
+        "callable = app",
+        "processes = 4",
+        "threads = 2",
+        "stats = 127.0.0.1:9191"
+    ]
+    write_config uwsgi_config, lines
 end
 
 def sudo_write_config(file_path, lines)
     temp_path = File.join(basedir, "temp_file.txt")
+    write_config(temp_path, lines)
+    sh "sudo mv #{temp_path} #{file_path}"
+end
 
-    File.open(temp_path, "w") do |f|
+def write_config(file_path, lines)
+    File.open(file_path, "w") do |f|
         lines.each do |l|
             f.puts l
         end
     end
-
-    sh "sudo mv #{temp_path} #{file_path}"
 end
 
 task :configure_nginx do
