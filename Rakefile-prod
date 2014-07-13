@@ -53,7 +53,8 @@ task :configure_uwsgi do
         "callable = app",
         "processes = 4",
         "threads = 2",
-        "stats = 127.0.0.1:9191"
+        "stats = 127.0.0.1:9191",
+        "master = true"
     ]
     write_config uwsgi_config, lines
 end
