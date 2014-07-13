@@ -94,8 +94,9 @@ task :configure_nginx do
         "    }",
         "}"
     ]
+    system "sudo service nginx stop"
     sudo_write_config nginx_config, lines
     system "sudo mv /etc/nginx/sites-enabled/default /etc/nginx/conf.d/"
     system "sudo ln -s #{nginx_config} /etc/nginx/sites-enabled/bottle"
-    sh "sudo service nginx restart"
+    sh "sudo service nginx start"
 end
