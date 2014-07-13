@@ -72,7 +72,7 @@ def sudo_write_config(file_path, lines)
 end
 
 task :configure_nginx do
-    nginx_config = "/etc/nginx/conf.d/bottle.conf"
+    nginx_config = "/etc/nginx/sites-available/bottle"
     lines = [
         "upstream _bottle {",
         "    server unix:/run/uwsgi/app/bottle/socket;",
@@ -96,7 +96,7 @@ task :configure_nginx do
     ]
     system "sudo service nginx stop"
     sudo_write_config nginx_config, lines
-    system "sudo mv /etc/nginx/sites-enabled/default /etc/nginx/conf.d/"
+    system "sudo rm -f /etc/nginx/sites-enabled/default"
     system "sudo ln -s #{nginx_config} /etc/nginx/sites-enabled/bottle"
     sh "sudo service nginx start"
 end
