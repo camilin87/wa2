@@ -1,5 +1,7 @@
 import 'Rakefile'
 
+$app_path = File.join($basedir, "webapp/")
+
 task :configure_pyenv_linux do
     alias_filename = "~/.bash_aliases"
     bash_profile = File.expand_path alias_filename
@@ -15,6 +17,7 @@ task :install_prod_dependencies do
     install_pypi_prod_dependencies
 
     Rake::Task["configure_uwsgi"].execute
+    Rake::Task["configure_nginx"].execute
 end
 
 def install_prod_system_packages
@@ -39,11 +42,10 @@ end
 
 task :configure_uwsgi do
     app_available_config = "/etc/uwsgi/apps-available/bottle.ini"
-    app_path = File.join($basedir, "webapp/")
     lines = [
         "[uwsgi]",
         "socket = /run/uwsgi/app/bottle/socket",
-        "chdir = #{app_path}",
+        "chdir = #{$app_path}",
         "master = true",
         "plugins = python",
         "file = app.py",
@@ -65,4 +67,31 @@ def sudo_write_config(file_path, lines)
     end
 
     sh "sudo mv #{temp_path} #{file_path}"
+end
+
+task :configure_nginx do
+    nginx_config = "/etc/nginx/conf.d/bottle.conf"
+    lines = [
+        "upstream _bottle {",
+        "    server unix:/run/uwsgi/app/bottle/socket;",
+        "}",
+        "",
+        "server {",
+        "    listen [::]:80;",
+        "    listen 80;",
+        "    server_name deb.ngx.cc;",
+        "    root #{$app_path};",
+        "",
+        "    location / {",
+        "        try_files $uri @uwsgi;",
+        "    }",
+        "",
+        "    location @uwsgi {",
+        "        include uwsgi_params;",
+        "        uwsgi_pass _bottle;",
+        "    }",
+        "}"
+    ]
+    sudo_write_config nginx_config, lines
+    sh "sudo service nginx restart"    
 end
