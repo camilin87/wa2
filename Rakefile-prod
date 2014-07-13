@@ -25,7 +25,7 @@ end
 def install_prod_system_packages
     pkg_dependencies = [
         "python-pip",
-        "nginx"
+        "uwsgi", "nginx"
     ]
     install_system_dependencies_linux pkg_dependencies
 end
