@@ -1,12 +1,15 @@
 task :default => [:clean, :all_tests, :reports]
 
-$basedir = File.expand_path "."
-$gitstats_dir = File.join($basedir, ".git-stats-src/")
+def basedir
+   return File.expand_path "."
+end
+
+$gitstats_dir = File.join(basedir, ".git-stats-src/")
 
 $PYTHON_VERSION = "3.4.0"
 $PYTHON_VERSION_GIT_STATS = "2.7.6"
 
-$reports_dir = File.join($basedir, "code-reports/")
+$reports_dir = File.join(basedir, "code-reports/")
 $cover_report_dir = File.join($reports_dir, "coverage")
 $gitstats_report_dir = File.join($reports_dir, "gitstats")
 $pylint_report_dir = File.join($reports_dir, "pylint")
@@ -55,7 +58,7 @@ task :reports => [
 task :report_coverage => [:clean_pyc, :create_reports_dir] do
     sh %{nosetests -s --with-coverage --cover-html --cover-erase}
 
-    $cover_report_old = File.join($basedir, "cover")
+    $cover_report_old = File.join(basedir, "cover")
     File.rename($cover_report_old, $cover_report_dir)
 end
 
@@ -75,11 +78,11 @@ task :report_pylint => :create_reports_dir do
 end
 
 def get_packages
-    Dir.entries($basedir).select { |entry|
+    Dir.entries(basedir).select { |entry|
         File.directory? entry and !(entry =='.' || entry == '..') 
     }.map {|dir| {
         :name => dir,
-        :path => File.join($basedir, dir)
+        :path => File.join(basedir, dir)
     }}.compact.select { |dir_info|
         File.exists? File.join(dir_info[:path], "__init__.py")
     }
@@ -107,14 +110,14 @@ task :report_gitstats => :create_reports_dir do
     use_python $PYTHON_VERSION_GIT_STATS
 
     gitstats_path = File.join($gitstats_dir, "gitstats")
-    sh "#{gitstats_path} #{$basedir} #{$gitstats_report_dir} > /dev/null"
+    sh "#{gitstats_path} #{basedir} #{$gitstats_report_dir} > /dev/null"
 
     use_python $PYTHON_VERSION
 end
 
 task :report_lines_of_code do
-    loc_test = `find #{$basedir} -type f -iname '*.py' -path '*/test/*' | xargs wc -l | tail -1`
-    loc_prod = `find #{$basedir} -type f -iname '*.py' ! -path '*/test/*' | xargs wc -l | tail -1`
+    loc_test = `find #{basedir} -type f -iname '*.py' -path '*/test/*' | xargs wc -l | tail -1`
+    loc_prod = `find #{basedir} -type f -iname '*.py' ! -path '*/test/*' | xargs wc -l | tail -1`
 
     puts "Lines of Code"
     puts "Test:       #{loc_test}"

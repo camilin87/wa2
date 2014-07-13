@@ -1,6 +1,8 @@
 import 'Rakefile'
 
-$app_path = File.join($basedir, "webapp/")
+def webapp_path
+    return File.join(basedir, "webapp/")
+end
 
 task :configure_pyenv_linux do
     alias_filename = "~/.bash_aliases"
@@ -45,7 +47,7 @@ task :configure_uwsgi do
     lines = [
         "[uwsgi]",
         "socket = /run/uwsgi/app/bottle/socket",
-        "chdir = #{$app_path}",
+        "chdir = #{webapp_path}",
         "master = true",
         "plugins = python",
         "file = app.py",
@@ -58,7 +60,7 @@ task :configure_uwsgi do
 end
 
 def sudo_write_config(file_path, lines)
-    temp_path = File.join($basedir, "temp_file.txt")
+    temp_path = File.join(basedir, "temp_file.txt")
 
     File.open(temp_path, "w") do |f|
         lines.each do |l|
@@ -80,7 +82,7 @@ task :configure_nginx do
         "    listen [::]:80;",
         "    listen 80;",
         "    server_name deb.ngx.cc;",
-        "    root #{$app_path};",
+        "    root #{webapp_path};",
         "",
         "    location / {",
         "        try_files $uri @uwsgi;",
@@ -93,5 +95,5 @@ task :configure_nginx do
         "}"
     ]
     sudo_write_config nginx_config, lines
-    sh "sudo service nginx restart"    
+    sh "sudo service nginx restart"
 end
