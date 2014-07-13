@@ -24,7 +24,9 @@ end
 
 def install_prod_system_packages
     pkg_dependencies = [
-        "python-pip", "uwsgi", "nginx"
+        "python-pip", 
+        "build-essential", "python-dev",
+        "nginx"
     ]
     install_system_dependencies_linux pkg_dependencies
 end
@@ -37,26 +39,27 @@ end
 
 def install_pypi_prod_dependencies
     prod_packages = [
+        "uwsgi",
         "python-forecastio", "bottle"
     ]
     sudo_install_pypi_packages prod_packages
 end
 
 task :configure_uwsgi do
-    app_available_config = "/etc/uwsgi/apps-available/bottle.ini"
-    lines = [
-        "[uwsgi]",
-        "socket = /run/uwsgi/app/bottle/socket",
-        "chdir = #{webapp_path}",
-        "master = true",
-        "plugins = python",
-        "file = app.py",
-        "uid = www-data",
-        "gid = www-data"
-    ]
-    sudo_write_config app_available_config, lines
-    system "sudo ln -s #{app_available_config} /etc/uwsgi/apps-enabled/bottle.ini"
-    sh "sudo service uwsgi restart"    
+    # app_available_config = "/etc/uwsgi/apps-available/bottle.ini"
+    # lines = [
+    #     "[uwsgi]",
+    #     "socket = /run/uwsgi/app/bottle/socket",
+    #     "chdir = #{webapp_path}",
+    #     "master = true",
+    #     "plugins = python",
+    #     "file = app.py",
+    #     "uid = www-data",
+    #     "gid = www-data"
+    # ]
+    # sudo_write_config app_available_config, lines
+    # system "sudo ln -s #{app_available_config} /etc/uwsgi/apps-enabled/bottle.ini"
+    # sh "sudo service uwsgi restart"    
 end
 
 def sudo_write_config(file_path, lines)
@@ -72,31 +75,31 @@ def sudo_write_config(file_path, lines)
 end
 
 task :configure_nginx do
-    nginx_config = "/etc/nginx/sites-available/bottle"
-    lines = [
-        "upstream _bottle {",
-        "    server unix:/run/uwsgi/app/bottle/socket;",
-        "}",
-        "",
-        "server {",
-        "    listen 80;",
-        "    listen [::]:80;",        
-        "    server_name _;",
-        "    root #{webapp_path};",
-        "",
-        "    location / {",
-        "        try_files $uri @uwsgi;",
-        "    }",
-        "",
-        "    location @uwsgi {",
-        "        include uwsgi_params;",
-        "        uwsgi_pass _bottle;",
-        "    }",
-        "}"
-    ]
-    system "sudo service nginx stop"
-    sudo_write_config nginx_config, lines
-    system "sudo rm -f /etc/nginx/sites-enabled/default"
-    system "sudo ln -s #{nginx_config} /etc/nginx/sites-enabled/bottle"
-    sh "sudo service nginx start"
+    # nginx_config = "/etc/nginx/sites-available/bottle"
+    # lines = [
+    #     "upstream _bottle {",
+    #     "    server unix:/run/uwsgi/app/bottle/socket;",
+    #     "}",
+    #     "",
+    #     "server {",
+    #     "    listen 80;",
+    #     "    listen [::]:80;",        
+    #     "    server_name _;",
+    #     "    root #{webapp_path};",
+    #     "",
+    #     "    location / {",
+    #     "        try_files $uri @uwsgi;",
+    #     "    }",
+    #     "",
+    #     "    location @uwsgi {",
+    #     "        include uwsgi_params;",
+    #     "        uwsgi_pass _bottle;",
+    #     "    }",
+    #     "}"
+    # ]
+    # system "sudo service nginx stop"
+    # sudo_write_config nginx_config, lines
+    # system "sudo rm -f /etc/nginx/sites-enabled/default"
+    # system "sudo ln -s #{nginx_config} /etc/nginx/sites-enabled/bottle"
+    # sh "sudo service nginx start"
 end
