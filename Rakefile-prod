@@ -18,17 +18,16 @@ task :install_prod_dependencies do
     install_prod_system_packages
     install_pypi_prod_dependencies
 
-    # Rake::Task["configure_uwsgi"].execute
-    # Rake::Task["configure_nginx"].execute
+    Rake::Task["configure_uwsgi"].execute
+    Rake::Task["configure_nginx"].execute
 end
 
 def install_prod_system_packages
-    # pkg_dependencies = [
-    #     "python-pip", 
-    #     "build-essential", "python-dev",
-    #     "nginx"
-    # ]
-    # install_system_dependencies_linux pkg_dependencies
+    pkg_dependencies = [
+        "python-pip",
+        "nginx"
+    ]
+    install_system_dependencies_linux pkg_dependencies
 end
 
 def install_system_dependencies_linux(packages)
@@ -38,11 +37,10 @@ def install_system_dependencies_linux(packages)
 end
 
 def install_pypi_prod_dependencies
-    # prod_packages = [
-    #     "uwsgi",
-    #     "python-forecastio", "bottle"
-    # ]
-    # sudo_install_pypi_packages prod_packages
+    prod_packages = [
+        "python-forecastio", "Flask"
+    ]
+    sudo_install_pypi_packages prod_packages
 end
 
 task :configure_uwsgi do
