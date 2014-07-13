@@ -55,7 +55,7 @@ task :configure_uwsgi do
         "gid = www-data"
     ]
     sudo_write_config app_available_config, lines
-    sh "sudo ln -s #{app_available_config} /etc/uwsgi/apps-enabled/bottle.ini"
+    system "sudo ln -s #{app_available_config} /etc/uwsgi/apps-enabled/bottle.ini"
     sh "sudo service uwsgi restart"    
 end
 
