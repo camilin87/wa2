@@ -57,6 +57,19 @@ task :configure_uwsgi do
         "master = true"
     ]
     write_config uwsgi_config, lines
+
+    upstart_config_path = "/etc/init/wa2_uwsgi.conf"
+    upstart_config_lines = [
+        "start on runlevel [2345]",
+        "stop on runlevel [06]",
+
+        "exec uwsgi #{uwsgi_config}"
+    ]
+
+    if not File.exists? upstart_config_path
+        sudo_write_config upstart_config_path, upstart_config_lines
+        puts "WARNING: Reboot required to launch uwsgi"
+    end
 end
 
 def sudo_write_config(file_path, lines)
