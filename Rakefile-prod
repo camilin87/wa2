@@ -74,31 +74,37 @@ def write_config(file_path, lines)
 end
 
 task :configure_nginx do
-    # nginx_config = "/etc/nginx/sites-available/bottle"
-    # lines = [
-    #     "upstream _bottle {",
-    #     "    server unix:/run/uwsgi/app/bottle/socket;",
-    #     "}",
-    #     "",
-    #     "server {",
-    #     "    listen 80;",
-    #     "    listen [::]:80;",        
-    #     "    server_name _;",
-    #     "    root #{webapp_path};",
-    #     "",
-    #     "    location / {",
-    #     "        try_files $uri @uwsgi;",
-    #     "    }",
-    #     "",
-    #     "    location @uwsgi {",
-    #     "        include uwsgi_params;",
-    #     "        uwsgi_pass _bottle;",
-    #     "    }",
-    #     "}"
-    # ]
-    # system "sudo service nginx stop"
-    # sudo_write_config nginx_config, lines
-    # system "sudo rm -f /etc/nginx/sites-enabled/default"
-    # system "sudo ln -s #{nginx_config} /etc/nginx/sites-enabled/bottle"
-    # sh "sudo service nginx start"
+    nginx_config = "/etc/nginx/sites-available/default"
+    lines = [
+        "upstream uwsgicluster {",
+        "",
+        "    server 127.0.0.1:3031;",
+        "",
+        "}",
+        "",
+        "server {",
+        "",
+        "    access_log /var/log/nginx/access.log;"
+        "    error_log /var/log/nginx/error.log;",
+        "",
+        "    listen 80;",
+        "",
+        "    location / {",
+        "",
+        "       include            uwsgi_params;",
+        "       uwsgi_pass         uwsgicluster;",
+        "",
+        "       proxy_redirect     off;",
+        "       proxy_set_header   Host $host;",
+        "       proxy_set_header   X-Real-IP $remote_addr;",
+        "",
+        "       proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;",
+        "       proxy_set_header   X-Forwarded-Host $server_name;",
+        "",
+        "    }",
+        "}"
+    ]
+    system "sudo service nginx stop"
+    sudo_write_config nginx_config, lines
+    sh "sudo service nginx start"
 end
