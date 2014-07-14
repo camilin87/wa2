@@ -77,30 +77,27 @@ task :configure_nginx do
     nginx_config = "/etc/nginx/sites-available/default"
     lines = [
         "upstream uwsgicluster {",
-        "",
         "    server 127.0.0.1:3031;",
-        "",
         "}",
-        "",
+
         "server {",
-        "",
-        "    access_log /var/log/nginx/access.log;"
+        "    access_log /var/log/nginx/access.log;",
         "    error_log /var/log/nginx/error.log;",
-        "",
+        
         "    listen 80;",
-        "",
+        
         "    location / {",
-        "",
+        
         "       include            uwsgi_params;",
         "       uwsgi_pass         uwsgicluster;",
-        "",
+        
         "       proxy_redirect     off;",
         "       proxy_set_header   Host $host;",
         "       proxy_set_header   X-Real-IP $remote_addr;",
-        "",
+        
         "       proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;",
         "       proxy_set_header   X-Forwarded-Host $server_name;",
-        "",
+        
         "    }",
         "}"
     ]
