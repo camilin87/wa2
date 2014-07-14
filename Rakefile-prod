@@ -46,75 +46,73 @@ end
 task :configure_uwsgi do
     app_py_path = File.join(webapp_path, "app.py")
     uwsgi_config = File.join(basedir, "uwsgi_config.ini")
-    lines = [
-        "[uwsgi]",
-        "socket = 127.0.0.1:3031",
-        "wsgi-file = #{app_py_path}",
-        "callable = app",
-        "processes = 4",
-        "threads = 2",
-        "stats = 127.0.0.1:9191",
-        "master = true"
-    ]
-    write_config uwsgi_config, lines
+    uwsgi_config_contents = %{
+[uwsgi]
+socket = 127.0.0.1:3031
+wsgi-file = #{app_py_path}
+callable = app
+processes = 4
+threads = 2
+stats = 127.0.0.1:9191
+master = true
+}
+    write_config uwsgi_config, uwsgi_config_contents
 
     upstart_config_path = "/etc/init/wa2_uwsgi.conf"
-    upstart_config_lines = [
-        "start on runlevel [2345]",
-        "stop on runlevel [06]",
+    upstart_config_contents = %{
+start on runlevel [2345]
+stop on runlevel [06]
 
-        "exec uwsgi #{uwsgi_config}"
-    ]
+exec uwsgi #{uwsgi_config}
+}
 
     if not File.exists? upstart_config_path
-        sudo_write_config upstart_config_path, upstart_config_lines
+        sudo_write_config upstart_config_path, upstart_config_contents
         puts "WARNING: Reboot required to launch uwsgi"
     end
 end
 
-def sudo_write_config(file_path, lines)
+def sudo_write_config(file_path, file_content)
     temp_path = File.join(basedir, "temp_file.txt")
-    write_config(temp_path, lines)
+    write_config(temp_path, file_content)
     sh "sudo mv #{temp_path} #{file_path}"
 end
 
-def write_config(file_path, lines)
+def write_config(file_path, file_content)
     File.open(file_path, "w") do |f|
-        lines.each do |l|
-            f.puts l
-        end
+        f.puts file_content
     end
 end
 
 task :configure_nginx do
     nginx_config = "/etc/nginx/sites-available/default"
-    lines = [
-        "upstream uwsgicluster {",
-        "    server 127.0.0.1:3031;",
-        "}",
+    config_contents = %{
+upstream uwsgicluster {
+    server 127.0.0.1:3031;
+}
 
-        "server {",
-        "    access_log /var/log/nginx/access.log;",
-        "    error_log /var/log/nginx/error.log;",
-        
-        "    listen 80;",
-        
-        "    location / {",
-        
-        "       include            uwsgi_params;",
-        "       uwsgi_pass         uwsgicluster;",
-        
-        "       proxy_redirect     off;",
-        "       proxy_set_header   Host $host;",
-        "       proxy_set_header   X-Real-IP $remote_addr;",
-        
-        "       proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;",
-        "       proxy_set_header   X-Forwarded-Host $server_name;",
-        
-        "    }",
-        "}"
-    ]
+server {
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    listen 80;
+
+    location / {
+
+       include            uwsgi_params;
+       uwsgi_pass         uwsgicluster;
+
+       proxy_redirect     off;
+       proxy_set_header   Host $host;
+       proxy_set_header   X-Real-IP $remote_addr;
+
+       proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header   X-Forwarded-Host $server_name;
+
+    }
+}
+}
     system "sudo service nginx stop"
-    sudo_write_config nginx_config, lines
+    sudo_write_config nginx_config, config_contents
     sh "sudo service nginx start"
 end
