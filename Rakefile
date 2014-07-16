@@ -26,6 +26,12 @@ def ensure_python_is(python_version)
     fail error_msg unless current_version.include? python_version
 end
 
+def sudo_install_pypi_packages(pypi_packages)
+    pypi_packages.each do |pkg|
+        sh "sudo pip install --upgrade #{pkg}"
+    end
+end
+
 task :clean => [:clean_pyc] do
     rm_rf $reports_dir
 end
@@ -126,10 +132,4 @@ end
 
 task :run_debug do
     `python webapp/app.py`
-end
-
-def sudo_install_pypi_packages(pypi_packages)
-    pypi_packages.each do |pkg|
-        sh "sudo pip install --upgrade #{pkg}"
-    end
 end
