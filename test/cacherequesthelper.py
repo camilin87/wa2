@@ -36,6 +36,9 @@ class CacheRequestHelper(object):
     def _read_request(self):
         self.prev_response = self.curr_response
         response = get(self.url)
+        if response.status_code != 200:
+            raise ValueError("Received Non OK response")
+
         self.curr_response = response.text
         self.request_count += 1
 
