@@ -133,3 +133,16 @@ end
 task :run_debug do
     `python webapp/app.py`
 end
+
+task :validate_cache do
+    url = "http://localhost:8080/rd/AAAA/25.86/-80.30"
+    cache_ttl_sec = 3
+
+    cache_test_output = `python test/cacherequesthelper.py "#{url}" #{cache_ttl_sec}`
+
+    if not cache_test_output.include? "is_cached=True"
+        fail "cache error"
+    else
+        puts "Cache OK"
+    end
+end
