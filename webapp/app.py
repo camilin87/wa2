@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import jsonify
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -13,7 +14,8 @@ def retrieve_data(api_key, latitude, longitude):
         "method": "rd",
         "api_key": api_key,
         "latitude": latitude,
-        "longitude": longitude
+        "longitude": longitude,
+        "timestamp": datetime.utcnow().isoformat()
     })
 
 if __name__ == '__main__':
