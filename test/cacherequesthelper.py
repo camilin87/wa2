@@ -55,7 +55,7 @@ def main(args):
     req_tester = CacheRequestHelper(url)
     is_cached = req_tester.is_cached(cache_ttl_seconds)
 
-    print("is_cached=" + is_cached, "request_count=" + req_tester.request_count)
+    print("is_cached=" + str(is_cached), "request_count=" + str(req_tester.request_count))
 
 if __name__ == "__main__":
     main(argv)
