@@ -6,8 +6,8 @@ from datetime import datetime
 class CacheRequestHelper(object):
     def __init__(self, url):
         self.url = url
-        self.prev_dict = None
-        self.curr_dict = None
+        self.prev_response = None
+        self.curr_response = None
         self.time_start_utc = None
         self.seconds = None
         self.request_count = 0
@@ -34,28 +34,15 @@ class CacheRequestHelper(object):
         return elapsed_seconds >= self.seconds
 
     def _read_request(self):
-        self.prev_dict = self.curr_dict
+        self.prev_response = self.curr_response
         response = get(self.url)
-        self.curr_dict = response.json()
+        self.curr_response = response.text
         self.request_count += 1
 
     def _is_cached(self):
-        if not self.prev_dict: 
+        if not self.prev_response: 
             return True
-        return CacheRequestHelper._dicts_match(self.prev_dict, self.curr_dict)
-
-    @staticmethod
-    def _dicts_match(dict1, dict2):
-        if len(dict1) != len(dict2):
-            return False
-
-        for k, v in dict1.items():
-            if not k in dict2:
-                return False
-            if not v == dict2[k]:
-                return False
-
-        return True
+        return self.prev_response == self.curr_response
 
 def main(args):
     url = args[1]
