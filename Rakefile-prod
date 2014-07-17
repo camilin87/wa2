@@ -97,8 +97,8 @@ upstream uwsgicluster {
 }
 
 server {
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
+    # access_log /var/log/nginx/access.log;
+    # error_log /var/log/nginx/error.log;
 
     listen 80;
 
