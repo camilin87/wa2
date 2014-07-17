@@ -134,9 +134,17 @@ task :run_debug do
     `python webapp/app.py`
 end
 
-task :validate_cache do
-    url = "http://localhost:8080/rd/AAAA/25.86/-80.30"
-    cache_ttl_sec = 3
+task :validate_cache_debug do
+    Rake::Task[:validate_cache].invoke("localhost", 8080)
+end
+
+task :validate_cache, [:server, :port, :ttl_sec] do |t, args|
+    args.with_defaults(:server => "localhost", :port => 80, :ttl_sec => 3)
+
+    url = "http://#{args[:server]}:#{args[:port]}/rd/AAAA/25.86/-80.30"
+    puts url
+
+    cache_ttl_sec = args[:ttl_sec]
 
     cache_test_output = `python test/cacherequesthelper.py "#{url}" #{cache_ttl_sec}`
 
