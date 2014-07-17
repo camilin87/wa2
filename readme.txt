@@ -16,7 +16,7 @@ Development machines should have these
 
 Deployment Dependencies
 -----------------------
-> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/wf-flask && cd wa2
+> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/nginx-cache && cd wa2
 > cd ~/wa2 && rake -f Rakefile-prod install_prod_dependencies
 
 Coding Standards
