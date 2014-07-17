@@ -141,16 +141,31 @@ end
 task :validate_cache, [:server, :port, :ttl_sec] do |t, args|
     args.with_defaults(:server => "localhost", :port => 80, :ttl_sec => 3)
 
-    url = "http://#{args[:server]}:#{args[:port]}/rd/AAAA/25.86/-80.30"
-    puts url
+    url_hialeah = "http://#{args[:server]}:#{args[:port]}/rd/api_key/25.86/-80.30"
+    puts url_hialeah
+
+    url_lax = "http://#{args[:server]}:#{args[:port]}/rd/api_key/47.43/-121.80"
+    puts url_lax
 
     cache_ttl_sec = args[:ttl_sec]
 
-    cache_test_output = `python test/cacherequesthelper.py "#{url}" #{cache_ttl_sec}`
+    if not all_urls_return_different_responses([url_hialeah, url_lax])
+        fail "cache error: different urls return the same result"
+        return
+    end
+
+    cache_test_output = `python test/cacherequesthelper.py "#{url_hialeah}" #{cache_ttl_sec}`
 
     if not cache_test_output.include? "is_cached=True"
         fail "cache error"
-    else
-        puts "Cache OK"
+        return
     end
+        
+    puts "Cache OK"        
+end
+
+def all_urls_return_different_responses(url_list)
+    responses = []
+    url_list.each { |url| responses.push `curl #{url}` }
+    return responses.uniq.length == responses.length
 end
