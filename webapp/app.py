@@ -11,7 +11,7 @@ def page_not_found(error):
 @app.route("/rd/<api_key>/<latitude>/<longitude>")
 def retrieve_data(api_key, latitude, longitude):
     timestamp = "fixed"
-    # timestamp = datetime.utcnow().isoformat()
+    timestamp = datetime.utcnow().isoformat()
 
     return jsonify({
         "method": "rd",
