@@ -121,3 +121,7 @@ server {
     sudo_write_config nginx_config, config_contents
     sh "sudo service nginx start"
 end
+
+task :reload_nginx do
+   sh "sudo service nginx restart" 
+end
