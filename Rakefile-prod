@@ -43,6 +43,10 @@ def install_pypi_prod_dependencies
     sudo_install_pypi_packages prod_packages
 end
 
+task :reload_uwsgi do
+    `sudo sh -c 'echo r > /tmp/wa2_uwsgi'`
+end
+
 task :configure_uwsgi do
     app_py_path = File.join(webapp_path, "app.py")
     uwsgi_config = File.join(basedir, "uwsgi_config.ini")
@@ -55,6 +59,7 @@ processes = 4
 threads = 2
 stats = 127.0.0.1:9191
 master = true
+master-fifo = /tmp/wa2_uwsgi
 }
     write_config uwsgi_config, uwsgi_config_contents
 
