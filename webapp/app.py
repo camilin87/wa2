@@ -2,11 +2,14 @@ from flask import Flask
 from flask import jsonify
 from datetime import datetime
 
+
 app = Flask(__name__)
+
 
 @app.errorhandler(404)
 def page_not_found(error):
     return app.send_static_file('404.html'), 404
+
 
 @app.route("/rd/<api_key>/<latitude>/<longitude>")
 def retrieve_data(api_key, latitude, longitude):

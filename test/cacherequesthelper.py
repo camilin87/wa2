@@ -43,14 +43,15 @@ class CacheRequestHelper(object):
         self.request_count += 1
 
     def _is_cached(self):
-        if not self.prev_response: 
+        if not self.prev_response:
             return True
         return self.prev_response == self.curr_response
+
 
 def main(args):
     url = args[1]
     cache_ttl_seconds = int(args[2])
-    print("Starting cache test", "url=", url, "ttl_sec=", cache_ttl_seconds) 
+    print("Starting cache test", "url=", url, "ttl_sec=", cache_ttl_seconds)
 
     req_tester = CacheRequestHelper(url)
     is_cached = req_tester.is_cached(cache_ttl_seconds)
