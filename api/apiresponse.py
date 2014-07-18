@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class ApiResponse(object):
     def __init__(
             self, return_code, error_msg, summary_str, pop_percent,
@@ -20,6 +23,7 @@ class ApiResponse(object):
         self.pop = str(pop_percent)
         self.intensity = str(intensity_type)
         self.precip = str(precipitation_type)
+        self.timestamp = datetime.utcnow().isoformat()
 
     @staticmethod
     def _should_be_int(param_name, param_value):
@@ -29,7 +33,7 @@ class ApiResponse(object):
     def __str__(self):
         description_format = (
             "result={0}, errormsg='{1}', summary='{2}'" +
-            "pop={3}, intensity={4}, precip={5}"
+            "pop={3}, intensity={4}, precip={5}, timestamp='{6}'"
         )
         return self.__class__.__name__ + " " + description_format.format(
             self.result,
@@ -37,5 +41,6 @@ class ApiResponse(object):
             self.summary,
             self.pop,
             self.intensity,
-            self.precip
+            self.precip,
+            self.timestamp
         )
