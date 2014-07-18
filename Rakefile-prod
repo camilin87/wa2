@@ -38,13 +38,17 @@ end
 
 def install_pypi_prod_dependencies
     prod_packages = [
-        "uwsgi", "python-forecastio", "Flask"
+        "uwsgi", "python-forecastio", "Flask", "uwsgitop"
     ]
     sudo_install_pypi_packages prod_packages
 end
 
 task :reload_uwsgi do
     `sudo sh -c 'echo r > /tmp/wa2_uwsgi'`
+end
+
+task :uwsgi_stats do
+    system "uwsgitop 127.0.0.1:1717"
 end
 
 task :configure_uwsgi do
@@ -57,7 +61,7 @@ wsgi-file = #{app_py_path}
 callable = app
 processes = 4
 threads = 2
-stats = 127.0.0.1:9191
+stats = 127.0.0.1:1717
 master = true
 master-fifo = /tmp/wa2_uwsgi
 }
