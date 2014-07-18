@@ -11,3 +11,4 @@
 .python-version
 code-reports
 .git-stats-src
+uwsgi_config.ini

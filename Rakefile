@@ -1,88 +1,36 @@
 task :default => [:clean, :all_tests, :reports]
 
-$basedir = File.expand_path "."
-$gitstats_dir = File.join($basedir, ".git-stats-src/")
+def basedir
+   return File.expand_path "."
+end
+
+$gitstats_dir = File.join(basedir, ".git-stats-src/")
 
 $PYTHON_VERSION = "3.4.0"
 $PYTHON_VERSION_GIT_STATS = "2.7.6"
 
-$reports_dir = File.join($basedir, "code-reports/")
+$reports_dir = File.join(basedir, "code-reports/")
 $cover_report_dir = File.join($reports_dir, "coverage")
 $gitstats_report_dir = File.join($reports_dir, "gitstats")
 $pylint_report_dir = File.join($reports_dir, "pylint")
 $pep8_report_dir = File.join($reports_dir, "pep8")
-
-task :configure_pyenv do
-    bash_profile = File.expand_path "~/.bash_profile"
-    if not File.readlines(bash_profile).grep(/pyenv init/).any?
-        File.open(bash_profile, "a") do |f|
-            f.puts 'eval "$(pyenv init -)"'
-        end
-    end
-end
-
-task :install_dev_dependencies_mac do
-    system %{brew install pyenv}
-    system %{brew install xz}
-    system %{brew install gnuplot --cairo --png}
-    system %{sudo easy_install pip}
-
-    Rake::Task["install_dev_dependencies"].execute
-end
-
-task :install_dev_dependencies do
-    install_gitstats
-    configure_python_version
-    switch_to_dev_python_version
-    install_pypi_dev_dependencies
-    refresh_packages
-end
-
-def install_gitstats
-    system "git clone --depth 1 git://github.com/hoxu/gitstats.git #{$gitstats_dir}"
-    Dir.chdir($gitstats_dir){
-        sh %{git pull} 
-    }
-end
-
-def configure_python_version
-    install_python $PYTHON_VERSION
-    install_python $PYTHON_VERSION_GIT_STATS
-    refresh_packages
-end
-
-def install_python(python_version)
-    puts "install_python" + python_version
-    system "yes N | pyenv install #{python_version}"
-end
-
-def switch_to_dev_python_version
-    use_python $PYTHON_VERSION
-end
-
-def switch_to_git_stats_python_version
-    use_python $PYTHON_VERSION_GIT_STATS
-end
 
 def use_python(python_version)
     puts "use_python" + python_version
     sh "pyenv local #{python_version}"
 end
 
-def install_pypi_dev_dependencies
-    pypi_packages = [
-        "nose", "freezegun", "coverage",
-        "pylint", "pep8", "python-forecastio"
-    ]
+def ensure_python_is(python_version)
+    current_version = `python -V`
+    error_msg = "Error using python version. Expected: #{python_version} Actual: #{current_version}"
+    fail error_msg unless current_version.include? python_version
+end
+
+def sudo_install_pypi_packages(pypi_packages)
     pypi_packages.each do |pkg|
         sh "sudo pip install --upgrade #{pkg}"
     end
 end
-
-def refresh_packages
-    sh %{pyenv rehash}
-end
-
 
 task :clean => [:clean_pyc] do
     rm_rf $reports_dir
@@ -116,7 +64,7 @@ task :reports => [
 task :report_coverage => [:clean_pyc, :create_reports_dir] do
     sh %{nosetests -s --with-coverage --cover-html --cover-erase}
 
-    $cover_report_old = File.join($basedir, "cover")
+    $cover_report_old = File.join(basedir, "cover")
     File.rename($cover_report_old, $cover_report_dir)
 end
 
@@ -136,11 +84,11 @@ task :report_pylint => :create_reports_dir do
 end
 
 def get_packages
-    Dir.entries($basedir).select { |entry|
+    Dir.entries(basedir).select { |entry|
         File.directory? entry and !(entry =='.' || entry == '..') 
     }.map {|dir| {
         :name => dir,
-        :path => File.join($basedir, dir)
+        :path => File.join(basedir, dir)
     }}.compact.select { |dir_info|
         File.exists? File.join(dir_info[:path], "__init__.py")
     }
@@ -165,19 +113,63 @@ task :report_pep8 => :create_reports_dir do
 end
 
 task :report_gitstats => :create_reports_dir do
-    switch_to_git_stats_python_version
+    use_python $PYTHON_VERSION_GIT_STATS
 
     gitstats_path = File.join($gitstats_dir, "gitstats")
-    sh "#{gitstats_path} #{$basedir} #{$gitstats_report_dir} > /dev/null"
+    sh "#{gitstats_path} #{basedir} #{$gitstats_report_dir} > /dev/null"
 
-    switch_to_dev_python_version
+    use_python $PYTHON_VERSION
 end
 
 task :report_lines_of_code do
-    loc_test = `find #{$basedir} -type f -iname '*.py' -path '*/test/*' | xargs wc -l | tail -1`
-    loc_prod = `find #{$basedir} -type f -iname '*.py' ! -path '*/test/*' | xargs wc -l | tail -1`
+    loc_test = `find #{basedir} -type f -iname '*.py' -path '*/test/*' | xargs wc -l | tail -1`
+    loc_prod = `find #{basedir} -type f -iname '*.py' ! -path '*/test/*' | xargs wc -l | tail -1`
 
     puts "Lines of Code"
     puts "Test:       #{loc_test}"
     puts "Production: #{loc_prod}"
+end
+
+task :run_debug do
+    `python webapp/app.py`
+end
+
+task :validate_cache_debug do
+    Rake::Task[:validate_cache].invoke("localhost", 8080)
+end
+
+task :validate_cache_prod do
+    Rake::Task[:validate_cache].invoke("localhost", 80, 59)
+end
+
+task :validate_cache, [:server, :port, :ttl_sec] do |t, args|
+    args.with_defaults(:server => "localhost", :port => 80, :ttl_sec => 3)
+
+    url_hialeah = "http://#{args[:server]}:#{args[:port]}/rd/api_key/25.86/-80.30"
+    puts url_hialeah
+
+    url_lax = "http://#{args[:server]}:#{args[:port]}/rd/api_key/47.43/-121.80"
+    puts url_lax
+
+    cache_ttl_sec = args[:ttl_sec]
+
+    if not all_urls_return_different_responses([url_hialeah, url_lax])
+        fail "cache error: different urls return the same result"
+        return
+    end
+
+    cache_test_output = `python test/cacherequesthelper.py "#{url_hialeah}" #{cache_ttl_sec}`
+
+    if not cache_test_output.include? "is_cached=True"
+        fail "cache error"
+        return
+    end
+        
+    puts "Cache OK"        
+end
+
+def all_urls_return_different_responses(url_list)
+    responses = []
+    url_list.each { |url| responses.push `curl #{url}` }
+    return responses.uniq.length == responses.length
 end
