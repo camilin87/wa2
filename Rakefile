@@ -145,10 +145,10 @@ end
 task :validate_cache, [:server, :port, :ttl_sec] do |t, args|
     args.with_defaults(:server => "localhost", :port => 80, :ttl_sec => 3)
 
-    url_hialeah = "http://#{args[:server]}:#{args[:port]}/rd/api_key/25.86/-80.30"
+    url_hialeah = "http://#{args[:server]}:#{args[:port]}/t/api_key/25.86/-80.30"
     puts url_hialeah
 
-    url_lax = "http://#{args[:server]}:#{args[:port]}/rd/api_key/47.43/-121.80"
+    url_lax = "http://#{args[:server]}:#{args[:port]}/t/api_key/47.43/-121.80"
     puts url_lax
 
     cache_ttl_sec = args[:ttl_sec]
