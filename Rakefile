@@ -138,8 +138,12 @@ task :validate_cache_debug do
     Rake::Task[:validate_cache].invoke("localhost", 8080)
 end
 
+task :validate_cache_prod_quick do
+    Rake::Task[:validate_cache].invoke("localhost", 80, 3)
+end
+
 task :validate_cache_prod do
-    Rake::Task[:validate_cache].invoke("localhost", 80, 59)
+    Rake::Task[:validate_cache].invoke("localhost", 80, 3600 - 1)
 end
 
 task :validate_cache, [:server, :port, :ttl_sec] do |t, args|
