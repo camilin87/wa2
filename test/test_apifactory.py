@@ -4,6 +4,7 @@ from factory.apifactory import ApiFactory
 from unittest.mock import MagicMock
 from api.datarequestbuilder import DataRequestBuilder
 from api.hardcodedkeys import HardcodedKeys
+from api.apiresponse import ApiResponse
 
 
 class TestEngineFactory(TestCase):
@@ -24,3 +25,7 @@ class TestEngineFactory(TestCase):
 
         self.assertIsInstance(controller, DataRetrieverController)
         self.assertEquals(key_validator_mock, controller.validator)
+
+    def test_creates_dummy_response(self):
+        response = ApiFactory.create_dummy_response()
+        self.assertIsInstance(response, ApiResponse)
