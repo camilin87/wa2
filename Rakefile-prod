@@ -24,10 +24,11 @@ end
 
 def install_prod_system_packages
     pkg_dependencies = [
-        "python-pip", "python-dev",
+        "python3-pip", "python3-dev",
         "nginx"
     ]
     install_system_dependencies_linux pkg_dependencies
+    sh "sudo cp -f /usr/bin/pip3 /usr/bin/pip"
 end
 
 def install_system_dependencies_linux(packages)
