@@ -28,7 +28,6 @@ def install_prod_system_packages
         "nginx"
     ]
     install_system_dependencies_linux pkg_dependencies
-    sh "sudo cp -f /usr/bin/pip3 /usr/bin/pip"
 end
 
 def install_system_dependencies_linux(packages)
@@ -42,6 +41,12 @@ def install_pypi_prod_dependencies
         "uwsgi", "python-forecastio", "Flask", "uwsgitop"
     ]
     sudo_install_pypi_packages prod_packages
+end
+
+def sudo_install_pypi_packages(pypi_packages)
+    pypi_packages.each do |pkg|
+        sh "sudo pip3 install --upgrade #{pkg}"
+    end
 end
 
 task :reload_uwsgi do

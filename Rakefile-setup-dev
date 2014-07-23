@@ -56,6 +56,12 @@ def install_pypi_dev_dependencies
     sudo_install_pypi_packages dev_packages
 end
 
+def sudo_install_pypi_packages(pypi_packages)
+    pypi_packages.each do |pkg|
+        sh "sudo pip install --upgrade #{pkg}"
+    end
+end
+
 def install_python(python_version)
     puts "install_python " + python_version
     installed_versions = `pyenv versions`
