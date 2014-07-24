@@ -20,7 +20,7 @@ _log(sub_pkgs)
 from distutils.core import setup
 
 setup(
-    name = "wa",
+    name = pkg_dir,
     version = "0.1",
     author = "CASH Productions",
     author_email = "support@cash-productions.com",
