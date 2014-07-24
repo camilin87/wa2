@@ -27,8 +27,10 @@ def ensure_python_is(python_version)
 end
 
 task :install_wa do
-    wa_pkg_setup = File.join(basedir, "wa/setup.py")
-    sh "python #{wa_pkg_setup} -q install"
+    ["pkgtools", "wa"].each do |pkg|
+        pkg_setup_path = File.join(basedir, "#{pkg}/setup.py")
+        sh "python #{pkg_setup_path} -q install"
+    end 
 end
 
 task :clean => [:clean_pyc] do
