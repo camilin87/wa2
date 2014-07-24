@@ -26,6 +26,11 @@ def ensure_python_is(python_version)
     fail error_msg unless current_version.include? python_version
 end
 
+task :install_wa do
+    wa_pkg_setup = File.join(basedir, "wa/setup.py")
+    sh "python #{wa_pkg_setup} -q install"
+end
+
 task :clean => [:clean_pyc] do
     rm_rf $reports_dir
     rm_rf File.join(basedir, "build/")
@@ -38,11 +43,11 @@ task :clean_pyc do
 end
 
 task :all_tests => [:tests, :integration]
-task :tests => [:clean_pyc] do
+task :tests => [:clean_pyc, :install_wa] do
     sh %{nosetests -s -a '!integration'}
 end
 
-task :integration => [:clean_pyc] do
+task :integration => [:clean_pyc, :install_wa] do
     sh %{nosetests -s -a 'integration'}
 end
 
