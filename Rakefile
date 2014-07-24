@@ -28,6 +28,7 @@ end
 
 task :clean => [:clean_pyc] do
     rm_rf $reports_dir
+    rm_rf File.join(basedir, "build/")
 end
 
 task :clean_pyc do
