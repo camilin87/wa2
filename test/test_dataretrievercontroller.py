@@ -1,13 +1,13 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
-from api.dataretrievercontroller import DataRetrieverController
-from api import returncode
-from api.apirequest import ApiRequest
-from api.datarequestbuilder import DataRequestBuilder
-from engine.transmissionerror import TransmissionError
-from api.freeforall import FreeForAll
-from engine import intensitytype
-from engine import precipitationtype
+from wa.api.dataretrievercontroller import DataRetrieverController
+from wa.api import returncode
+from wa.api.apirequest import ApiRequest
+from wa.api.datarequestbuilder import DataRequestBuilder
+from wa.engine.transmissionerror import TransmissionError
+from wa.api.freeforall import FreeForAll
+from wa.engine import intensitytype
+from wa.engine import precipitationtype
 
 
 class TestDataRetrieverController(TestCase):

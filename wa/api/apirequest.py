@@ -1,4 +1,4 @@
-from api import returncode
+from wa.api import returncode
 from re import match
 
 

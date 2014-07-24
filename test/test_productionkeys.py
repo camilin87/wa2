@@ -1,5 +1,5 @@
 from unittest import TestCase
-from extapi.productionkeys import ProductionKeys
+from wa.extapi.productionkeys import ProductionKeys
 
 
 class TestsProductionKeys(TestCase):

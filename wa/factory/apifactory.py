@@ -1,10 +1,10 @@
-from api.dataretrievercontroller import DataRetrieverController
-from api.datarequestbuilder import DataRequestBuilder
-from api.hardcodedkeys import HardcodedKeys
-from api.apiresponse import ApiResponse
-from api import returncode
-from engine import intensitytype
-from engine import precipitationtype
+from wa.api.dataretrievercontroller import DataRetrieverController
+from wa.api.datarequestbuilder import DataRequestBuilder
+from wa.api.hardcodedkeys import HardcodedKeys
+from wa.api.apiresponse import ApiResponse
+from wa.api import returncode
+from wa.engine import intensitytype
+from wa.engine import precipitationtype
 
 
 class ApiFactory(object):

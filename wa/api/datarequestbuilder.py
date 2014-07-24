@@ -1,5 +1,5 @@
-from api import returncode
-from engine.datarequest import DataRequest
+from wa.api import returncode
+from wa.engine.datarequest import DataRequest
 
 
 class DataRequestBuilder(object):

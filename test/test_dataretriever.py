@@ -1,5 +1,5 @@
 from unittest import TestCase
-from engine.dataretriever import DataRetriever
+from wa.engine.dataretriever import DataRetriever
 
 
 class TestDataRetriever(TestCase):

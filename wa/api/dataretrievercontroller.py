@@ -1,7 +1,7 @@
-from api.apirequest import ApiRequest
-from api.apiresponse import ApiResponse
-from api import returncode
-from engine.transmissionerror import TransmissionError
+from wa.api.apirequest import ApiRequest
+from wa.api.apiresponse import ApiResponse
+from wa.api import returncode
+from wa.engine.transmissionerror import TransmissionError
 
 
 class DataRetrieverController(object):

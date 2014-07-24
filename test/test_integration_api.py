@@ -1,12 +1,12 @@
 from unittest import TestCase
 from nose.plugins.attrib import attr
-from factory.apifactory import ApiFactory
-from factory.enginefactory import EngineFactory
-from extapi.citkeys import CitKeys
-from api.freeforall import FreeForAll
-from api import returncode
+from wa.factory.apifactory import ApiFactory
+from wa.factory.enginefactory import EngineFactory
+from wa.extapi.citkeys import CitKeys
+from wa.api.freeforall import FreeForAll
+from wa.api import returncode
 from forecastiohelper import ForecastIoHelper
-from engine import intensitytype
+from wa.engine import intensitytype
 
 
 @attr("integration")

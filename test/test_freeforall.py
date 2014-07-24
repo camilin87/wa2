@@ -1,5 +1,5 @@
 from unittest import TestCase
-from api.freeforall import FreeForAll
+from wa.api.freeforall import FreeForAll
 
 
 class TestFreeForAll(TestCase):
