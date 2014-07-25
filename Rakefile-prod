@@ -27,7 +27,7 @@ end
 def install_prod_wa_packages
     wa_packages.each do |pkg|
         pkg_setup_path = File.join(basedir, "#{pkg}/setup.py")
-        sh "sudo python #{pkg_setup_path} -q install"
+        sh "sudo python3 #{pkg_setup_path} -q install"
     end
 end
 
