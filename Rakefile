@@ -27,7 +27,7 @@ def ensure_python_is(python_version)
 end
 
 task :install_wa do
-    ["pkgtools", "wa"].each do |pkg|
+    ["wa"].each do |pkg|
         pkg_setup_path = File.join(basedir, "#{pkg}/setup.py")
         sh "python #{pkg_setup_path} -q install"
     end 

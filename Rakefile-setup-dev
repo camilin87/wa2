@@ -49,7 +49,7 @@ end
 
 def install_pypi_dev_dependencies
     dev_packages = [
-        "nose", "freezegun", "coverage",
+        "pkginit", "nose", "freezegun", "coverage",
         "pylint", "pep8", "python-forecastio",
         "Flask"
     ]

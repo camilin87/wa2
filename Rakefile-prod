@@ -38,7 +38,7 @@ end
 
 def install_pypi_prod_dependencies
     prod_packages = [
-        "uwsgi", "python-forecastio", "Flask", "uwsgitop"
+        "pkginit", "uwsgi", "python-forecastio", "Flask", "uwsgitop"
     ]
     sudo_install_pypi_packages prod_packages
 end
