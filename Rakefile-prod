@@ -18,8 +18,17 @@ task :install_prod_dependencies do
     install_prod_system_packages
     install_pypi_prod_dependencies
 
+    install_prod_wa_packages
+
     Rake::Task["configure_uwsgi"].execute
     Rake::Task["configure_nginx"].execute
+end
+
+def install_prod_wa_packages
+    wa_packages.each do |pkg|
+        pkg_setup_path = File.join(basedir, "#{pkg}/setup.py")
+        sh "sudo python #{pkg_setup_path} -q install"
+    end
 end
 
 def install_prod_system_packages

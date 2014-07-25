@@ -4,6 +4,10 @@ def basedir
    return File.expand_path "."
 end
 
+def wa_packages
+    return ["wa"]
+end
+
 $gitstats_dir = File.join(basedir, ".git-stats-src/")
 
 $PYTHON_VERSION = "3.4.0"
@@ -27,10 +31,10 @@ def ensure_python_is(python_version)
 end
 
 task :install_wa do
-    ["wa"].each do |pkg|
+    wa_packages.each do |pkg|
         pkg_setup_path = File.join(basedir, "#{pkg}/setup.py")
         sh "python #{pkg_setup_path} -q install"
-    end 
+    end
 end
 
 task :clean => [:clean_pyc] do
