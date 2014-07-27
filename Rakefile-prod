@@ -93,7 +93,8 @@ exec uwsgi #{uwsgi_config}
 
     if not File.exists? upstart_config_path
         sudo_write_config upstart_config_path, upstart_config_contents
-        puts "WARNING: Reboot required to launch uwsgi"
+        sh "sudo initctl reload-configuration"
+        sh "sudo initctl start wa2_uwsgi"
     end
 end
 
