@@ -67,13 +67,14 @@ task :uwsgi_stats do
 end
 
 task :configure_uwsgi do
-    app_py_path = File.join(webapp_path, "app.py")
     uwsgi_config = File.join(basedir, "uwsgi_config.ini")
     uwsgi_config_contents = %{
 [uwsgi]
 socket = 127.0.0.1:3031
-wsgi-file = #{app_py_path}
+pythonpath = #{webapp_path}
+module = app
 callable = app
+vaccum = true
 processes = 4
 threads = 2
 stats = 127.0.0.1:1717
