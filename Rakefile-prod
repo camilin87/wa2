@@ -74,9 +74,15 @@ socket = 127.0.0.1:3031
 pythonpath = #{webapp_path}
 module = app
 callable = app
+
 vaccum = true
 processes = 4
 threads = 2
+
+uid = www-data
+gid = www-data
+daemonize = /var/log/uwsgi/wa2_uwsgi.log
+
 stats = 127.0.0.1:1717
 memory-report = true
 master = true
