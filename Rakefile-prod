@@ -79,9 +79,10 @@ vaccum = true
 processes = 4
 threads = 2
 
+chmod-socket = 666
 uid = www-data
 gid = www-data
-daemonize = /var/log/uwsgi/wa2_uwsgi.log
+daemonize = /var/log/nginx/wa2_uwsgi.log
 
 stats = 127.0.0.1:1717
 memory-report = true
