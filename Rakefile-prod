@@ -160,3 +160,7 @@ end
 task :reload_nginx do
    sh "sudo service nginx restart" 
 end
+
+task :run_debug do
+    `python3 webapp/app.py`
+end

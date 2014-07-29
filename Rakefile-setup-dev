@@ -76,3 +76,7 @@ def switch_to_dev_python_version
     use_python $PYTHON_VERSION
     ensure_python_is $PYTHON_VERSION
 end
+
+task :run_debug do
+    `python webapp/app.py`
+end

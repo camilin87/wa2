@@ -136,10 +136,6 @@ task :report_lines_of_code do
     puts "Production: #{loc_prod}"
 end
 
-task :run_debug do
-    `python webapp/app.py`
-end
-
 task :validate_cache_debug do
     Rake::Task[:validate_cache].invoke("localhost", 8080)
 end
