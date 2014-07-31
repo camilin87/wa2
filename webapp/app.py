@@ -13,7 +13,7 @@ def page_not_found(error):
 
 @app.route("/t/<api_key>/<latitude>/<longitude>")
 def retrieve_data(api_key, latitude, longitude):
-    return jsonify(ApiFactory.create_dummy_response().__dict__)
+    return jsonify(ApiFactory.create_dummy_response(float(latitude), float(longitude)).__dict__)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)

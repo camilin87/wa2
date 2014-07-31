@@ -15,11 +15,15 @@ class ApiFactory(object):
         return DataRetrieverController(data_retriever, DataRequestBuilder(), key_validator)
 
     @staticmethod
-    def create_dummy_response():
+    def create_dummy_response(latitude, longitude):
+        summary_str = "Sunny Day"
+        if latitude_str < 40:
+            summary_str = "Cloudy Day"
+
         return ApiResponse(
             returncode.OK,
             "",
-            "Sunny day",
+            summary_str,
             10,
             intensitytype.LIGHT,
             precipitationtype.RAIN
