@@ -1,3 +1,6 @@
+import "api_tests_cache.rb"
+import "api_tests.rb"
+
 $env_data = {
     :name => "default",
     :protocol => "http",
@@ -48,4 +51,7 @@ end
 task :run_tests do
     puts "run_tests with environment"
     puts $env_data
+
+    Rake::Task["api_tests_cache:default"].invoke
+    Rake::Task["api_tests:default"].invoke
 end
