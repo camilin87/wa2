@@ -52,6 +52,9 @@ task :run_tests do
     puts "run_tests with environment"
     puts $env_data
 
-    Rake::Task["api_tests_cache:default"].invoke
+    if $env_data[:validate_cache]
+        Rake::Task["api_tests_cache:default"].invoke
+    end
+
     Rake::Task["api_tests:default"].invoke
 end
