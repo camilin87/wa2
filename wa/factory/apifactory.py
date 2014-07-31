@@ -17,7 +17,7 @@ class ApiFactory(object):
     @staticmethod
     def create_dummy_response(latitude, longitude):
         summary_str = "Sunny Day"
-        if latitude_str < 40:
+        if latitude < 40:
             summary_str = "Cloudy Day"
 
         return ApiResponse(
