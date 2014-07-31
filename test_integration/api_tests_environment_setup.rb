@@ -1,5 +1,3 @@
-require "rake"
-
 $env_data = {
     :name => "default",
     :protocol => "http",
@@ -11,7 +9,7 @@ $env_data = {
     }
 }
 
-task :default, [:env] do |t, args|
+task :run_tests_with_environment, [:env] do |t, args|
     configure_environment args[:env]
     Rake::Task["run_tests"].execute
 end

@@ -1,3 +1,5 @@
+import "api_tests_environment_setup.rb"
+
 task :default => [:staging]
 
 task :staging do |t|
@@ -14,6 +16,6 @@ task :debug do |t|
     # shutdown the debug webserver here
 end
 
-def run_tests(env)
-    sh "rake -f api_tests.rb default[#{env}]"
+def run_tests(env_name)
+    Rake::Task[:run_tests_with_environment].invoke env_name
 end
