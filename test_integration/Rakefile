@@ -1,16 +1,16 @@
 task :default => [:staging]
 
-task :staging do
-    run_tests "STAGING"
+task :staging do |t|
+    run_tests t.name
 end
 
-task :production do
-    run_tests "PRODUCTION"
+task :production do |t|
+    run_tests t.name
 end
 
-task :debug do
+task :debug do |t|
     # launch the debug webserver here
-    run_tests "DEBUG"
+    run_tests t.name
     # shutdown the debug webserver here
 end
 

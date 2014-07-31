@@ -1,6 +1,7 @@
 require "rake"
 
 $env_data = {
+    :name => "default",
     :protocol => "http",
     :host => "localhost",
     :port => 80,
@@ -16,12 +17,14 @@ task :default, [:env] do |t, args|
 end
 
 def configure_environment(environment)
+    $env_data[:name] = environment
+
     case environment
-    when "PRODUCTION"
+    when "production"
         set_production_env_data
-    when "STAGING"
+    when "staging"
         set_staging_env_data
-    when "DEBUG"
+    when "debug"
         set_debug_env_data
     else
         raise "invalid environment specified"
