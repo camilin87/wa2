@@ -1,14 +1,17 @@
-require "rake"
+task :default => [:staging]
 
-$env_protocol = "http"
-
-task :default, [:env] do |t, args|
-    $env_protocol = "https"
-    puts "default task called #{args[:env]}"
-
-    Rake::Task["run_tests"].execute
+task :staging do
+    run_tests "STAGING"
 end
 
-task :run_tests do
-    puts "run_tests with protocol #{$env_protocol}"
+task :production do
+    run_tests "PRODUCTION"
+end
+
+task :debug do
+    run_tests "DEBUG"
+end
+
+def run_tests(env)
+    sh "rake -f api_tests.rb default[#{env}]"
 end
