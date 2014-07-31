@@ -9,7 +9,9 @@ task :production do
 end
 
 task :debug do
+    # launch the debug webserver here
     run_tests "DEBUG"
+    # shutdown the debug webserver here
 end
 
 def run_tests(env)
