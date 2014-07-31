@@ -1,12 +1,12 @@
 from unittest import TestCase
-from factory.enginefactory import EngineFactory
-from extapi.forecastioretriever import ForecastIoRetriever
+from wa.factory.enginefactory import EngineFactory
+from wa.extapi.forecastioretriever import ForecastIoRetriever
 from unittest.mock import MagicMock
 from unittest.mock import patch
 
 
 class TestEngineFactory(TestCase):
-    @patch("factory.enginefactory.ProductionKeys", return_value=MagicMock())
+    @patch("wa.factory.enginefactory.ProductionKeys", return_value=MagicMock())
     def test_creates_production_weather_data_retriever(self, keys_mock):
         keys_mock.return_value.key = MagicMock(return_value="production key")
 

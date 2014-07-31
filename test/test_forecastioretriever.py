@@ -1,14 +1,14 @@
 from unittest import TestCase
-from extapi.forecastioretriever import ForecastIoRetriever
-from engine.datarequest import DataRequest
+from wa.extapi.forecastioretriever import ForecastIoRetriever
+from wa.engine.datarequest import DataRequest
 from unittest.mock import MagicMock
 from unittest.mock import patch
 from requests.exceptions import RequestException
-from engine.transmissionerror import TransmissionError
+from wa.engine.transmissionerror import TransmissionError
 
 
 class TestForecastIoRetriever(TestCase):
-    @patch("extapi.forecastioretriever.load_forecast")
+    @patch("wa.extapi.forecastioretriever.load_forecast")
     def test_retrieves_weather_data(self, forecast_mock):
         seeded_datapoint = MagicMock()
         seeded_response = MagicMock()
@@ -34,7 +34,7 @@ class TestForecastIoRetriever(TestCase):
 
         self.assertEquals(seeded_response, response)
 
-    @patch("extapi.forecastioretriever.load_forecast")
+    @patch("wa.extapi.forecastioretriever.load_forecast")
     def test_wraps_ext_api_errors_with_transmission_error(self, forecast_mock):
         seeded_exception = RequestException("connection error")
 

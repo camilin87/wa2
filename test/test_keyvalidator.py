@@ -1,5 +1,5 @@
 from unittest import TestCase
-from api.keyvalidator import KeyValidator
+from wa.api.keyvalidator import KeyValidator
 
 
 class TestKeyValidator(TestCase):

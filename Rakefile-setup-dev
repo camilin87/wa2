@@ -49,11 +49,17 @@ end
 
 def install_pypi_dev_dependencies
     dev_packages = [
-        "nose", "freezegun", "coverage",
+        "pkginit", "nose", "freezegun", "coverage",
         "pylint", "pep8", "python-forecastio",
         "Flask"
     ]
     sudo_install_pypi_packages dev_packages
+end
+
+def sudo_install_pypi_packages(pypi_packages)
+    pypi_packages.each do |pkg|
+        sh "sudo pip install --upgrade #{pkg}"
+    end
 end
 
 def install_python(python_version)
@@ -69,4 +75,8 @@ end
 def switch_to_dev_python_version
     use_python $PYTHON_VERSION
     ensure_python_is $PYTHON_VERSION
+end
+
+task :run_debug do
+    `python webapp/app.py`
 end

@@ -1,4 +1,4 @@
-from api.keyvalidator import KeyValidator
+from wa.api.keyvalidator import KeyValidator
 
 
 class FreeForAll(KeyValidator):

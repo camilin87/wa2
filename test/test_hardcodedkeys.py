@@ -1,5 +1,5 @@
 from unittest import TestCase
-from api.hardcodedkeys import HardcodedKeys
+from wa.api.hardcodedkeys import HardcodedKeys
 
 
 class TestHardcodedKeys(TestCase):

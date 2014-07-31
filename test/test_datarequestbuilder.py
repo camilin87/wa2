@@ -1,6 +1,6 @@
 from unittest import TestCase
-from api.datarequestbuilder import DataRequestBuilder
-from api.apirequest import ApiRequest
+from wa.api.datarequestbuilder import DataRequestBuilder
+from wa.api.apirequest import ApiRequest
 
 
 class TestDataRequestBuilder(TestCase):

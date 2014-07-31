@@ -12,3 +12,4 @@
 code-reports
 .git-stats-src
 uwsgi_config.ini
+build

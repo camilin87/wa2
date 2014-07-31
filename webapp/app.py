@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import jsonify
-from datetime import datetime
+from wa.factory.apifactory import ApiFactory
 
 
 app = Flask(__name__)
@@ -13,16 +13,7 @@ def page_not_found(error):
 
 @app.route("/t/<api_key>/<latitude>/<longitude>")
 def retrieve_data(api_key, latitude, longitude):
-    timestamp = "fixed"
-    timestamp = datetime.utcnow().isoformat()
-
-    return jsonify({
-        "method": "rd",
-        "api_key": api_key,
-        "latitude": latitude,
-        "longitude": longitude,
-        "timestamp": timestamp
-    })
+    return jsonify(ApiFactory.create_dummy_response().__dict__)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)

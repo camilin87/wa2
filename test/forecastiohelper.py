@@ -1,4 +1,4 @@
-from extapi.citkeys import CitKeys
+from wa.extapi.citkeys import CitKeys
 from forecastio import load_forecast
 
 

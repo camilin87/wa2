@@ -18,13 +18,22 @@ task :install_prod_dependencies do
     install_prod_system_packages
     install_pypi_prod_dependencies
 
+    install_prod_wa_packages
+
     Rake::Task["configure_uwsgi"].execute
     Rake::Task["configure_nginx"].execute
 end
 
+def install_prod_wa_packages
+    wa_packages.each do |pkg|
+        pkg_setup_path = File.join(basedir, "#{pkg}/setup.py")
+        sh "sudo python3 #{pkg_setup_path} -q install"
+    end
+end
+
 def install_prod_system_packages
     pkg_dependencies = [
-        "python-pip", "python-dev",
+        "python3-pip", "python3-dev",
         "nginx"
     ]
     install_system_dependencies_linux pkg_dependencies
@@ -38,9 +47,15 @@ end
 
 def install_pypi_prod_dependencies
     prod_packages = [
-        "uwsgi", "python-forecastio", "Flask", "uwsgitop"
+        "pkginit", "uwsgi", "python-forecastio", "Flask", "uwsgitop"
     ]
     sudo_install_pypi_packages prod_packages
+end
+
+def sudo_install_pypi_packages(pypi_packages)
+    pypi_packages.each do |pkg|
+        sh "sudo pip3 install --upgrade #{pkg}"
+    end
 end
 
 task :reload_uwsgi do
@@ -52,15 +67,23 @@ task :uwsgi_stats do
 end
 
 task :configure_uwsgi do
-    app_py_path = File.join(webapp_path, "app.py")
     uwsgi_config = File.join(basedir, "uwsgi_config.ini")
     uwsgi_config_contents = %{
 [uwsgi]
 socket = 127.0.0.1:3031
-wsgi-file = #{app_py_path}
+pythonpath = #{webapp_path}
+module = app
 callable = app
+
+vaccum = true
 processes = 4
 threads = 2
+
+chmod-socket = 666
+uid = www-data
+gid = www-data
+daemonize = /var/log/nginx/wa2_uwsgi.log
+
 stats = 127.0.0.1:1717
 memory-report = true
 master = true
@@ -78,7 +101,8 @@ exec uwsgi #{uwsgi_config}
 
     if not File.exists? upstart_config_path
         sudo_write_config upstart_config_path, upstart_config_contents
-        puts "WARNING: Reboot required to launch uwsgi"
+        sh "sudo initctl reload-configuration"
+        sh "sudo initctl start wa2_uwsgi"
     end
 end
 
@@ -135,4 +159,8 @@ end
 
 task :reload_nginx do
    sh "sudo service nginx restart" 
+end
+
+task :run_debug do
+    `python3 webapp/app.py`
 end

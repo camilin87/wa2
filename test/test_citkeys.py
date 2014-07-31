@@ -1,5 +1,5 @@
 from unittest import TestCase
-from extapi.citkeys import CitKeys
+from wa.extapi.citkeys import CitKeys
 
 
 class TestsCitKeys(TestCase):

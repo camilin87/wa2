@@ -1,6 +1,6 @@
 from unittest import TestCase
-from api.apirequest import ApiRequest
-from api import returncode
+from wa.api.apirequest import ApiRequest
+from wa.api import returncode
 
 
 class TestApiRequest(TestCase):

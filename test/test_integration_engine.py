@@ -1,10 +1,10 @@
 from unittest import TestCase
 from nose.plugins.attrib import attr
-from extapi.citkeys import CitKeys
-from factory.enginefactory import EngineFactory
-from engine.datarequest import DataRequest
-from extapi.dataresponsebuilder import DataResponseBuilder
-from engine import precipitationtype
+from wa.extapi.citkeys import CitKeys
+from wa.factory.enginefactory import EngineFactory
+from wa.engine.datarequest import DataRequest
+from wa.extapi.dataresponsebuilder import DataResponseBuilder
+from wa.engine import precipitationtype
 from forecastiohelper import ForecastIoHelper
 
 

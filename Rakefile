@@ -4,6 +4,10 @@ def basedir
    return File.expand_path "."
 end
 
+def wa_packages
+    return ["wa"]
+end
+
 $gitstats_dir = File.join(basedir, ".git-stats-src/")
 
 $PYTHON_VERSION = "3.4.0"
@@ -26,14 +30,16 @@ def ensure_python_is(python_version)
     fail error_msg unless current_version.include? python_version
 end
 
-def sudo_install_pypi_packages(pypi_packages)
-    pypi_packages.each do |pkg|
-        sh "sudo pip install --upgrade #{pkg}"
+task :install_wa do
+    wa_packages.each do |pkg|
+        pkg_setup_path = File.join(basedir, "#{pkg}/setup.py")
+        sh "python #{pkg_setup_path} -q install"
     end
 end
 
 task :clean => [:clean_pyc] do
     rm_rf $reports_dir
+    rm_rf File.join(basedir, "build/")
 end
 
 task :clean_pyc do
@@ -43,11 +49,11 @@ task :clean_pyc do
 end
 
 task :all_tests => [:tests, :integration]
-task :tests => [:clean_pyc] do
+task :tests => [:clean_pyc, :install_wa] do
     sh %{nosetests -s -a '!integration'}
 end
 
-task :integration => [:clean_pyc] do
+task :integration => [:clean_pyc, :install_wa] do
     sh %{nosetests -s -a 'integration'}
 end
 
@@ -130,16 +136,16 @@ task :report_lines_of_code do
     puts "Production: #{loc_prod}"
 end
 
-task :run_debug do
-    `python webapp/app.py`
-end
-
 task :validate_cache_debug do
     Rake::Task[:validate_cache].invoke("localhost", 8080)
 end
 
+task :validate_cache_prod_quick do
+    Rake::Task[:validate_cache].invoke("localhost", 80)
+end
+
 task :validate_cache_prod do
-    Rake::Task[:validate_cache].invoke("localhost", 80, 59)
+    Rake::Task[:validate_cache].invoke("localhost", 80, 3600 - 1)
 end
 
 task :validate_cache, [:server, :port, :ttl_sec] do |t, args|

@@ -1,5 +1,5 @@
-from extapi.forecastioretriever import ForecastIoRetriever
-from extapi.productionkeys import ProductionKeys
+from wa.extapi.forecastioretriever import ForecastIoRetriever
+from wa.extapi.productionkeys import ProductionKeys
 
 
 class EngineFactory(object):

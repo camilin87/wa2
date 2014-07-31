@@ -1,10 +1,10 @@
 from unittest import TestCase
-from api.dataretrievercontroller import DataRetrieverController
-from factory.apifactory import ApiFactory
+from wa.api.dataretrievercontroller import DataRetrieverController
+from wa.factory.apifactory import ApiFactory
 from unittest.mock import MagicMock
-from api.datarequestbuilder import DataRequestBuilder
-from api.hardcodedkeys import HardcodedKeys
-from api.apiresponse import ApiResponse
+from wa.api.datarequestbuilder import DataRequestBuilder
+from wa.api.hardcodedkeys import HardcodedKeys
+from wa.api.apiresponse import ApiResponse
 
 
 class TestEngineFactory(TestCase):

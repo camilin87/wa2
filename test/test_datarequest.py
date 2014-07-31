@@ -1,5 +1,5 @@
 from unittest import TestCase
-from engine.datarequest import DataRequest
+from wa.engine.datarequest import DataRequest
 
 
 class TestDataRequest(TestCase):

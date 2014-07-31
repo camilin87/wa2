@@ -1,8 +1,8 @@
-from engine.dataretriever import DataRetriever
+from wa.engine.dataretriever import DataRetriever
 from forecastio import load_forecast
-from extapi.dataresponsebuilder import DataResponseBuilder
+from wa.extapi.dataresponsebuilder import DataResponseBuilder
 from requests.exceptions import RequestException
-from engine.transmissionerror import TransmissionError
+from wa.engine.transmissionerror import TransmissionError
 
 
 class ForecastIoRetriever(DataRetriever):

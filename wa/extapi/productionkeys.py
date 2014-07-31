@@ -1,4 +1,4 @@
-from extapi.apikeyreader import ApiKeyReader
+from wa.extapi.apikeyreader import ApiKeyReader
 
 
 class ProductionKeys(ApiKeyReader):
