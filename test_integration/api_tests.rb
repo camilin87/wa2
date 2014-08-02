@@ -1,8 +1,18 @@
 namespace :api_tests do
-    task :default => [:test_1, :test_2]
+    task :default => [:api_takes_trailing_slash, :test_2]
 
-    task :test_1 do
-        puts "api_tests.rb test_1 #{basedir} => ", $env_data
+    task :api_takes_trailing_slash do |t|
+       base_url = test_url_with "25.86", "-80.30"
+       expected_data = cleanup_timestamp `curl -L #{base_url}`
+       actual_data = cleanup_timestamp `curl -L #{base_url}/`
+
+       assert_true(t, expected_data == actual_data)
+    end
+
+    def cleanup_timestamp(response_body)
+        return response_body.lines.reject { |line|
+            line.include? "timestamp"
+        }.join "\n"
     end
 
     task :test_2 do

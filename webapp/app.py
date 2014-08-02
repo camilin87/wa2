@@ -11,7 +11,7 @@ def page_not_found(error):
     return app.send_static_file('404.html'), 404
 
 
-@app.route("/t/<api_key>/<latitude>/<longitude>")
+@app.route("/t/<api_key>/<latitude>/<longitude>/")
 def retrieve_data(api_key, latitude, longitude):
     return jsonify(ApiFactory.create_dummy_response(float(latitude), float(longitude)).__dict__)
 
