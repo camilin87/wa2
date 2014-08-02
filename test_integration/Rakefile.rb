@@ -15,15 +15,28 @@ task :production do |t|
 end
 
 task :debug do |t|
-    app_path = File.join(basedir, "webapp/app.py")
-    spawned_process = "python #{app_path}"
-    spawn(spawned_process)
+    Rake::Task[:start_debug_server].invoke
+
+    begin
+        run_tests t.name
+    ensure
+        Rake::Task[:stop_debug_server].invoke
+    end
+end
+
+task :start_debug_server do
+    spawn(debug_server_executable)
     sleep(3)
+end
 
-    run_tests t.name
-
-    pid = `ps -l | grep "#{spawned_process}" | grep -v "grep" | awk '{print $2}' | head -1`
+task :stop_debug_server do
+    pid = `ps -l | grep "#{debug_server_executable}" | grep -v "grep" | awk '{print $2}' | head -1`
     `kill #{pid}` unless pid.to_s.empty?
+end
+
+def debug_server_executable
+    app_path = File.join(basedir, "webapp/app.py")
+    return "python #{app_path}"
 end
 
 def run_tests(env_name)
