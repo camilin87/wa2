@@ -20,7 +20,7 @@ task :install_prod_dependencies do
 
     install_prod_wa_packages
 
-    Rake::Task[:install_wa].invoke
+    Rake::Task[:install_wa_prod].invoke
     Rake::Task[:configure_uwsgi].invoke
     Rake::Task[:configure_nginx].invoke
 end
