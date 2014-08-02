@@ -20,6 +20,7 @@ task :install_prod_dependencies do
 
     install_prod_wa_packages
 
+    Rake::Task[:install_wa].invoke
     Rake::Task[:configure_uwsgi].invoke
     Rake::Task[:configure_nginx].invoke
 end
@@ -104,6 +105,8 @@ exec uwsgi #{uwsgi_config}
         sh "sudo initctl reload-configuration"
         sh "sudo initctl start wa2_uwsgi"
     end
+
+    Rake::Task[:reload_uwsgi].invoke
 end
 
 def sudo_write_config(file_path, file_content)
