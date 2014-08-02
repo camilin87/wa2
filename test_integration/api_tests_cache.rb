@@ -1,10 +1,6 @@
 namespace :api_tests_cache do
     task :default => [:validate_cache]
 
-    def basedir
-       return File.expand_path ".."
-    end
-
     task :validate_cache do
         url_hialeah = test_url_with "25.86", "-80.30"
         url_lax = test_url_with "47.43", "-121.80"
