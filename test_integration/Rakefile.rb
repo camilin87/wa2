@@ -26,7 +26,7 @@ end
 
 task :start_debug_server do
     spawn(debug_server_executable)
-    sleep(3)
+    sleep(1)
 end
 
 task :stop_debug_server do
