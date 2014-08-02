@@ -16,12 +16,14 @@ end
 
 task :debug do |t|
     app_path = File.join(basedir, "webapp/app.py")
-    pid = spawn("python #{app_path}")
+    spawned_process = "python #{app_path}"
+    spawn(spawned_process)
     sleep(3)
 
     run_tests t.name
 
-    Process.kill("HUP", pid)
+    pid = `ps -l | grep "#{spawned_process}" | grep -v "grep" | awk '{print $2}' | head -1`
+    `kill #{pid}` unless pid.to_s.empty?
 end
 
 def run_tests(env_name)
