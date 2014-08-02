@@ -1,3 +1,4 @@
+import "api_tests_utils.rb"
 import "api_tests_cache.rb"
 import "api_tests.rb"
 
