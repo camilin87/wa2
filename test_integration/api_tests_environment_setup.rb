@@ -14,7 +14,7 @@ $env_data = {
 
 task :run_tests_with_environment, [:env] do |t, args|
     configure_environment args[:env]
-    Rake::Task["run_tests"].execute
+    Rake::Task[:run_tests].invoke
 end
 
 def configure_environment(environment)
