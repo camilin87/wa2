@@ -11,13 +11,13 @@ Development machines should have these
 - homebrew
 
 > sh setup-dev.sh
-> rake -f Rakefile-setup-dev install_dev_system_dependencies_mac
-> rake -f Rakefile-setup-dev install_dev_python_dependencies_mac
+> rake -f Rakefile-setup-dev.rb install_dev_system_dependencies_mac
+> rake -f Rakefile-setup-dev.rb install_dev_python_dependencies_mac
 
 Deployment Dependencies
 -----------------------
 > cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/api-integration-test && cd wa2
-> cd ~/wa2 && rake -f Rakefile-prod install_prod_dependencies
+> cd ~/wa2 && rake -f Rakefile-prod.rb install_prod_dependencies2
 
 Coding Standards
 ----------------

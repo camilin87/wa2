@@ -1,4 +1,4 @@
-import 'Rakefile'
+import 'Rakefile.rb'
 
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"

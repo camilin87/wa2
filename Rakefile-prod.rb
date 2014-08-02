@@ -1,4 +1,4 @@
-import 'Rakefile'
+import 'Rakefile.rb'
 
 def webapp_path
     return File.join(basedir, "webapp/")
