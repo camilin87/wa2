@@ -55,6 +55,11 @@ end
 
 task :integration => [:clean_pyc, :install_wa] do
     sh %{nosetests -s -a 'integration'}
+
+    test_integration_dir = File.join(basedir, "test_integration")
+    Dir.chdir(test_integration_dir){
+        sh %{rake debug} 
+    }
 end
 
 task :create_reports_dir do
