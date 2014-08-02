@@ -18,6 +18,7 @@ Deployment Dependencies
 -----------------------
 > cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/api-integration-test && cd wa2
 > cd ~/wa2 && rake -f Rakefile-prod.rb install_prod_dependencies2
+> cd ~/wa2/test_integration/ && rake staging && cd ..
 
 Coding Standards
 ----------------
