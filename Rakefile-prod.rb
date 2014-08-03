@@ -18,13 +18,13 @@ task :install_prod_dependencies do
     install_prod_system_packages
     install_pypi_prod_dependencies
 
-    install_prod_wa_packages
+    Rake::Task[:install_prod_wa_packages].invoke
 
     Rake::Task[:configure_uwsgi].invoke
     Rake::Task[:configure_nginx].invoke
 end
 
-def install_prod_wa_packages
+task :install_prod_wa_packages do
     wa_packages.each do |pkg|
         pkg_setup_path = File.join(basedir, "#{pkg}/setup.py")
         sh "sudo python3 #{pkg_setup_path} -q install"
@@ -88,6 +88,9 @@ stats = 127.0.0.1:1717
 memory-report = true
 master = true
 master-fifo = /tmp/wa2_uwsgi
+
+; custom configuration setting for wa2 only
+disable_debug = false
 }
     write_config uwsgi_config, uwsgi_config_contents
 

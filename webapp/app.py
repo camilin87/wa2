@@ -18,7 +18,7 @@ def page_not_found(error):
 
 @app.route("/t/<api_key>/<latitude>/<longitude>/")
 def retrieve_data_test(api_key, latitude, longitude):
-    if disable_debug:
+    if _disable_debug():
         abort(404)
         return
     return jsonify(ApiFactory.create_dummy_response(float(latitude), float(longitude)).__dict__)
@@ -26,12 +26,22 @@ def retrieve_data_test(api_key, latitude, longitude):
 
 @app.route("/s/<api_key>/<latitude>/<longitude>/")
 def retrieve_data_staging(api_key, latitude, longitude):
-    if disable_debug:
+    if _disable_debug():
         abort(404)
         return
     key_validator = FreeForAll()
     api_key_reader = CitKeys()
     return _retrieve_data(api_key, latitude, longitude, key_validator, api_key_reader)
+
+
+def _disable_debug():
+    def _disable_uwsgi_debug():
+        try:
+            from uwsgi import opt
+            return "true" == opt["disable_debug"].decode()
+        except:
+            return False
+    return disable_debug or _disable_uwsgi_debug()
 
 
 @app.route("/p/<api_key>/<latitude>/<longitude>/")
