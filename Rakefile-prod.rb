@@ -120,8 +120,11 @@ def write_config(file_path, file_content)
     end
 end
 
+def nginx_cache_dir
+    return "/var/nginx/cache"
+end
+
 task :configure_nginx do
-    nginx_cache_dir = "/var/nginx/cache"
     nginx_config = "/etc/nginx/sites-available/default"
     config_contents = %{
 upstream uwsgicluster {
@@ -157,6 +160,11 @@ server {
     sudo_write_config nginx_config, config_contents
 
     sh "sudo service nginx start"
+end
+
+task :clear_cache do
+    sh "sudo rm -R -f #{nginx_cache_dir}/*"
+    Rake::Task[:reload_nginx].invoke
 end
 
 task :reload_nginx do
