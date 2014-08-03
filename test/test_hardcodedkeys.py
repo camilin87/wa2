@@ -17,3 +17,6 @@ class TestHardcodedKeys(TestCase):
 
     def test_production_key_is_valid(self):
         self._key_should_be("4ce78e2fdeca946a94c04bb76de9d3f1", True)
+
+    def test_cit_key_is_valid(self):
+        self._key_should_be("4f8ae30039c63cb663a360282c28095d", True)
