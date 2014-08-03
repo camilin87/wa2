@@ -73,7 +73,7 @@ task :configure_uwsgi do
 start on runlevel [2345]
 stop on runlevel [06]
 
-exec uwsgi #{uwsgi_config}
+exec uwsgi #{uwsgi_config_path}
 }
     config_existed_before = File.file? upstart_config_path
     sudo_write_config upstart_config_path, upstart_config_contents
@@ -92,8 +92,11 @@ task :disable_debug do
     Rake::Task[:clear_cache].invoke
 end
 
+def uwsgi_config_path
+    return File.join(basedir, "uwsgi_config.ini")
+end
+
 def write_uwsgi_config(disable_debug = false)
-    uwsgi_config = File.join(basedir, "uwsgi_config.ini")
     uwsgi_config_contents = %{
 [uwsgi]
 socket = 127.0.0.1:3031
@@ -118,7 +121,7 @@ master-fifo = /tmp/wa2_uwsgi
 ; custom configuration setting for wa2 only
 disable_debug = #{disable_debug}
 }
-    write_config uwsgi_config, uwsgi_config_contents
+    write_config uwsgi_config_path, uwsgi_config_contents
 end
 
 def sudo_write_config(file_path, file_content)
