@@ -67,6 +67,32 @@ task :uwsgi_stats do
 end
 
 task :configure_uwsgi do
+    write_uwsgi_config
+    upstart_config_path = "/etc/init/wa2_uwsgi.conf"
+    upstart_config_contents = %{
+start on runlevel [2345]
+stop on runlevel [06]
+
+exec uwsgi #{uwsgi_config}
+}
+    config_existed_before = File.file? upstart_config_path
+    sudo_write_config upstart_config_path, upstart_config_contents
+
+    if config_existed_before
+        Rake::Task[:reload_uwsgi].invoke
+    else
+        puts "WARNING: Reboot required to launch uwsgi"
+    end
+end
+
+task :disable_debug do
+    write_uwsgi_config true
+
+    Rake::Task[:reload_uwsgi].invoke
+    Rake::Task[:clear_cache].invoke
+end
+
+def write_uwsgi_config(disable_debug = false)
     uwsgi_config = File.join(basedir, "uwsgi_config.ini")
     uwsgi_config_contents = %{
 [uwsgi]
@@ -90,25 +116,9 @@ master = true
 master-fifo = /tmp/wa2_uwsgi
 
 ; custom configuration setting for wa2 only
-disable_debug = false
+disable_debug = #{disable_debug}
 }
     write_config uwsgi_config, uwsgi_config_contents
-
-    upstart_config_path = "/etc/init/wa2_uwsgi.conf"
-    upstart_config_contents = %{
-start on runlevel [2345]
-stop on runlevel [06]
-
-exec uwsgi #{uwsgi_config}
-}
-    config_existed_before = File.file? upstart_config_path
-    sudo_write_config upstart_config_path, upstart_config_contents
-
-    if config_existed_before
-        Rake::Task[:reload_uwsgi].invoke
-    else
-        puts "WARNING: Reboot required to launch uwsgi"
-    end
 end
 
 def sudo_write_config(file_path, file_content)
