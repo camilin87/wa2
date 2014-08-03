@@ -98,12 +98,14 @@ stop on runlevel [06]
 
 exec uwsgi #{uwsgi_config}
 }
-
+    config_existed_before = File.file? upstart_config_path
     sudo_write_config upstart_config_path, upstart_config_contents
-    sh "sudo initctl reload-configuration"
-    sh "sudo initctl start wa2_uwsgi"
 
-    Rake::Task[:reload_uwsgi].invoke
+    if config_existed_before
+        Rake::Task[:reload_uwsgi].invoke
+    else
+        puts "WARNING: Reboot required to launch uwsgi"
+    end
 end
 
 def sudo_write_config(file_path, file_content)
