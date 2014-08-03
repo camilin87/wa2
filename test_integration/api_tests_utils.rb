@@ -8,7 +8,7 @@ def test_url_with(latitude, longitude)
 end
 
 def staging_url_with(latitude, longitude)
-    result_url = "#{host_url}/s/29hrndtLxcjnAkUcnyRTnmAY/#{latitude}/#{longitude}"
+    result_url = "#{host_url}/s/anyapikey/#{latitude}/#{longitude}"
     return result_url
 end
 

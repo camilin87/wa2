@@ -2,6 +2,8 @@ from flask import Flask
 from flask import jsonify
 from wa.factory.apifactory import ApiFactory
 from wa.factory.enginefactory import EngineFactory
+from wa.api.freeforall import FreeForAll
+from wa.extapi.citkeys import CitKeys
 
 
 app = Flask(__name__)
@@ -19,16 +21,26 @@ def retrieve_data_test(api_key, latitude, longitude):
 
 @app.route("/s/<api_key>/<latitude>/<longitude>/")
 def retrieve_data_staging(api_key, latitude, longitude):
-    return retrieve_data_production(api_key, latitude, longitude)
+    key_validator = FreeForAll()
+    api_key_reader = CitKeys()
+    return _retrieve_data(api_key, latitude, longitude, key_validator, api_key_reader)
 
 
 @app.route("/p/<api_key>/<latitude>/<longitude>/")
 def retrieve_data_production(api_key, latitude, longitude):
-    data_retriever_controller = ApiFactory.create_data_retriever_controller(
-        EngineFactory.create_data_retriever()
-    )
+    return _retrieve_data(api_key, latitude, longitude)
+
+
+def _retrieve_data(api_key, latitude, longitude, key_validator=None, api_key_reader=None):
+    data_retriever_controller = _create_controller(key_validator, api_key_reader)
     api_response = data_retriever_controller.get(api_key, latitude, longitude)
     return jsonify(api_response.__dict__)
+
+
+def _create_controller(key_validator, api_key_reader):
+    data_retriever = EngineFactory.create_data_retriever(api_key_reader)
+    return ApiFactory.create_data_retriever_controller(data_retriever, key_validator)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
