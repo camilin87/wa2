@@ -14,3 +14,6 @@ class TestHardcodedKeys(TestCase):
 
     def test_empty_keys_are_not_valid(self):
         self._key_should_be("", False)
+
+    def test_production_key_is_valid(self):
+        self._key_should_be("4ce78e2fdeca946a94c04bb76de9d3f1", True)
