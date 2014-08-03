@@ -1,3 +1,4 @@
+from sys import argv
 from flask import Flask
 from flask import jsonify
 from wa.factory.apifactory import ApiFactory
@@ -6,6 +7,7 @@ from wa.api.freeforall import FreeForAll
 from wa.extapi.citkeys import CitKeys
 
 
+disable_debug = False
 app = Flask(__name__)
 
 
@@ -16,11 +18,17 @@ def page_not_found(error):
 
 @app.route("/t/<api_key>/<latitude>/<longitude>/")
 def retrieve_data_test(api_key, latitude, longitude):
+    if disable_debug:
+        abort(404)
+        return
     return jsonify(ApiFactory.create_dummy_response(float(latitude), float(longitude)).__dict__)
 
 
 @app.route("/s/<api_key>/<latitude>/<longitude>/")
 def retrieve_data_staging(api_key, latitude, longitude):
+    if disable_debug:
+        abort(404)
+        return
     key_validator = FreeForAll()
     api_key_reader = CitKeys()
     return _retrieve_data(api_key, latitude, longitude, key_validator, api_key_reader)
@@ -43,4 +51,6 @@ def _create_controller(key_validator, api_key_reader):
 
 
 if __name__ == '__main__':
+    if "disable_debug" in argv:
+        disable_debug = True
     app.run(host='0.0.0.0', port=8080, debug=True)
