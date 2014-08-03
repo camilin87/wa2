@@ -21,8 +21,9 @@ def assert_true(task, condition, error_message="")
 end
 
 def curl(url)
-    puts "curl -L #{url}"
-    return `curl -L #{url}`
+    command = "curl -s -L #{url}"
+    puts command
+    return `#{command}`
 end
 
 def cleanup_timestamp(response_body)
