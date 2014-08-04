@@ -57,3 +57,11 @@ class TestAppCore(TestCase):
         result = self.app_core.retrieve_data_test("apikey", "12.3", "45.58")
 
         self.assertEquals(expected_result, result)
+
+    def test_retrieve_data_staging_returns_404_when_disabled(self):
+        self.app_core.disable_debug = True
+        self.app_core._abort_wrapper = MagicMock()
+
+        self.app_core.retrieve_data_staging(None, None, None)
+
+        self.app_core._abort_wrapper.assert_called_with(404)    
