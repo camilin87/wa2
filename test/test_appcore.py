@@ -37,3 +37,23 @@ class TestAppCore(TestCase):
 
         self.app_core._abort_wrapper.assert_called_with(404)
 
+    @patch("webapp.appcore.ApiFactory.create_dummy_response")
+    def test_retrieve_data_test_returns_dummy_response(self, create_mock):
+        seeded_response = MagicMock()
+        expected_result = MagicMock()
+
+        def create_response_func(lat, long):
+            if (lat == 12.30 and long == 45.58):
+                return seeded_response
+            raise NotImplementedError("Calling create_dummy_response with invalid arguments")
+        create_mock.side_effect = create_response_func
+
+        def jsonify_func(value):
+            if value == seeded_response.__dict__:
+                return expected_result
+            raise NotImplementedError("Calling jsonify with invalid arguments")
+        self.app_core._jsonify_wrapper = MagicMock(side_effect=jsonify_func)
+
+        result = self.app_core.retrieve_data_test("apikey", "12.3", "45.58")
+
+        self.assertEquals(expected_result, result)
