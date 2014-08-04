@@ -19,7 +19,7 @@ class TestAppCore(TestCase):
         abort_mock.assert_called_with(123)
 
     @patch("webapp.appcore.jsonify")
-    def test_abort_wrapper(self, jsonify_mock):
+    def test_jsonify_wrapper(self, jsonify_mock):
         seeded_result = MagicMock()
 
         def jsonify_func(value):

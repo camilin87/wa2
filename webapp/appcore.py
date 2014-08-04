@@ -27,7 +27,7 @@ class AppCore(object):
         def _disable_uwsgi_debug():
             try:
                 from uwsgi import opt
-                return "true" == opt["disable_debug"].decode()
+                return "true" == opt["disable_debug"].decode() # pragma: no cover
             except:
                 return False
         return self.disable_debug or _disable_uwsgi_debug()
