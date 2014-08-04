@@ -32,20 +32,30 @@ class AppCore(object):
             return
         key_validator = FreeForAll()
         api_key_reader = CitKeys()
-        return self._retrieve_data(
+        return AppCore._retrieve_data_json(
             api_key, latitude_str, longitude_str, key_validator, api_key_reader
         )
 
     def retrieve_data_production(self, api_key, latitude_str, longitude_str):
-        return self._retrieve_data(api_key, latitude_str, longitude_str)
+        return AppCore._retrieve_data_json(api_key, latitude_str, longitude_str)
 
-    def _retrieve_data(
-        self, api_key, latitude_str, longitude_str, key_validator=None, api_key_reader=None
+    @staticmethod
+    def _retrieve_data_json(
+            api_key, latitude_str, longitude_str, key_validator=None, api_key_reader=None
     ):
-        data_retriever_controller = self._create_controller(key_validator, api_key_reader)
-        api_response = data_retriever_controller.get(api_key, latitude_str, longitude_str)
+        api_response = AppCore._retrieve_data(
+            api_key, latitude_str, longitude_str, key_validator, api_key_reader
+        )
         return jsonify(api_response.__dict__)
 
-    def _create_controller(self, key_validator, api_key_reader):
+    @staticmethod
+    def _retrieve_data(
+            api_key, latitude_str, longitude_str, key_validator, api_key_reader
+    ):
+        data_retriever_controller = AppCore._create_controller(key_validator, api_key_reader)
+        return data_retriever_controller.get(api_key, latitude_str, longitude_str)
+
+    @staticmethod
+    def _create_controller(key_validator, api_key_reader):
         data_retriever = EngineFactory.create_data_retriever(api_key_reader)
         return ApiFactory.create_data_retriever_controller(data_retriever, key_validator)
