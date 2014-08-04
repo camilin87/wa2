@@ -24,9 +24,8 @@ class TestIntegrationEngine(TestCase):
             DataResponseBuilder.intensity_type(api_response["precipIntensity"]),
             response.intensity
         )
-        self.assertEquals(
-            api_response["precipProbability"] * 100,
-            response.pop_percent
+        self.assertTrue(
+            abs(api_response["precipProbability"] * 100 - response.pop_percent) < 5
         )
         if not api_response["precipType"]:
             self.assertEquals(precipitationtype.NONE, response.precipitation)
