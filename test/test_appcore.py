@@ -2,6 +2,8 @@ from unittest import TestCase
 from unittest.mock import patch
 from webapp.appcore import AppCore
 from unittest.mock import MagicMock
+from wa.extapi.citkeys import CitKeys
+from wa.api.freeforall import FreeForAll
 
 
 class TestAppCore(TestCase):
@@ -64,4 +66,44 @@ class TestAppCore(TestCase):
 
         self.app_core.retrieve_data_staging(None, None, None)
 
-        self.app_core._abort_wrapper.assert_called_with(404)    
+        self.app_core._abort_wrapper.assert_called_with(404)
+
+    @patch("webapp.appcore.EngineFactory.create_data_retriever")
+    @patch("webapp.appcore.ApiFactory.create_data_retriever_controller")
+    def test_retrieve_data_staging_returns_correct_response(
+            self, controller_mock, data_retriever_mock
+    ):
+        expected_result = MagicMock()
+
+        seeded_data_retriever = MagicMock()
+        def create_data_retriever_func(api_key_reader):
+            if isinstance(api_key_reader, CitKeys):
+                return seeded_data_retriever
+            raise NotImplementedError("Calling create_data_retriever with invalid arguments")
+        data_retriever_mock.side_effect = create_data_retriever_func
+
+        seeded_controller = MagicMock()
+        def create_controller_func(retriever, validator):
+            if retriever == seeded_data_retriever and isinstance(validator, FreeForAll):
+                return seeded_controller
+            raise NotImplementedError(
+                "Calling create_data_retriever_controller with invalid arguments"
+            )
+        controller_mock.side_effect = create_controller_func
+
+        seeded_response = MagicMock()
+        def get_func(api_key, lat_str, long_str):
+            if api_key == "apikey" and lat_str == "12.3" and long_str == "45.58":
+                return seeded_response
+            raise NotImplementedError("Calling get with invalid arguments")
+        seeded_controller.get.side_effect = get_func
+
+        def jsonify_func(value):
+            if value == seeded_response.__dict__:
+                return expected_result
+            raise NotImplementedError("Calling jsonify with invalid arguments")
+        self.app_core._jsonify_wrapper = MagicMock(side_effect=jsonify_func)
+
+        result = self.app_core.retrieve_data_staging("apikey", "12.3", "45.58")
+
+        self.assertEquals(expected_result, result)
