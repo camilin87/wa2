@@ -12,10 +12,13 @@ class AppCore(object):
 
     def retrieve_data_test(self, api_key, latitude_str, longitude_str):
         if self._disable_debug():
-            abort(404)
+            self._abort_wrapper(404)
             return
         result = ApiFactory.create_dummy_response(float(latitude_str), float(longitude_str))
         return jsonify(result.__dict__)
+
+    def _abort_wrapper(self, response_code):
+        abort(response_code)
 
     def _disable_debug(self):
         def _disable_uwsgi_debug():
@@ -28,7 +31,7 @@ class AppCore(object):
 
     def retrieve_data_staging(self, api_key, latitude_str, longitude_str):
         if self._disable_debug():
-            abort(404)
+            self._abort_wrapper(404)
             return
         key_validator = FreeForAll()
         api_key_reader = CitKeys()
