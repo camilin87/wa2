@@ -15,10 +15,13 @@ class AppCore(object):
             self._abort_wrapper(404)
             return
         result = ApiFactory.create_dummy_response(float(latitude_str), float(longitude_str))
-        return jsonify(result.__dict__)
+        return self._jsonify_wrapper(result.__dict__)
 
     def _abort_wrapper(self, response_code):
         abort(response_code)
+
+    def _jsonify_wrapper(self, value):
+        return jsonify(value)
 
     def _disable_debug(self):
         def _disable_uwsgi_debug():
@@ -35,21 +38,20 @@ class AppCore(object):
             return
         key_validator = FreeForAll()
         api_key_reader = CitKeys()
-        return AppCore._retrieve_data_json(
+        return self._retrieve_data_json(
             api_key, latitude_str, longitude_str, key_validator, api_key_reader
         )
 
     def retrieve_data_production(self, api_key, latitude_str, longitude_str):
-        return AppCore._retrieve_data_json(api_key, latitude_str, longitude_str)
+        return self._retrieve_data_json(api_key, latitude_str, longitude_str)
 
-    @staticmethod
     def _retrieve_data_json(
-            api_key, latitude_str, longitude_str, key_validator=None, api_key_reader=None
+            self, api_key, latitude_str, longitude_str, key_validator=None, api_key_reader=None
     ):
         api_response = AppCore._retrieve_data(
             api_key, latitude_str, longitude_str, key_validator, api_key_reader
         )
-        return jsonify(api_response.__dict__)
+        return self._jsonify_wrapper(api_response.__dict__)
 
     @staticmethod
     def _retrieve_data(
