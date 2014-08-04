@@ -46,7 +46,6 @@ class AppCore(object):
         api_response = data_retriever_controller.get(api_key, latitude_str, longitude_str)
         return jsonify(api_response.__dict__)
 
-
     def _create_controller(self, key_validator, api_key_reader):
         data_retriever = EngineFactory.create_data_retriever(api_key_reader)
         return ApiFactory.create_data_retriever_controller(data_retriever, key_validator)

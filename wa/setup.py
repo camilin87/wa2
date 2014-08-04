@@ -20,12 +20,12 @@ _log(sub_pkgs)
 from distutils.core import setup
 
 setup(
-    name = pkg_dir,
-    version = "0.1",
-    author = "CASH Productions",
-    author_email = "support@cash-productions.com",
-    description = ("Wa application"),
-    license = "Proprietary",
-    keywords = "weather API smart location",
-    packages = sub_pkgs
+    name=pkg_dir,
+    version="0.1",
+    author="CASH Productions",
+    author_email="support@cash-productions.com",
+    description=("Wa application"),
+    license="Proprietary",
+    keywords="weather API smart location",
+    packages=sub_pkgs
 )
