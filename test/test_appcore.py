@@ -21,6 +21,7 @@ class TestAppCore(TestCase):
     @patch("webapp.appcore.jsonify")
     def test_abort_wrapper(self, jsonify_mock):
         seeded_result = MagicMock()
+
         def jsonify_func(value):
             if value == 123:
                 return seeded_result
@@ -28,7 +29,7 @@ class TestAppCore(TestCase):
         jsonify_mock.side_effect = jsonify_func
 
         actual_result = self.app_core._jsonify_wrapper(123)
-        
+
         self.assertEquals(seeded_result, actual_result)
 
     def test_retrieve_data_test_returns_404_when_disabled(self):
@@ -74,15 +75,16 @@ class TestAppCore(TestCase):
             self, controller_mock, data_retriever_mock
     ):
         expected_result = MagicMock()
-
         seeded_data_retriever = MagicMock()
+        seeded_controller = MagicMock()
+        seeded_response = MagicMock()
+
         def create_data_retriever_func(api_key_reader):
             if isinstance(api_key_reader, CitKeys):
                 return seeded_data_retriever
             raise NotImplementedError("Calling create_data_retriever with invalid arguments")
         data_retriever_mock.side_effect = create_data_retriever_func
 
-        seeded_controller = MagicMock()
         def create_controller_func(retriever, validator):
             if retriever == seeded_data_retriever and isinstance(validator, FreeForAll):
                 return seeded_controller
@@ -91,7 +93,6 @@ class TestAppCore(TestCase):
             )
         controller_mock.side_effect = create_controller_func
 
-        seeded_response = MagicMock()
         def get_func(api_key, lat_str, long_str):
             if api_key == "apikey" and lat_str == "12.3" and long_str == "45.58":
                 return seeded_response
@@ -114,24 +115,24 @@ class TestAppCore(TestCase):
             self, controller_mock, data_retriever_mock
     ):
         expected_result = MagicMock()
-
         seeded_data_retriever = MagicMock()
+        seeded_controller = MagicMock()
+        seeded_response = MagicMock()
+
         def create_data_retriever_func(api_key_reader):
-            if api_key_reader == None:
+            if api_key_reader is None:
                 return seeded_data_retriever
             raise NotImplementedError("Calling create_data_retriever with invalid arguments")
         data_retriever_mock.side_effect = create_data_retriever_func
 
-        seeded_controller = MagicMock()
         def create_controller_func(retriever, validator):
-            if retriever == seeded_data_retriever and validator == None:
+            if retriever == seeded_data_retriever and validator is None:
                 return seeded_controller
             raise NotImplementedError(
                 "Calling create_data_retriever_controller with invalid arguments"
             )
         controller_mock.side_effect = create_controller_func
 
-        seeded_response = MagicMock()
         def get_func(api_key, lat_str, long_str):
             if api_key == "apikey" and lat_str == "12.3" and long_str == "45.58":
                 return seeded_response
