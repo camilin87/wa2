@@ -26,6 +26,12 @@ class TestEngineFactory(TestCase):
         self.assertIsInstance(controller, DataRetrieverController)
         self.assertEquals(key_validator_mock, controller.validator)
 
-    def test_creates_dummy_response(self):
-        response = ApiFactory.create_dummy_response()
+    def test_creates_dummy_response_sunny(self):
+        response = ApiFactory.create_dummy_response(45, 45)
         self.assertIsInstance(response, ApiResponse)
+        self.assertTrue("Sunny" in response.summary)
+
+    def test_creates_dummy_response_cloudy(self):
+        response = ApiFactory.create_dummy_response(4, 45)
+        self.assertIsInstance(response, ApiResponse)
+        self.assertTrue("Cloudy" in response.summary)

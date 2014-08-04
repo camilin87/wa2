@@ -55,6 +55,11 @@ end
 
 task :integration => [:clean_pyc, :install_wa] do
     sh %{nosetests -s -a 'integration'}
+
+    test_integration_dir = File.join(basedir, "test_integration")
+    Dir.chdir(test_integration_dir){
+        sh %{rake debug} 
+    }
 end
 
 task :create_reports_dir do
@@ -134,48 +139,4 @@ task :report_lines_of_code do
     puts "Lines of Code"
     puts "Test:       #{loc_test}"
     puts "Production: #{loc_prod}"
-end
-
-task :validate_cache_debug do
-    Rake::Task[:validate_cache].invoke("localhost", 8080)
-end
-
-task :validate_cache_prod_quick do
-    Rake::Task[:validate_cache].invoke("localhost", 80)
-end
-
-task :validate_cache_prod do
-    Rake::Task[:validate_cache].invoke("localhost", 80, 3600 - 1)
-end
-
-task :validate_cache, [:server, :port, :ttl_sec] do |t, args|
-    args.with_defaults(:server => "localhost", :port => 80, :ttl_sec => 3)
-
-    url_hialeah = "http://#{args[:server]}:#{args[:port]}/t/api_key/25.86/-80.30"
-    puts url_hialeah
-
-    url_lax = "http://#{args[:server]}:#{args[:port]}/t/api_key/47.43/-121.80"
-    puts url_lax
-
-    cache_ttl_sec = args[:ttl_sec]
-
-    if not all_urls_return_different_responses([url_hialeah, url_lax])
-        fail "cache error: different urls return the same result"
-        return
-    end
-
-    cache_test_output = `python test/cacherequesthelper.py "#{url_hialeah}" #{cache_ttl_sec}`
-
-    if not cache_test_output.include? "is_cached=True"
-        fail "cache error"
-        return
-    end
-        
-    puts "Cache OK"        
-end
-
-def all_urls_return_different_responses(url_list)
-    responses = []
-    url_list.each { |url| responses.push `curl #{url}` }
-    return responses.uniq.length == responses.length
 end

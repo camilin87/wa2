@@ -1,4 +1,4 @@
-import 'Rakefile'
+import 'Rakefile.rb'
 
 task :configure_pyenv do
     bash_profile = File.expand_path "~/.bash_profile"
@@ -50,8 +50,8 @@ end
 def install_pypi_dev_dependencies
     dev_packages = [
         "pkginit", "nose", "freezegun", "coverage",
-        "pylint", "pep8", "python-forecastio",
-        "Flask"
+        "pylint", "pep8",
+        "python-forecastio", "Flask"
     ]
     sudo_install_pypi_packages dev_packages
 end
