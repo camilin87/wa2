@@ -7,11 +7,6 @@ api_params = "/<api_key>/<latitude>/<longitude>/"
 app_core = AppCore()
 
 
-@app.errorhandler(404)
-def page_not_found(error):
-    return app.send_static_file('404.html'), 404
-
-
 @app.route("/t" + api_params)
 def retrieve_data_test(api_key, latitude, longitude):
     return app_core.retrieve_data_test(api_key, latitude, longitude)
