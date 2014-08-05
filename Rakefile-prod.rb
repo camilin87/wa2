@@ -118,6 +118,8 @@ memory-report = true
 master = true
 master-fifo = /tmp/wa2_uwsgi
 
+add-header = Cache-Control: public, max-age=3600
+
 ; custom configuration setting for wa2 only
 disable_debug = #{disable_debug}
 }
