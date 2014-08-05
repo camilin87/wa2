@@ -56,7 +56,7 @@ class AppCore(object):
     
         debug((
             "AppCore._retrieve_data_json; " + 
-            "api_key='{0}', latitude_str={1}, longitude_str={2}, result_json={3}"
+            "api_key='{0}', latitude_str={1}, longitude_str={2}, result_json='{3}'"
         ).format(
             api_key, latitude_str, longitude_str, result.response[0].decode().replace("\n", "")
         ))
