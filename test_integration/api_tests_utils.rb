@@ -27,7 +27,7 @@ def curl(url)
 end
 
 def curl_headers(url)
-    command = "curl -I -L #{url}"
+    command = "curl -s -I -L #{url}"
     puts command
     return `#{command}`
 end
