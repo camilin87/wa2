@@ -26,6 +26,12 @@ def curl(url)
     return `#{command}`
 end
 
+def curl_headers(url)
+    command = "curl -I -L #{url}"
+    puts command
+    return `#{command}`
+end
+
 def cleanup_timestamp(response_body)
     return response_body.lines.reject { |line|
         line.include? "timestamp"

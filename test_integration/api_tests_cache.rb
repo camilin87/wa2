@@ -1,5 +1,9 @@
 namespace :api_tests_cache do
-    task :default => [:all_urls_return_different_responses, :validate_cache]
+    task :default => [
+        :all_urls_return_different_responses,
+        :validate_cache,
+        :cache_expiration_header
+    ]
 
     task :all_urls_return_different_responses do |t|
         urls_return_different = all_urls_return_different_responses([url_hialeah, url_lax])
@@ -13,6 +17,13 @@ namespace :api_tests_cache do
         output_is_cached = cache_test_output.include? "is_cached=True"
 
         assert_true(t, output_is_cached)
+    end
+
+    task :cache_expiration_header do |t|
+        cache_test_output = curl_headers url_hialeah 
+        contains_cache_header = cache_test_output.include? "Cache-Control: max-age=3600"
+
+        assert_true(t, contains_cache_header)
     end
 
     def url_hialeah
