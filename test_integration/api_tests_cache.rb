@@ -21,7 +21,7 @@ namespace :api_tests_cache do
 
     task :cache_expiration_header do |t|
         cache_test_output = curl_headers url_hialeah 
-        contains_cache_header = cache_test_output.include? "Cache-Control: max-age=3600"
+        contains_cache_header = cache_test_output.include? "Cache-Control: public, max-age=3600"
 
         assert_true(t, contains_cache_header)
     end
