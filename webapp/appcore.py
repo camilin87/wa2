@@ -4,6 +4,7 @@ from wa.factory.apifactory import ApiFactory
 from wa.factory.enginefactory import EngineFactory
 from wa.api.freeforall import FreeForAll
 from wa.extapi.citkeys import CitKeys
+from logging import debug
 
 
 class AppCore(object):
@@ -51,7 +52,16 @@ class AppCore(object):
         api_response = AppCore._retrieve_data(
             api_key, latitude_str, longitude_str, key_validator, api_key_reader
         )
-        return self._jsonify_wrapper(api_response.__dict__)
+        result = self._jsonify_wrapper(api_response.__dict__)
+    
+        debug((
+            "AppCore._retrieve_data_json; " + 
+            "api_key='{0}', latitude_str={1}, longitude_str={2}, result_json={3}"
+        ).format(
+            api_key, latitude_str, longitude_str, result.response[0].decode().replace("\n", "")
+        ))
+
+        return result
 
     @staticmethod
     def _retrieve_data(
