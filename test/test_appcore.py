@@ -4,6 +4,7 @@ from webapp.appcore import AppCore
 from unittest.mock import MagicMock
 from wa.extapi.citkeys import CitKeys
 from wa.api.freeforall import FreeForAll
+import logging
 
 
 class TestAppCore(TestCase):
@@ -148,3 +149,13 @@ class TestAppCore(TestCase):
         result = self.app_core.retrieve_data_production("apikey", "12.3", "45.58")
 
         self.assertEquals(expected_result, result)
+
+    @patch("webapp.appcore.logging.basicConfig")
+    def test_configures_logging(self, basic_config_mock):
+        self.app_core.configure_logging()
+
+        basic_config_mock.assert_called_with(
+            level=logging.INFO,
+            format="%(asctime)s [%(levelname)s] %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )

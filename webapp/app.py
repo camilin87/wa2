@@ -1,21 +1,12 @@
 from sys import argv
 from flask import Flask
 from appcore import AppCore
-from logging import basicConfig
-from logging import INFO
 
 
 app = Flask(__name__)
 api_params = "/<api_key>/<latitude>/<longitude>/"
 app_core = AppCore()
-
-log_format_str = "%(asctime)s [%(levelname)s] %(message)s"
-date_format_str = "%Y-%m-%d %H:%M:%S"
-basicConfig(
-    level=INFO,
-    format=log_format_str,
-    datefmt=date_format_str
-)
+app_core.configure_logging()
 
 
 @app.route("/t" + api_params)

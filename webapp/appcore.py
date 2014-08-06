@@ -4,7 +4,7 @@ from wa.factory.apifactory import ApiFactory
 from wa.factory.enginefactory import EngineFactory
 from wa.api.freeforall import FreeForAll
 from wa.extapi.citkeys import CitKeys
-from logging import debug
+import logging
 
 
 class AppCore(object):
@@ -54,7 +54,7 @@ class AppCore(object):
         )
         result = self._jsonify_wrapper(api_response.__dict__)
     
-        debug((
+        logging.debug((
             "AppCore._retrieve_data_json; " + 
             "api_key='{0}', latitude_str={1}, longitude_str={2}, result_json='{3}'"
         ).format(
@@ -74,3 +74,13 @@ class AppCore(object):
     def _create_controller(key_validator, api_key_reader):
         data_retriever = EngineFactory.create_data_retriever(api_key_reader)
         return ApiFactory.create_data_retriever_controller(data_retriever, key_validator)
+
+    def configure_logging(self):
+        log_format_str = "%(asctime)s [%(levelname)s] %(message)s"
+        date_format_str = "%Y-%m-%d %H:%M:%S"
+
+        logging.basicConfig(
+            level=logging.INFO,
+            format=log_format_str,
+            datefmt=date_format_str
+        )
