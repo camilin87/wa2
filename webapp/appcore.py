@@ -90,7 +90,7 @@ class AppCore(object):
         try:
             from uwsgi import opt
             if "true" == opt["log_debug"].decode():  # pragma: no cover
-                return logging.debug
+                return logging.DEBUG
         except:
             pass
         return self.log_level
