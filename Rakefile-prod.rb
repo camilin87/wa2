@@ -92,11 +92,18 @@ task :disable_debug do
     Rake::Task[:clear_cache].invoke
 end
 
+task :log_debug do
+    write_uwsgi_config false, true
+
+    Rake::Task[:reload_uwsgi].invoke
+    Rake::Task[:clear_cache].invoke
+end
+
 def uwsgi_config_path
     return File.join(basedir, "uwsgi_config.ini")
 end
 
-def write_uwsgi_config(disable_debug = false)
+def write_uwsgi_config(disable_debug = false, log_debug = false)
     uwsgi_config_contents = %{
 [uwsgi]
 socket = 127.0.0.1:3031
@@ -122,6 +129,7 @@ add-header = Cache-Control: public, max-age=3600
 
 ; custom configuration setting for wa2 only
 disable_debug = #{disable_debug}
+log_debug = #{log_debug}
 }
     write_config uwsgi_config_path, uwsgi_config_contents
 end

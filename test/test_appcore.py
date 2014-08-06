@@ -1,5 +1,6 @@
 from unittest import TestCase
 from unittest.mock import patch
+from unittest.mock import ANY
 from webapp.appcore import AppCore
 from unittest.mock import MagicMock
 from wa.extapi.citkeys import CitKeys
@@ -158,4 +159,16 @@ class TestAppCore(TestCase):
             level=logging.INFO,
             format="%(asctime)s [%(levelname)s] %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S"
+        )
+
+    @patch("webapp.appcore.logging.basicConfig")
+    def test_configures_debug_logging(self, basic_config_mock):
+        self.app_core.log_level = logging.DEBUG
+
+        self.app_core.configure_logging()
+
+        basic_config_mock.assert_called_with(
+            level=logging.DEBUG,
+            format=ANY,
+            datefmt=ANY
         )

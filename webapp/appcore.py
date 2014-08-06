@@ -54,9 +54,9 @@ class AppCore(object):
             api_key, latitude_str, longitude_str, key_validator, api_key_reader
         )
         result = self._jsonify_wrapper(api_response.__dict__)
-    
+
         logging.debug((
-            "AppCore._retrieve_data_json; " + 
+            "AppCore._retrieve_data_json; " +
             "api_key='{0}', latitude_str={1}, longitude_str={2}, result_json='{3}'"
         ).format(
             api_key, latitude_str, longitude_str, result.response[0].decode().replace("\n", "")
@@ -81,7 +81,16 @@ class AppCore(object):
         date_format_str = "%Y-%m-%d %H:%M:%S"
 
         logging.basicConfig(
-            level=self.log_level,
+            level=self._read_log_level(),
             format=log_format_str,
             datefmt=date_format_str
         )
+
+    def _read_log_level(self):
+        try:
+            from uwsgi import opt
+            if "true" == opt["log_debug"].decode():  # pragma: no cover
+                return logging.debug
+        except:
+            pass
+        return self.log_level
