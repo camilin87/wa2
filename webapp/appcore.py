@@ -10,6 +10,7 @@ import logging
 class AppCore(object):
     def __init__(self):
         self.disable_debug = False
+        self.log_level = logging.INFO
 
     def retrieve_data_test(self, api_key, latitude_str, longitude_str):
         if self._disable_debug():
@@ -80,7 +81,7 @@ class AppCore(object):
         date_format_str = "%Y-%m-%d %H:%M:%S"
 
         logging.basicConfig(
-            level=logging.INFO,
+            level=self.log_level,
             format=log_format_str,
             datefmt=date_format_str
         )
