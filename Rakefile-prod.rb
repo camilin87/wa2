@@ -72,6 +72,19 @@ task :reload_uwsgi do
     `sudo sh -c 'echo r > /tmp/wa2_uwsgi'`
 end
 
+task :start_uwsgi_manually do
+    is_running_output = `ps aux | grep "uwsgi" | grep -v "grep"`
+    if is_running_output.include? "uwsgi"
+        `sudo sh -c 'echo q > /tmp/wa2_uwsgi'`
+    end
+
+    `sudo rm /tmp/wa2_uwsgi`
+
+    `sed -i 's/daemonize/#daemonize/g' #{uwsgi_config_path}`
+
+    `NEW_RELIC_CONFIG_FILE=#{newrelic_config_path} newrelic-admin run-program uwsgi #{uwsgi_config_path}`
+end
+
 task :uwsgi_stats do
     system "uwsgitop 127.0.0.1:1717"
 end
