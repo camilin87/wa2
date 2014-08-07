@@ -151,21 +151,30 @@ def nginx_cache_dir
 end
 
 task :configure_nginx do
-    nginx_config = "/etc/nginx/sites-available/default"
-    system "sudo service nginx stop"
-
-    system "sudo mkdir -p #{nginx_cache_dir}"
-    sudo_write_config nginx_config, get_nginx_config_contents
-
-    sh "sudo service nginx start"
+    configure_nginx
 end
 
-def get_nginx_config_contents(no_cache = false)
+task :disable_cache => :clear_cache do
+    configure_nginx True
+end
+
+def configure_nginx(no_cache = False)
+    nginx_config = "/etc/nginx/sites-available/default"
     cache_config = get_nginx_cache_config
     if no_cache
         cache_config = ""
     end
+    config_contents = get_nginx_config_contents cache_config
 
+    system "sudo service nginx stop"
+
+    system "sudo mkdir -p #{nginx_cache_dir}"
+    sudo_write_config nginx_config, config_contents
+
+    sh "sudo service nginx start"
+end
+
+def get_nginx_config_contents(cache_config)
     return %{
         upstream uwsgicluster {
             server 127.0.0.1:3031;
