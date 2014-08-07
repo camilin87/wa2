@@ -158,7 +158,7 @@ task :disable_cache => :clear_cache do
     configure_nginx True
 end
 
-def configure_nginx(no_cache = False)
+def configure_nginx(no_cache = false)
     nginx_config = "/etc/nginx/sites-available/default"
     cache_config = get_nginx_cache_config
     if no_cache
