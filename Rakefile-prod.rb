@@ -151,41 +151,64 @@ def nginx_cache_dir
 end
 
 task :configure_nginx do
+    configure_nginx
+end
+
+task :disable_cache => :clear_cache do
+    configure_nginx true
+end
+
+def configure_nginx(no_cache = false)
     nginx_config = "/etc/nginx/sites-available/default"
-    config_contents = %{
-upstream uwsgicluster {
-    server 127.0.0.1:3031;
-}
+    cache_config = get_nginx_cache_config
+    if no_cache
+        cache_config = ""
+    end
+    config_contents = get_nginx_config_contents cache_config
 
-uwsgi_cache_path #{nginx_cache_dir} levels=1:2 keys_zone=one:10m max_size=2048m;
-
-server {
-    listen 80;
-
-    location / {
-        include            uwsgi_params;
-        uwsgi_pass         uwsgicluster;
-
-        proxy_redirect     off;
-        proxy_set_header   Host $host;
-        proxy_set_header   X-Real-IP $remote_addr;
-
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header   X-Forwarded-Host $server_name;
-
-        uwsgi_cache        one;
-        uwsgi_cache_key    $request_uri;
-        uwsgi_cache_valid  200 302   60m;
-        uwsgi_cache_valid  404     1440m;
-    }
-}
-}
     system "sudo service nginx stop"
 
     system "sudo mkdir -p #{nginx_cache_dir}"
     sudo_write_config nginx_config, config_contents
 
     sh "sudo service nginx start"
+end
+
+def get_nginx_config_contents(cache_config)
+    return %{
+        upstream uwsgicluster {
+            server 127.0.0.1:3031;
+        }
+
+        uwsgi_cache_path #{nginx_cache_dir} levels=1:2 keys_zone=one:10m max_size=2048m;
+
+        server {
+            listen 80;
+
+            location / {
+                include            uwsgi_params;
+                uwsgi_pass         uwsgicluster;
+
+                proxy_redirect     off;
+                proxy_set_header   Host $host;
+                proxy_set_header   X-Real-IP $remote_addr;
+
+                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header   X-Forwarded-Host $server_name;
+
+                #{cache_config}
+            }
+        }
+    }
+end
+
+def get_nginx_cache_config
+    return %{
+        uwsgi_cache        one;
+        uwsgi_cache_key    $request_uri;
+        uwsgi_cache_valid  200 302   60m;
+        uwsgi_cache_valid  404     1440m;
+    }
 end
 
 task :clear_cache do
