@@ -172,3 +172,19 @@ class TestAppCore(TestCase):
             format=ANY,
             datefmt=ANY
         )
+
+    @patch("webapp.appcore.logging.basicConfig")
+    def test_configures_debug_logging_from_uwsgi(self, basic_config_mock):
+        def read_param_func(param_name):
+            if param_name == "log_debug":
+                return logging.INFO
+            raise NotImplementedError("Calling _read_bool_uwsgi_parameter with invalid parameters")
+        self.app_core._read_bool_uwsgi_parameter = MagicMock(side_effect=read_param_func)
+
+        self.app_core.configure_logging()
+
+        basic_config_mock.assert_called_with(
+            level=logging.DEBUG,
+            format=ANY,
+            datefmt=ANY
+        )

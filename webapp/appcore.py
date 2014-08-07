@@ -26,13 +26,7 @@ class AppCore(object):
         return jsonify(value)
 
     def _disable_debug(self):
-        def _disable_uwsgi_debug():
-            try:
-                from uwsgi import opt
-                return "true" == opt["disable_debug"].decode()  # pragma: no cover
-            except:
-                return False
-        return self.disable_debug or _disable_uwsgi_debug()
+        return self.disable_debug or self._read_bool_uwsgi_parameter("disable_debug")
 
     def retrieve_data_staging(self, api_key, latitude_str, longitude_str):
         if self._disable_debug():
@@ -87,10 +81,13 @@ class AppCore(object):
         )
 
     def _read_log_level(self):
+        if self._read_bool_uwsgi_parameter("log_debug"):
+            return logging.DEBUG
+        return self.log_level
+
+    def _read_bool_uwsgi_parameter(self, param_name):
         try:
             from uwsgi import opt
-            if "true" == opt["log_debug"].decode():  # pragma: no cover
-                return logging.DEBUG
+            return "true" == opt[param_name].decode()  # pragma: no cover
         except:
-            pass
-        return self.log_level
+            return False
