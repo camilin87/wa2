@@ -173,10 +173,7 @@ server {
         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header   X-Forwarded-Host $server_name;
 
-        uwsgi_cache        one;
-        uwsgi_cache_key    $request_uri;
-        uwsgi_cache_valid  200 302   60m;
-        uwsgi_cache_valid  404     1440m;
+        #{get_nginx_cache_config}
     }
 }
 }
@@ -186,6 +183,15 @@ server {
     sudo_write_config nginx_config, config_contents
 
     sh "sudo service nginx start"
+end
+
+def get_nginx_cache_config
+    return %{
+        uwsgi_cache        one;
+        uwsgi_cache_key    $request_uri;
+        uwsgi_cache_valid  200 302   60m;
+        uwsgi_cache_valid  404     1440m;
+}
 end
 
 task :clear_cache do
