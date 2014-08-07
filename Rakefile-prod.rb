@@ -20,6 +20,7 @@ task :install_prod_dependencies do
 
     Rake::Task[:install_prod_wa_packages].invoke
 
+    Rake::Task[:configure_newrelic].invoke
     Rake::Task[:configure_uwsgi].invoke
     Rake::Task[:configure_nginx].invoke
 end
@@ -47,7 +48,7 @@ end
 
 def install_pypi_prod_dependencies
     prod_packages = [
-        "pkginit", "uwsgi", "python-forecastio", "Flask", "uwsgitop"
+        "pkginit", "uwsgi", "python-forecastio", "Flask", "uwsgitop", "newrelic"
     ]
     sudo_install_pypi_packages prod_packages
 end
@@ -56,6 +57,15 @@ def sudo_install_pypi_packages(pypi_packages)
     pypi_packages.each do |pkg|
         sh "sudo pip3 install --upgrade #{pkg}"
     end
+end
+
+def newrelic_config_path
+    return File.join(basedir, "newrelic.ini")
+end
+
+task :configure_newrelic do
+    new_relic_key = "550cb88ab17af890360b32fac5a898cd470274e6"
+    sh "newrelic-admin generate-config #{new_relic_key} #{newrelic_config_path}"
 end
 
 task :reload_uwsgi do
@@ -73,7 +83,7 @@ task :configure_uwsgi do
 start on runlevel [2345]
 stop on runlevel [06]
 
-exec uwsgi #{uwsgi_config_path}
+exec NEW_RELIC_CONFIG_FILE=#{newrelic_config_path} newrelic-admin run-program uwsgi #{uwsgi_config_path}
 }
     config_existed_before = File.file? upstart_config_path
     sudo_write_config upstart_config_path, upstart_config_contents
