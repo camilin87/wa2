@@ -155,7 +155,7 @@ task :configure_nginx do
 end
 
 task :disable_cache => :clear_cache do
-    configure_nginx True
+    configure_nginx true
 end
 
 def configure_nginx(no_cache = false)
