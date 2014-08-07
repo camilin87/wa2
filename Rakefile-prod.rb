@@ -160,7 +160,12 @@ task :configure_nginx do
     sh "sudo service nginx start"
 end
 
-def get_nginx_config_contents 
+def get_nginx_config_contents(no_cache = false)
+    cache_config = get_nginx_cache_config
+    if no_cache
+        cache_config = ""
+    end
+
     return %{
         upstream uwsgicluster {
             server 127.0.0.1:3031;
@@ -182,7 +187,7 @@ def get_nginx_config_contents
                 proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header   X-Forwarded-Host $server_name;
 
-                #{get_nginx_cache_config}
+                #{cache_config}
             }
         }
     }
