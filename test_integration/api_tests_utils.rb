@@ -2,8 +2,8 @@ def host_url
     return "#{$env_data[:protocol]}://#{$env_data[:host]}:#{$env_data[:port]}"
 end
 
-def test_url_with(latitude, longitude)
-    result_url = "#{host_url}/t/api_key/#{latitude}/#{longitude}"
+def test_url_with(latitude, longitude, api_key="api_key")
+    result_url = "#{host_url}/t/#{api_key}/#{latitude}/#{longitude}"
     return result_url
 end
 

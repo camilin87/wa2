@@ -2,6 +2,7 @@ namespace :api_tests_cache do
     task :default => [
         :all_urls_return_different_responses,
         :validate_cache,
+        :validate_cache_for_different_api_keys,
         :cache_expiration_header
     ]
 
@@ -15,6 +16,16 @@ namespace :api_tests_cache do
         cache_request_helper_path = File.join(basedir, "test/cacherequesthelper.py")
         cache_test_output = `python #{cache_request_helper_path} "#{url_hialeah}" #{$env_data[:cache_params][:ttl_seconds]}`
         output_is_cached = cache_test_output.include? "is_cached=True"
+
+        assert_true(t, output_is_cached)
+    end
+
+    test :validate_cache_for_different_api_keys do |t|
+        url_list = [
+            test_url_with("25.86", "-80.30", "apikey1"),
+            test_url_with("25.86", "-80.30", "apikey2"),
+        ]
+        output_is_cached = all_urls_return_the_same_response url_list
 
         assert_true(t, output_is_cached)
     end
@@ -35,8 +46,18 @@ namespace :api_tests_cache do
     end
 
     def all_urls_return_different_responses(url_list)
+        responses = get_responses url_list
+        return responses.uniq.length == responses.length
+    end
+
+    def all_urls_return_the_same_response(url_list)
+        responses = get_responses url_list
+        return responses.uniq.length == 1
+    end
+
+    def get_responses(url_list)
         responses = []
         url_list.each { |url| responses.push curl url }
-        return responses.uniq.length == responses.length
+        return responses
     end
 end
