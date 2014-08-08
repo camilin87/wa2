@@ -67,8 +67,8 @@ task :configure_newrelic do
     new_relic_key = "550cb88ab17af890360b32fac5a898cd470274e6"
     sh "newrelic-admin generate-config #{new_relic_key} #{newrelic_config_path}"
 
-    `sed -i 's/transaction_tracer.enabled/#transaction_tracer.enabled/g' #{newrelic_config_path}`
-    `sed -i 's/error_collector.enabled/#error_collector.enabled/g' #{newrelic_config_path}`
+    remove_setting newrelic_config_path, "transaction_tracer.enabled"
+    remove_setting newrelic_config_path, "error_collector.enabled"
 end
 
 task :reload_uwsgi do
@@ -83,10 +83,14 @@ task :start_uwsgi_manually do
 
     `sudo rm /tmp/wa2_uwsgi`
 
-    `sed -i 's/daemonize/#daemonize/g' #{uwsgi_config_path}`
+    remove_setting uwsgi_config_path, "daemonize"
 
     `env NEW_RELIC_CONFIG_FILE=#{newrelic_config_path}`
     `newrelic-admin run-program uwsgi #{uwsgi_config_path}`
+end
+
+def remove_setting(filename, setting_name, comment="#")
+    `sed -i 's/#{setting_name}/#{comment}#{setting_name}/g' #{filename}`
 end
 
 task :uwsgi_stats do
