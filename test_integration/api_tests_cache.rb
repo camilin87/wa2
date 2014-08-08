@@ -20,7 +20,7 @@ namespace :api_tests_cache do
         assert_true(t, output_is_cached)
     end
 
-    test :validate_cache_for_different_api_keys do |t|
+    task :validate_cache_for_different_api_keys do |t|
         url_list = [
             test_url_with("25.86", "-80.30", "apikey1"),
             test_url_with("25.86", "-80.30", "apikey2"),
