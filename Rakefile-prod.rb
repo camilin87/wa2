@@ -20,6 +20,7 @@ task :install_prod_dependencies do
 
     Rake::Task[:install_prod_wa_packages].invoke
 
+    Rake::Task[:configure_newrelic].invoke
     Rake::Task[:configure_uwsgi].invoke
     Rake::Task[:configure_nginx].invoke
 end
@@ -47,7 +48,7 @@ end
 
 def install_pypi_prod_dependencies
     prod_packages = [
-        "pkginit", "uwsgi", "python-forecastio", "Flask", "uwsgitop"
+        "pkginit", "uwsgi", "python-forecastio", "Flask", "uwsgitop", "newrelic"
     ]
     sudo_install_pypi_packages prod_packages
 end
@@ -58,8 +59,38 @@ def sudo_install_pypi_packages(pypi_packages)
     end
 end
 
+def newrelic_config_path
+    return File.join(basedir, "newrelic.ini")
+end
+
+task :configure_newrelic do
+    new_relic_key = "550cb88ab17af890360b32fac5a898cd470274e6"
+    sh "newrelic-admin generate-config #{new_relic_key} #{newrelic_config_path}"
+
+    remove_setting newrelic_config_path, "transaction_tracer.enabled"
+    remove_setting newrelic_config_path, "error_collector.enabled"
+end
+
 task :reload_uwsgi do
     `sudo sh -c 'echo r > /tmp/wa2_uwsgi'`
+end
+
+task :start_uwsgi_manually do
+    is_running_output = `ps aux | grep "uwsgi" | grep -v "grep"`
+    if is_running_output.include? "uwsgi"
+        `sudo sh -c 'echo q > /tmp/wa2_uwsgi'`
+    end
+
+    `sudo rm /tmp/wa2_uwsgi`
+
+    remove_setting uwsgi_config_path, "daemonize"
+
+    `env NEW_RELIC_CONFIG_FILE=#{newrelic_config_path}`
+    `newrelic-admin run-program uwsgi #{uwsgi_config_path}`
+end
+
+def remove_setting(filename, setting_name, comment="#")
+    `sed -i 's/#{setting_name}/#{comment}#{setting_name}/g' #{filename}`
 end
 
 task :uwsgi_stats do
@@ -73,7 +104,8 @@ task :configure_uwsgi do
 start on runlevel [2345]
 stop on runlevel [06]
 
-exec uwsgi #{uwsgi_config_path}
+env NEW_RELIC_CONFIG_FILE=#{newrelic_config_path}
+exec newrelic-admin run-program uwsgi #{uwsgi_config_path}
 }
     config_existed_before = File.file? upstart_config_path
     sudo_write_config upstart_config_path, upstart_config_contents

@@ -12,4 +12,5 @@
 code-reports
 .git-stats-src
 uwsgi_config.ini
+newrelic.ini
 build
