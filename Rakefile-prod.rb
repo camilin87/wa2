@@ -66,6 +66,9 @@ end
 task :configure_newrelic do
     new_relic_key = "550cb88ab17af890360b32fac5a898cd470274e6"
     sh "newrelic-admin generate-config #{new_relic_key} #{newrelic_config_path}"
+
+    `sed -i 's/transaction_tracer.enabled/#transaction_tracer.enabled/g' #{newrelic_config_path}`
+    `sed -i 's/error_collector.enabled/#error_collector.enabled/g' #{newrelic_config_path}`
 end
 
 task :reload_uwsgi do
