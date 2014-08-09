@@ -269,18 +269,13 @@ task :run_debug do
     `python3 webapp/app.py`
 end
 
-task :setup_self_signed_certificate do
-    server_key = File.join(basedir, "server.key")
-    server_csr = File.join(basedir, "server.csr")
-    config_csr = File.join(basedir, "csr_config.ini")
-    server_crt = File.join(basedir, "server.crt")
+task :setup_self_signed_certificate => :clean_ssl_dir do
+    sh "mkdir #{ssl_dir}"
 
-    [
-        server_key, "#{server_key}.out", 
-        server_csr, config_csr, server_crt
-    ].each do |fname|
-        system "sudo rm #{fname}"
-    end
+    server_key = File.join(ssl_dir, "server.key")
+    server_csr = File.join(ssl_dir, "server.csr")
+    config_csr = File.join(ssl_dir, "csr_config.ini")
+    server_crt = File.join(ssl_dir, "server.crt")
 
     puts "use the following password #{get_random_pwd}"
     sh "sudo openssl genrsa -des3 -out #{server_key} 1024"
@@ -308,6 +303,14 @@ task :setup_self_signed_certificate do
     sh "sudo openssl rsa -in #{server_key}.org -out #{server_key}"
 
     sh "sudo openssl x509 -req -days 365 -in #{server_csr} -signkey #{server_key} -out #{server_crt}"
+end
+
+task :clean_ssl_dir do
+    rm_rf ssl_dir
+end
+
+def ssl_dir
+    return File.join(basedir, "ssl/")
 end
 
 def get_random_pwd
