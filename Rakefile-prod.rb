@@ -207,6 +207,8 @@ def configure_nginx(no_cache = false)
 end
 
 def get_nginx_config_contents(cache_config)
+    location_contents = get_nginx_location cache_config
+
     return %{
         upstream uwsgicluster {
             server 127.0.0.1:3031;
@@ -217,30 +219,36 @@ def get_nginx_config_contents(cache_config)
         server {
             listen 80;
 
-            location ~ /(?<api_method>.+)/(?<api_key>.+)/(?<latitude>.+)/(?<longitude>.+) {
+            #{location_contents}
+        }
+    }
+end
 
-                include            uwsgi_params;
-                uwsgi_pass         uwsgicluster;
+def get_nginx_location(cache_config)
+    return %{
+        location ~ /(?<api_method>.+)/(?<api_key>.+)/(?<latitude>.+)/(?<longitude>.+) {
 
-                proxy_redirect     off;
-                proxy_set_header   Host $host;
-                proxy_set_header   X-Real-IP $remote_addr;
+            include            uwsgi_params;
+            uwsgi_pass         uwsgicluster;
 
-                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header   X-Forwarded-Host $server_name;
+            proxy_redirect     off;
+            proxy_set_header   Host $host;
+            proxy_set_header   X-Real-IP $remote_addr;
 
-                gzip on;
-                gzip_disable "msie6";
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Host $server_name;
 
-                gzip_vary on;
-                gzip_proxied any;
-                gzip_comp_level 6;
-                gzip_buffers 16 8k;
-                gzip_http_version 1.1;
-                gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+            gzip on;
+            gzip_disable "msie6";
 
-                #{cache_config}
-            }
+            gzip_vary on;
+            gzip_proxied any;
+            gzip_comp_level 6;
+            gzip_buffers 16 8k;
+            gzip_http_version 1.1;
+            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+            #{cache_config}
         }
     }
 end
