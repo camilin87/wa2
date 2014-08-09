@@ -310,7 +310,7 @@ task :clean_ssl_dir do
 end
 
 def ssl_dir
-    return File.join(basedir, "ssl/")
+    return File.join(basedir, "ssl-config/")
 end
 
 def get_random_pwd
