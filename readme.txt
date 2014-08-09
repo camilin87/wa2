@@ -16,7 +16,7 @@ Development machines should have these
 
 Deployment Dependencies
 -----------------------
-> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/improve-cache && cd wa2
+> cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh develop && cd wa2
 > cd ~/wa2 && rake -f Rakefile-prod.rb install_prod_dependencies
 > cd ~/wa2/test_integration/ && rake staging && cd ..
 > cd ~/wa2 && rake -f Rakefile-prod.rb disable_debug # this should be executed only in a production environment
