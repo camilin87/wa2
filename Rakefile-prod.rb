@@ -268,3 +268,49 @@ end
 task :run_debug do
     `python3 webapp/app.py`
 end
+
+task :setup_self_signed_certificate do
+    server_key = File.join(basedir, "server.key")
+    server_csr = File.join(basedir, "server.csr")
+    config_csr = File.join(basedir, "csr_config.ini")
+    server_crt = File.join(basedir, "server.crt")
+
+    [
+        server_key, "#{server_key}.out", 
+        server_csr, config_csr, server_crt
+    ].each do |fname|
+        system "sudo rm #{fname}"
+    end
+
+    puts "use the following password #{get_random_pwd}"
+    sh "sudo openssl genrsa -des3 -out #{server_key} 1024"
+
+    config_contents = %{
+         [ req ]
+         default_bits           = 1024
+         default_keyfile        = #{server_key}
+         distinguished_name     = req_distinguished_name
+         prompt                 = no
+         [ req_distinguished_name ]
+         C                      = US
+         ST                     = FL
+         L                      = Miami
+         O                      = CASH Productions
+         OU                     = SWA
+         CN                     = v1.api.smartweatheralerts.com
+         emailAddress           = postmaster@smartweatheralerts.com
+    }
+    write_config config_csr, config_contents
+
+    sh "sudo openssl req -new -key #{server_key} -out #{server_csr} -config #{config_csr}"
+
+    sh "sudo cp #{server_key} #{server_key}.org"
+    sh "sudo openssl rsa -in #{server_key}.org -out #{server_key}"
+
+    sh "sudo openssl x509 -req -days 365 -in #{server_csr} -signkey #{server_key} -out #{server_crt}"
+end
+
+def get_random_pwd
+    o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
+    return (0...50).map { o[rand(o.length)] }.join
+end
