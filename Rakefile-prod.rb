@@ -217,7 +217,7 @@ def get_nginx_config_contents(cache_config)
         server {
             listen 80;
 
-            location / {
+            location ~ /(.+)/(.+)/(.+)/(.+) {
                 include            uwsgi_params;
                 uwsgi_pass         uwsgicluster;
 
