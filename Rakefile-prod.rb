@@ -221,6 +221,17 @@ def get_nginx_config_contents(cache_config)
 
             #{location_contents}
         }
+
+        server {
+            listen 443;
+            server_name v1.api.smartweatheralerts.com;
+
+            ssl on;
+            ssl_certificate #{server_crt};
+            ssl_certificate_key #{server_key}; 
+
+            #{location_contents}
+        }
     }
 end
 
@@ -280,10 +291,8 @@ end
 task :setup_self_signed_certificate => :clean_ssl_dir do
     sh "mkdir #{ssl_dir}"
 
-    server_key = File.join(ssl_dir, "server.key")
     server_csr = File.join(ssl_dir, "server.csr")
     config_csr = File.join(ssl_dir, "csr_config.ini")
-    server_crt = File.join(ssl_dir, "server.crt")
 
     puts "use the following password #{get_random_pwd}"
     sh "sudo openssl genrsa -des3 -out #{server_key} 1024"
@@ -319,6 +328,14 @@ end
 
 def ssl_dir
     return File.join(basedir, "ssl-config/")
+end
+
+def server_key 
+    return File.join(ssl_dir, "server.key")
+end
+
+def server_crt 
+    return File.join(ssl_dir, "server.crt")
 end
 
 def get_random_pwd
