@@ -217,7 +217,8 @@ def get_nginx_config_contents(cache_config)
         server {
             listen 80;
 
-            location / {
+            location ~ /(?<api_method>.+)/(?<api_key>.+)/(?<latitude>.+)/(?<longitude>.+) {
+
                 include            uwsgi_params;
                 uwsgi_pass         uwsgicluster;
 
@@ -228,6 +229,16 @@ def get_nginx_config_contents(cache_config)
                 proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header   X-Forwarded-Host $server_name;
 
+                gzip on;
+                gzip_disable "msie6";
+
+                gzip_vary on;
+                gzip_proxied any;
+                gzip_comp_level 6;
+                gzip_buffers 16 8k;
+                gzip_http_version 1.1;
+                gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
                 #{cache_config}
             }
         }
@@ -237,9 +248,11 @@ end
 def get_nginx_cache_config
     return %{
         uwsgi_cache        one;
-        uwsgi_cache_key    $request_uri;
+        uwsgi_cache_key    $host$api_method$latitude$longitude;
         uwsgi_cache_valid  200 302   60m;
         uwsgi_cache_valid  404     1440m;
+
+        add_header         X-Cache $upstream_cache_status;
     }
 end
 
