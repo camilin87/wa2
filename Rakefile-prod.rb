@@ -238,7 +238,7 @@ end
 def get_nginx_cache_config
     return %{
         uwsgi_cache        one;
-        uwsgi_cache_key    $request_uri;
+        uwsgi_cache_key    $host$api_method$latitude$longitude;
         uwsgi_cache_valid  200 302   60m;
         uwsgi_cache_valid  404     1440m;
     }
