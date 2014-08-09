@@ -229,6 +229,16 @@ def get_nginx_config_contents(cache_config)
                 proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header   X-Forwarded-Host $server_name;
 
+                gzip on;
+                gzip_disable "msie6";
+
+                gzip_vary on;
+                gzip_proxied any;
+                gzip_comp_level 6;
+                gzip_buffers 16 8k;
+                gzip_http_version 1.1;
+                gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
                 #{cache_config}
             }
         }
