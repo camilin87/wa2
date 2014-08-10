@@ -224,7 +224,6 @@ def get_nginx_config_contents(cache_config)
 
         server {
             listen 443;
-            server_name v1.api.smartweatheralerts.com;
 
             ssl on;
             ssl_certificate #{server_crt};
