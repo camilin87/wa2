@@ -14,7 +14,10 @@ namespace :api_tests_cache do
 
     task :validate_cache do |t|
         cache_request_helper_path = File.join(basedir, "test/cacherequesthelper.py")
-        cache_test_output = `python #{cache_request_helper_path} "#{url_hialeah}" #{$env_data[:cache_params][:ttl_seconds]}`
+        cache_validation_command = "python #{cache_request_helper_path} "#{url_hialeah}" #{$env_data[:cache_params][:ttl_seconds]}"
+        puts cache_validation_command
+        
+        cache_test_output = `#{cache_validation_command}`
         output_is_cached = cache_test_output.include? "is_cached=True"
 
         assert_true(t, output_is_cached)
