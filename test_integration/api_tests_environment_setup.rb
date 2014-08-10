@@ -5,6 +5,7 @@ import "api_tests.rb"
 $env_data = {
     :name => "default",
     :protocol => "http",
+    :verify_certificate => false,
     :host => "localhost",
     :port => 80,
     :validate_cache => false,
