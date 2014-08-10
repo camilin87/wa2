@@ -291,7 +291,7 @@ end
 
 task :setup_self_signed_certificate_if_needed do
     if not File.exists? server_key or not File.exists? server_crt
-        Rake::Task[:setup_self_signed_certificate].invoke True
+        Rake::Task[:setup_self_signed_certificate].invoke true
     else
         puts "server_key and server_crt already exist"
     end
