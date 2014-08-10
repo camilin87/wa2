@@ -22,6 +22,8 @@ task :install_prod_dependencies do
 
     Rake::Task[:configure_newrelic].invoke
     Rake::Task[:configure_uwsgi].invoke
+
+    Rake::Task[:setup_self_signed_certificate_if_needed].invoke
     Rake::Task[:configure_nginx].invoke
 end
 
@@ -287,7 +289,15 @@ task :run_debug do
     `python3 webapp/app.py`
 end
 
-task :setup_self_signed_certificate => :clean_ssl_dir do
+task :setup_self_signed_certificate_if_needed do
+    if not File.exists? server_key or not File.exists? server_crt
+        Rake::Task[:setup_self_signed_certificate].invoke True
+    else
+        puts "server_key and server_crt already exist"
+    end
+end
+
+task :setup_self_signed_certificate, [:no_reload] => :clean_ssl_dir do |t, args|
     sh "mkdir #{ssl_dir}"
 
     server_csr = File.join(ssl_dir, "server.csr")
@@ -320,7 +330,7 @@ task :setup_self_signed_certificate => :clean_ssl_dir do
 
     sh "sudo openssl x509 -req -days 365 -in #{server_csr} -signkey #{server_key} -out #{server_crt}"
 
-    Rake::Task[:reload_nginx].invoke
+    Rake::Task[:reload_nginx].invoke unless args[:no_reload]
 end
 
 task :clean_ssl_dir do
