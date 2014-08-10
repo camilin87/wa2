@@ -319,6 +319,8 @@ task :setup_self_signed_certificate => :clean_ssl_dir do
     sh "sudo openssl rsa -in #{server_key}.org -out #{server_key}"
 
     sh "sudo openssl x509 -req -days 365 -in #{server_csr} -signkey #{server_key} -out #{server_crt}"
+
+    Rake::Task[:reload_nginx].invoke
 end
 
 task :clean_ssl_dir do
