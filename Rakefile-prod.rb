@@ -210,6 +210,8 @@ end
 
 def get_nginx_config_contents(cache_config)
     location_contents = get_nginx_location cache_config
+    http_server = get_nginx_http_server location_contents
+    https_server = get_nginx_https_server location_contents
 
     return %{
         upstream uwsgicluster {
@@ -218,18 +220,30 @@ def get_nginx_config_contents(cache_config)
 
         uwsgi_cache_path #{nginx_cache_dir} levels=1:2 keys_zone=one:10m max_size=2048m;
 
-        server {
-            listen 80;
+        #{http_server}
 
-            #{location_contents}
-        }
+        #{https_server}
+    }
+end
 
+def get_nginx_https_server(location_contents)
+    return %{
         server {
             listen 443;
 
             ssl on;
             ssl_certificate #{server_crt};
             ssl_certificate_key #{server_key}; 
+
+            #{location_contents}
+        }
+    }
+end
+
+def get_nginx_http_server(location_contents)
+    return %{
+        server {
+            listen 80;
 
             #{location_contents}
         }
