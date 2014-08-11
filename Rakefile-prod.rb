@@ -204,12 +204,10 @@ def configure_nginx(no_cache = false, disable_http = false)
     end
     config_contents = get_nginx_config_contents cache_config, disable_http
 
-    system "sudo service nginx stop"
-
     system "sudo mkdir -p #{nginx_cache_dir}"
     sudo_write_config nginx_config, config_contents
 
-    sh "sudo service nginx start"
+    Rake::Task[:reload_nginx].invoke
 end
 
 def get_nginx_config_contents(cache_config, disable_http)
