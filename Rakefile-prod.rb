@@ -192,13 +192,17 @@ task :disable_cache => :clear_cache do
     configure_nginx true
 end
 
-def configure_nginx(no_cache = false)
+task :disable_http => :clear_cache do
+    configure_nginx false, true
+end
+
+def configure_nginx(no_cache = false, disable_http = false)
     nginx_config = "/etc/nginx/sites-available/default"
     cache_config = get_nginx_cache_config
     if no_cache
         cache_config = ""
     end
-    config_contents = get_nginx_config_contents cache_config
+    config_contents = get_nginx_config_contents cache_config, disable_http
 
     system "sudo service nginx stop"
 
@@ -208,9 +212,9 @@ def configure_nginx(no_cache = false)
     sh "sudo service nginx start"
 end
 
-def get_nginx_config_contents(cache_config)
+def get_nginx_config_contents(cache_config, disable_http)
     location_contents = get_nginx_location cache_config
-    http_server = get_nginx_http_server location_contents
+    http_server = disable_http ? "" : get_nginx_http_server location_contents
     https_server = get_nginx_https_server location_contents
 
     return %{
