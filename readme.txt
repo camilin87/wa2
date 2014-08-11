@@ -23,7 +23,7 @@ Deployment Dependencies
 Production Deployment Additional Steps
 --------------------------------------
 > cd ~/wa2 && rake -f Rakefile-prod.rb install_prod_ssl     # TODO
-> cd ~/wa2 && rake -f Rakefile-prod.rb disable_http         # TODO
+> cd ~/wa2 && rake -f Rakefile-prod.rb disable_http
 > cd ~/wa2/test_integration/ && rake production && cd ..
 > cd ~/wa2 && rake -f Rakefile-prod.rb disable_debug
 

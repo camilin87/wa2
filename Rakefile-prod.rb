@@ -4,6 +4,10 @@ def webapp_path
     return File.join(basedir, "webapp/")
 end
 
+def reboot_required_path
+    return File.join(basedir, "reboot_required.tmp")
+end
+
 task :configure_pyenv_linux do
     alias_filename = "~/.bash_aliases"
     bash_profile = File.expand_path alias_filename
@@ -25,6 +29,16 @@ task :install_prod_dependencies do
 
     Rake::Task[:setup_self_signed_certificate_if_needed].invoke
     Rake::Task[:configure_nginx].invoke
+
+    # leave this task to the end
+    Rake::Task[:reboot_if_needed].invoke
+end
+
+task :reboot_if_needed do
+    if File.exists? reboot_required_path
+        rm reboot_required_path
+        sh "sudo reboot"
+    end
 end
 
 task :install_prod_wa_packages do
@@ -116,6 +130,7 @@ exec newrelic-admin run-program uwsgi #{uwsgi_config_path}
         Rake::Task[:reload_uwsgi].invoke
     else
         puts "WARNING: Reboot required to launch uwsgi"
+        write_config reboot_required_path ""
     end
 end
 
@@ -192,24 +207,31 @@ task :disable_cache => :clear_cache do
     configure_nginx true
 end
 
-def configure_nginx(no_cache = false)
+task :disable_http => :clear_cache do
+    configure_nginx false, true
+end
+
+def configure_nginx(no_cache = false, disable_http = false)
     nginx_config = "/etc/nginx/sites-available/default"
     cache_config = get_nginx_cache_config
     if no_cache
         cache_config = ""
     end
-    config_contents = get_nginx_config_contents cache_config
-
-    system "sudo service nginx stop"
+    config_contents = get_nginx_config_contents cache_config, disable_http
 
     system "sudo mkdir -p #{nginx_cache_dir}"
     sudo_write_config nginx_config, config_contents
 
-    sh "sudo service nginx start"
+    Rake::Task[:reload_nginx].invoke
 end
 
-def get_nginx_config_contents(cache_config)
+def get_nginx_config_contents(cache_config, disable_http)
     location_contents = get_nginx_location cache_config
+    http_server = get_nginx_http_server location_contents
+    if disable_http
+        http_server = ""
+    end
+    https_server = get_nginx_https_server location_contents
 
     return %{
         upstream uwsgicluster {
@@ -218,12 +240,14 @@ def get_nginx_config_contents(cache_config)
 
         uwsgi_cache_path #{nginx_cache_dir} levels=1:2 keys_zone=one:10m max_size=2048m;
 
-        server {
-            listen 80;
+        #{http_server}
 
-            #{location_contents}
-        }
+        #{https_server}
+    }
+end
 
+def get_nginx_https_server(location_contents)
+    return %{
         server {
             listen 443;
 
@@ -236,43 +260,53 @@ def get_nginx_config_contents(cache_config)
     }
 end
 
+def get_nginx_http_server(location_contents)
+    return %{
+        server {
+            listen 80;
+
+            #{location_contents}
+        }
+    }
+end
+
 def get_nginx_location(cache_config)
     return %{
-        location ~ /(?<api_method>.+)/(?<api_key>.+)/(?<latitude>.+)/(?<longitude>.+) {
+            location ~ /(?<api_method>.+)/(?<api_key>.+)/(?<latitude>.+)/(?<longitude>.+) {
 
-            include            uwsgi_params;
-            uwsgi_pass         uwsgicluster;
+                include            uwsgi_params;
+                uwsgi_pass         uwsgicluster;
 
-            proxy_redirect     off;
-            proxy_set_header   Host $host;
-            proxy_set_header   X-Real-IP $remote_addr;
+                proxy_redirect     off;
+                proxy_set_header   Host $host;
+                proxy_set_header   X-Real-IP $remote_addr;
 
-            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header   X-Forwarded-Host $server_name;
+                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header   X-Forwarded-Host $server_name;
 
-            gzip on;
-            gzip_disable "msie6";
+                gzip on;
+                gzip_disable "msie6";
 
-            gzip_vary on;
-            gzip_proxied any;
-            gzip_comp_level 6;
-            gzip_buffers 16 8k;
-            gzip_http_version 1.1;
-            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+                gzip_vary on;
+                gzip_proxied any;
+                gzip_comp_level 6;
+                gzip_buffers 16 8k;
+                gzip_http_version 1.1;
+                gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
-            #{cache_config}
-        }
+                #{cache_config}
+            }
     }
 end
 
 def get_nginx_cache_config
     return %{
-        uwsgi_cache        one;
-        uwsgi_cache_key    $host$api_method$latitude$longitude;
-        uwsgi_cache_valid  200 302   60m;
-        uwsgi_cache_valid  404     1440m;
+                uwsgi_cache        one;
+                uwsgi_cache_key    $host$api_method$latitude$longitude;
+                uwsgi_cache_valid  200 302   60m;
+                uwsgi_cache_valid  404     1440m;
 
-        add_header         X-Cache $upstream_cache_status;
+                add_header         X-Cache $upstream_cache_status;
     }
 end
 
@@ -282,7 +316,7 @@ task :clear_cache do
 end
 
 task :reload_nginx do
-   sh "sudo service nginx restart" 
+   sh "sudo nginx -s reload" 
 end
 
 task :run_debug do
