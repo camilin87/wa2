@@ -4,6 +4,10 @@ def webapp_path
     return File.join(basedir, "webapp/")
 end
 
+def reboot_required_path
+    return File.join(basedir, "reboot_required.tmp")
+end
+
 task :configure_pyenv_linux do
     alias_filename = "~/.bash_aliases"
     bash_profile = File.expand_path alias_filename
@@ -25,6 +29,16 @@ task :install_prod_dependencies do
 
     Rake::Task[:setup_self_signed_certificate_if_needed].invoke
     Rake::Task[:configure_nginx].invoke
+
+    # leave this task to the end
+    Rake::Task[:reboot_if_needed].invoke
+end
+
+task :reboot_if_needed do
+    if File.exists? reboot_required_path
+        rm reboot_required_path
+        sh "sudo reboot"
+    end
 end
 
 task :install_prod_wa_packages do
@@ -116,6 +130,7 @@ exec newrelic-admin run-program uwsgi #{uwsgi_config_path}
         Rake::Task[:reload_uwsgi].invoke
     else
         puts "WARNING: Reboot required to launch uwsgi"
+        write_config reboot_required_path ""
     end
 end
 
