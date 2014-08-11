@@ -296,7 +296,7 @@ task :clear_cache do
 end
 
 task :reload_nginx do
-   sh "sudo service nginx restart" 
+   sh "sudo nginx -s reload" 
 end
 
 task :run_debug do
