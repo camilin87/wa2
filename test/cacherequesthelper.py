@@ -1,11 +1,13 @@
 from sys import argv
+from ast import literal_eval
 from requests import get
 from datetime import datetime
 
 
 class CacheRequestHelper(object):
-    def __init__(self, url):
+    def __init__(self, url, verify_ssl):
         self.url = url
+        self.verify_ssl = verify_ssl
         self.prev_response = None
         self.curr_response = None
         self.time_start_utc = None
@@ -35,7 +37,7 @@ class CacheRequestHelper(object):
 
     def _read_request(self):
         self.prev_response = self.curr_response
-        response = get(self.url)
+        response = get(self.url, verify=self.verify_ssl)
         if response.status_code != 200:
             raise ValueError("Received Non OK response")
 
@@ -51,9 +53,10 @@ class CacheRequestHelper(object):
 def main(args):
     url = args[1]
     cache_ttl_seconds = int(args[2])
+    verify_ssl = bool(literal_eval(args[3]))
     print("Starting cache test", "url=", url, "ttl_sec=", cache_ttl_seconds)
 
-    req_tester = CacheRequestHelper(url)
+    req_tester = CacheRequestHelper(url, verify_ssl)
     is_cached = req_tester.is_cached(cache_ttl_seconds)
 
     print("is_cached=" + str(is_cached), "request_count=" + str(req_tester.request_count))

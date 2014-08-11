@@ -22,6 +22,8 @@ task :install_prod_dependencies do
 
     Rake::Task[:configure_newrelic].invoke
     Rake::Task[:configure_uwsgi].invoke
+
+    Rake::Task[:setup_self_signed_certificate_if_needed].invoke
     Rake::Task[:configure_nginx].invoke
 end
 
@@ -207,6 +209,8 @@ def configure_nginx(no_cache = false)
 end
 
 def get_nginx_config_contents(cache_config)
+    location_contents = get_nginx_location cache_config
+
     return %{
         upstream uwsgicluster {
             server 127.0.0.1:3031;
@@ -217,30 +221,46 @@ def get_nginx_config_contents(cache_config)
         server {
             listen 80;
 
-            location ~ /(?<api_method>.+)/(?<api_key>.+)/(?<latitude>.+)/(?<longitude>.+) {
+            #{location_contents}
+        }
 
-                include            uwsgi_params;
-                uwsgi_pass         uwsgicluster;
+        server {
+            listen 443;
 
-                proxy_redirect     off;
-                proxy_set_header   Host $host;
-                proxy_set_header   X-Real-IP $remote_addr;
+            ssl on;
+            ssl_certificate #{server_crt};
+            ssl_certificate_key #{server_key}; 
 
-                proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header   X-Forwarded-Host $server_name;
+            #{location_contents}
+        }
+    }
+end
 
-                gzip on;
-                gzip_disable "msie6";
+def get_nginx_location(cache_config)
+    return %{
+        location ~ /(?<api_method>.+)/(?<api_key>.+)/(?<latitude>.+)/(?<longitude>.+) {
 
-                gzip_vary on;
-                gzip_proxied any;
-                gzip_comp_level 6;
-                gzip_buffers 16 8k;
-                gzip_http_version 1.1;
-                gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+            include            uwsgi_params;
+            uwsgi_pass         uwsgicluster;
 
-                #{cache_config}
-            }
+            proxy_redirect     off;
+            proxy_set_header   Host $host;
+            proxy_set_header   X-Real-IP $remote_addr;
+
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Host $server_name;
+
+            gzip on;
+            gzip_disable "msie6";
+
+            gzip_vary on;
+            gzip_proxied any;
+            gzip_comp_level 6;
+            gzip_buffers 16 8k;
+            gzip_http_version 1.1;
+            gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+            #{cache_config}
         }
     }
 end
@@ -267,4 +287,69 @@ end
 
 task :run_debug do
     `python3 webapp/app.py`
+end
+
+task :setup_self_signed_certificate_if_needed do
+    if not File.exists? server_key or not File.exists? server_crt
+        Rake::Task[:setup_self_signed_certificate].invoke true
+    else
+        puts "server_key and server_crt already exist"
+    end
+end
+
+task :setup_self_signed_certificate, [:no_reload] => :clean_ssl_dir do |t, args|
+    sh "mkdir #{ssl_dir}"
+
+    server_csr = File.join(ssl_dir, "server.csr")
+    config_csr = File.join(ssl_dir, "csr_config.ini")
+
+    puts "use the following password #{get_random_pwd}"
+    sh "sudo openssl genrsa -des3 -out #{server_key} 1024"
+
+    config_contents = %{
+         [ req ]
+         default_bits           = 1024
+         default_keyfile        = #{server_key}
+         distinguished_name     = req_distinguished_name
+         prompt                 = no
+         [ req_distinguished_name ]
+         C                      = US
+         ST                     = FL
+         L                      = Miami
+         O                      = CASH Productions
+         OU                     = SWA
+         CN                     = v1.api.smartweatheralerts.com
+         emailAddress           = postmaster@smartweatheralerts.com
+    }
+    write_config config_csr, config_contents
+
+    sh "sudo openssl req -new -key #{server_key} -out #{server_csr} -config #{config_csr}"
+
+    sh "sudo cp #{server_key} #{server_key}.org"
+    sh "sudo openssl rsa -in #{server_key}.org -out #{server_key}"
+
+    sh "sudo openssl x509 -req -days 365 -in #{server_csr} -signkey #{server_key} -out #{server_crt}"
+
+    Rake::Task[:reload_nginx].invoke unless args[:no_reload]
+end
+
+task :clean_ssl_dir do
+    rm_rf ssl_dir
+end
+
+def ssl_dir
+    return File.join(basedir, "ssl-config/")
+end
+
+def server_key 
+    return File.join(ssl_dir, "server.key")
+end
+
+def server_crt 
+    return File.join(ssl_dir, "server.crt")
+end
+
+def get_random_pwd
+    o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
+    return (0...50).map { o[rand(o.length)] }.join
 end
