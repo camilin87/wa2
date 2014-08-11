@@ -212,7 +212,10 @@ end
 
 def get_nginx_config_contents(cache_config, disable_http)
     location_contents = get_nginx_location cache_config
-    http_server = disable_http ? "" : get_nginx_http_server location_contents
+    http_server = get_nginx_http_server location_contents
+    if disable_http
+        http_server = ""
+    end
     https_server = get_nginx_https_server location_contents
 
     return %{
