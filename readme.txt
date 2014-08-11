@@ -19,7 +19,13 @@ Deployment Dependencies
 > cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh feature/ssl && cd wa2
 > cd ~/wa2 && rake -f Rakefile-prod.rb install_prod_dependencies
 > cd ~/wa2/test_integration/ && rake staging && rake staging_ssl && cd ..
-> cd ~/wa2 && rake -f Rakefile-prod.rb disable_debug # this should be executed only in a production environment
+
+Production Deployment Additional Steps
+--------------------------------------
+> cd ~/wa2 && rake -f Rakefile-prod.rb install_prod_ssl     # TODO
+> cd ~/wa2 && rake -f Rakefile-prod.rb disable_http         # TODO
+> cd ~/wa2/test_integration/ && rake production && cd ..
+> cd ~/wa2 && rake -f Rakefile-prod.rb disable_debug
 
 Coding Standards
 ----------------
