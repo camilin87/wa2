@@ -27,6 +27,21 @@ end
 task :build_api_docs => [:clean, :build_output] do 
     puts "building api docs"
     set_value "VERSION", get_api_version
+    set_value "HOST", get_api_host
+end
+
+def get_api_host
+    rake_file_prod = File.join(basedir, "Rakefile-prod.rb")
+
+    File.open(rake_file_prod, "r") do |f|
+        f.each_line do |line|
+            if line.include? "CN                     = "
+                return line
+            end
+        end
+    end
+
+    return "UNKOWN"
 end
 
 def get_api_version
