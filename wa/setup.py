@@ -2,30 +2,30 @@ def _log(obj):
     print(obj)
 
 from os import path
-pkg_dir_path = path.dirname(path.realpath(__file__))
-pkg_dir = path.basename(pkg_dir_path)
-_log(pkg_dir_path)
-_log(pkg_dir)
+_PKG_DIR_PATH = path.dirname(path.realpath(__file__))
+_PKG_DIR = path.basename(_PKG_DIR_PATH)
+_log(_PKG_DIR_PATH)
+_log(_PKG_DIR)
 
 from os import listdir
-sub_pkgs = []
-for dir_entry in listdir(pkg_dir_path):
-    full_path = path.join(pkg_dir_path, dir_entry)
+_SUB_PKGS = []
+for dir_entry in listdir(_PKG_DIR_PATH):
+    full_path = path.join(_PKG_DIR_PATH, dir_entry)
     if path.isdir(full_path):
         init_path = path.join(full_path, "__init__.py")
         if path.isfile(init_path):
-            sub_pkgs.append(pkg_dir + "." + dir_entry)
-_log(sub_pkgs)
+            _SUB_PKGS.append(_PKG_DIR + "." + dir_entry)
+_log(_SUB_PKGS)
 
 from distutils.core import setup
 
 setup(
-    name=pkg_dir,
+    name=_PKG_DIR,
     version="0.1",
     author="CASH Productions",
     author_email="support@cash-productions.com",
     description=("Wa application"),
     license="Proprietary",
     keywords="weather API smart location",
-    packages=sub_pkgs
+    packages=_SUB_PKGS
 )

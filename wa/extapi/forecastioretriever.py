@@ -27,7 +27,7 @@ class ForecastIoRetriever(DataRetriever):
 
     def _log_data_request(self, data_request):
         info((
-            "ForecastIoRetriever.retrieve; " + 
+            "ForecastIoRetriever.retrieve; " +
             "api_key='{0}', latitude={1:.2f}, longitude={2:.2f}"
         ).format(
             self.api_key,
