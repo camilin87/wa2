@@ -29,6 +29,20 @@ task :build_api_docs => [:clean, :build_output] do
     set_value "VERSION", get_api_version
     set_value "HOST", get_api_host
     set_value "INTENSITY_TYPES", get_intensity_types
+    set_value "PRECIPITATION_TYPES", get_precipitation_types
+    set_value "API_RESULT", get_api_result
+end
+
+def get_api_result
+    precipitation_types_path = File.join(wa_pkg_dir, "api/returncode.py")
+
+    return read_code_file precipitation_types_path, 8
+end
+
+def get_precipitation_types
+    precipitation_types_path = File.join(wa_pkg_dir, "engine/precipitationtype.py")
+
+    return read_code_file precipitation_types_path, 8
 end
 
 def get_intensity_types

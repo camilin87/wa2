@@ -31,3 +31,18 @@ Wa Api Docs {{VERSION}}
 {{INTENSITY_TYPES}}
 
 - pop
+    A percent value from 0 to 100
+- precip
+    A value from the following list
+
+{{PRECIPITATION_TYPES}}
+
+- result
+    A value from the following list
+
+{{API_RESULT}}
+
+- summary
+    A string with a summary of the weather
+- timestamp
+    The utc time our server the response was issued
