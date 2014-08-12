@@ -32,24 +32,26 @@ end
 
 def get_api_host
     rake_file_prod = File.join(basedir, "Rakefile-prod.rb")
-
-    File.open(rake_file_prod, "r") do |f|
-        f.each_line do |line|
-            if line.include? "CN                     = "
-                return line
-            end
-        end
-    end
-
-    return "UNKOWN"
+    return get_ini_value rake_file_prod, "CN"
 end
 
 def get_api_version
     wa_setup_path = File.join(wa_pkg_dir, "setup.py")
-    File.open(wa_setup_path, "r") do |f|
+    return get_ini_value wa_setup_path, "VERSION"
+end
+
+def get_ini_value(filename, key, equal_sign = "=")
+    File.open(filename, "r") do |f|
         f.each_line do |line|
-            if line.start_with? "VERSION ="
-                return line
+            pieces = line.split(equal_sign, 2)
+            if pieces.count == 2
+                found_key = pieces[0].strip
+
+                if found_key == key
+                    value = pieces[1].strip
+                    value_unquoted = value.chomp('"').reverse.chomp('"').reverse
+                    return value_unquoted
+                end
             end
         end
     end
