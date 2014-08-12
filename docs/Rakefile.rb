@@ -28,6 +28,25 @@ task :build_api_docs => [:clean, :build_output] do
     puts "building api docs"
     set_value "VERSION", get_api_version
     set_value "HOST", get_api_host
+    set_value "INTENSITY_TYPES", get_intensity_types
+end
+
+def get_intensity_types
+    intensity_types_path = File.join(wa_pkg_dir, "engine/intensitytype.py")
+
+    return read_code_file intensity_types_path, 8
+end
+
+def read_code_file(filename, tabs = 4)
+    result = ""
+
+    File.open(filename, "rb") do |f|
+        f.each_line do |line|
+            result += (" " * tabs) + line
+        end
+    end
+
+    return result
 end
 
 def get_api_host
@@ -60,7 +79,8 @@ def get_ini_value(filename, key, equal_sign = "=")
 end
 
 def set_value(key, value)
-    value_sanitized = value.gsub("\n", "")
+    # value_sanitized = value.gsub("\n", "")
+    value_sanitized = value
     key_str = "{{#{key}}}"
 
     tmp_file = output_file + ".tmp"
