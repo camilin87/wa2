@@ -68,8 +68,12 @@ end
 
 task :reports => [
     :create_reports_dir,
-    :report_coverage, :report_pylint, :report_pep8,
-    :report_gitstats, :report_lines_of_code
+    :report_coverage,
+    :report_pylint,
+    :report_pep8,
+    :report_gitstats,
+    :docs
+    :report_lines_of_code
 ]
 
 task :report_coverage => [:clean_pyc, :create_reports_dir] do
@@ -139,4 +143,11 @@ task :report_lines_of_code do
     puts "Lines of Code"
     puts "Test:       #{loc_test}"
     puts "Production: #{loc_prod}"
+end
+
+task :docs do
+    docs_dir = File.join(basedir, "docs")
+    Dir.chdir(docs_dir){
+        sh %{rake} 
+    }
 end

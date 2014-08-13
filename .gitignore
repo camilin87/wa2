@@ -15,4 +15,3 @@ ssl-config
 uwsgi_config.ini
 newrelic.ini
 build
-Readme-gen.md

@@ -13,11 +13,11 @@ def input_file
 end
 
 def output_file
-    return File.join(basedir, "docs/Readme-gen.md")
+    return File.join(basedir, "docs/WebApiDocs-gen.md")
 end
 
 task :clean do
-    system "rm output_file"
+    system "rm #{output_file}"
 end
 
 task :build_output do
