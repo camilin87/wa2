@@ -1,3 +1,5 @@
+VERSION = "0.1"
+
 def _log(obj):
     print(obj)
 
@@ -21,7 +23,7 @@ from distutils.core import setup
 
 setup(
     name=_PKG_DIR,
-    version="0.1",
+    version=VERSION,
     author="CASH Productions",
     author_email="support@cash-productions.com",
     description=("Wa application"),
