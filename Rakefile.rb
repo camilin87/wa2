@@ -72,7 +72,7 @@ task :reports => [
     :report_pylint,
     :report_pep8,
     :report_gitstats,
-    :docs
+    :api_docs,
     :report_lines_of_code
 ]
 
@@ -145,9 +145,10 @@ task :report_lines_of_code do
     puts "Production: #{loc_prod}"
 end
 
-task :docs do
+task :api_docs do
     docs_dir = File.join(basedir, "docs")
     Dir.chdir(docs_dir){
-        sh %{rake} 
+        sh "rake"
+        sh "mv *-gen.md #{$reports_dir}"
     }
 end
