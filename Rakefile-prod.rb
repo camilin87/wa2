@@ -335,6 +335,11 @@ task :create_ssl_dir do
     system "mkdir #{ssl_dir}"
 end
 
+def get_production_host
+    host_file = File.join(basedir, "host.txt")
+    return File.open(host_file, &:gets)
+end
+
 task :setup_self_signed_certificate, [:no_reload] => [:clean_ssl_dir, :create_ssl_dir] do |t, args|
     server_csr = File.join(ssl_dir, "server.csr")
     config_csr = File.join(ssl_dir, "csr_config.ini")
@@ -354,8 +359,8 @@ task :setup_self_signed_certificate, [:no_reload] => [:clean_ssl_dir, :create_ss
          L                      = Miami
          O                      = CASH Productions
          OU                     = SWA
-         CN                     = v1.api.raindna.com
-         emailAddress           = postmaster@raindna.com
+         CN                     = #{get_production_host}
+         emailAddress           = postmaster@cash-productions.com
     }
     write_config config_csr, config_contents
 

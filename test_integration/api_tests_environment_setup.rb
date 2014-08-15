@@ -39,10 +39,15 @@ end
 def set_production_env_data
     $env_data[:protocol] = "https"
     $env_data[:port] = 443
-    $env_data[:host] = "v1.api.raindna.com"
+    $env_data[:host] = get_production_host
     $env_data[:verify_certificate] = true
     $env_data[:validate_cache] = true
     $env_data[:cache_params][:ttl_seconds] = 10 - 1
+end
+
+def get_production_host
+    host_file = File.join(basedir, "host.txt")
+    return File.open(host_file, &:gets)
 end
 
 def set_staging_env_data

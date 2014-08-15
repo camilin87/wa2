@@ -27,7 +27,7 @@ end
 task :build_api_docs => [:clean, :build_output] do 
     puts "building api docs"
     set_value "VERSION", get_api_version
-    set_value "HOST", get_api_host
+    set_value "HOST", get_production_host
     set_value "INTENSITY_TYPES", get_intensity_types
     set_value "PRECIPITATION_TYPES", get_precipitation_types
     set_value "API_RESULT", get_api_result
@@ -63,9 +63,9 @@ def read_code_file(filename, tabs = 4)
     return result
 end
 
-def get_api_host
-    rake_file_prod = File.join(basedir, "Rakefile-prod.rb")
-    return get_ini_value rake_file_prod, "CN"
+def get_production_host
+    host_file = File.join(basedir, "host.txt")
+    return File.open(host_file, &:gets)
 end
 
 def get_api_version
