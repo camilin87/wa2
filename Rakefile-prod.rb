@@ -130,7 +130,7 @@ exec newrelic-admin run-program uwsgi #{uwsgi_config_path}
         Rake::Task[:reload_uwsgi].invoke
     else
         puts "WARNING: Reboot required to launch uwsgi"
-        write_config reboot_required_path ""
+        write_config reboot_required_path, ""
     end
 end
 
