@@ -352,8 +352,8 @@ task :setup_self_signed_certificate, [:no_reload] => :clean_ssl_dir do |t, args|
          L                      = Miami
          O                      = CASH Productions
          OU                     = SWA
-         CN                     = v1.api.smartweatheralerts.com
-         emailAddress           = postmaster@smartweatheralerts.com
+         CN                     = v1.api.raindna.com
+         emailAddress           = postmaster@raindna.com
     }
     write_config config_csr, config_contents
 
