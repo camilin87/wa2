@@ -331,9 +331,11 @@ task :setup_self_signed_certificate_if_needed do
     end
 end
 
-task :setup_self_signed_certificate, [:no_reload] => :clean_ssl_dir do |t, args|
+task :create_ssl_dir do
     sh "mkdir #{ssl_dir}"
+end
 
+task :setup_self_signed_certificate, [:no_reload] => [:clean_ssl_dir, :create_ssl_dir] do |t, args|
     server_csr = File.join(ssl_dir, "server.csr")
     config_csr = File.join(ssl_dir, "csr_config.ini")
 
@@ -375,6 +377,10 @@ def ssl_dir
     return File.join(basedir, "ssl-config/")
 end
 
+def ssl_prod_dir
+    return File.join(basedir, "ssl/")
+end
+
 def server_key 
     return File.join(ssl_dir, "server.key")
 end
@@ -386,4 +392,9 @@ end
 def get_random_pwd
     o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
     return (0...50).map { o[rand(o.length)] }.join
+end
+
+task :install_prod_ssl => :create_ssl_dir do
+    sh "cp -f #{ssl_prod_dir}* #{ssl_dir}"
+    Rake::Task[:reload_nginx].invoke
 end

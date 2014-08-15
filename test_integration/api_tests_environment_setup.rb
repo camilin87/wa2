@@ -42,7 +42,7 @@ def set_production_env_data
     $env_data[:host] = "api.v1.smartweatheralerts.com"
     $env_data[:verify_certificate] = true
     $env_data[:validate_cache] = true
-    $env_data[:cache_params][:ttl_seconds] = 3600 - 1
+    $env_data[:cache_params][:ttl_seconds] = 60 - 1
 end
 
 def set_staging_env_data
