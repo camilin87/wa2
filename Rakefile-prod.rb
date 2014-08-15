@@ -332,7 +332,7 @@ task :setup_self_signed_certificate_if_needed do
 end
 
 task :create_ssl_dir do
-    sh "mkdir #{ssl_dir}"
+    system "mkdir #{ssl_dir}"
 end
 
 task :setup_self_signed_certificate, [:no_reload] => [:clean_ssl_dir, :create_ssl_dir] do |t, args|
