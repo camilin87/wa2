@@ -1,5 +1,6 @@
 VERSION = "0.1"
 
+
 def _log(obj):
     print(obj)
 

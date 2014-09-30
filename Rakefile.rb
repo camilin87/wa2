@@ -10,7 +10,7 @@ end
 
 $gitstats_dir = File.join(basedir, ".git-stats-src/")
 
-$PYTHON_VERSION = "3.4.0"
+$PYTHON_VERSION = "3.4.1"
 $PYTHON_VERSION_GIT_STATS = "2.7.6"
 
 $reports_dir = File.join(basedir, "code-reports/")

@@ -9,6 +9,7 @@ Development machines should have these
 - git
 - xquartz
 - homebrew
+- xcode-select --install # Xcode Command Line Tools
 
 > sh setup-dev.sh
 > rake -f Rakefile-setup-dev.rb install_dev_system_dependencies_mac
