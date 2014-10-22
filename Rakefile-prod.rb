@@ -254,6 +254,7 @@ def get_nginx_https_server(location_contents)
             ssl on;
             ssl_certificate #{server_crt};
             ssl_certificate_key #{server_key}; 
+            ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
             #{location_contents}
         }
