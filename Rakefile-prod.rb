@@ -49,11 +49,20 @@ task :install_prod_wa_packages do
 end
 
 def install_prod_system_packages
+    install_latest_pip3_from_source
+
     pkg_dependencies = [
-        "python3-pip", "python3-dev",
+        "python3-dev",
         "nginx"
     ]
     install_system_dependencies_linux pkg_dependencies
+end
+
+def install_latest_pip3_from_source
+    system "sudo apt-get remove -y python3-pip"
+    sh "wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
+    sh "sudo python3 get-pip.py"
+    rm "get-pip.py"
 end
 
 def install_system_dependencies_linux(packages)
