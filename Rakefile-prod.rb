@@ -414,7 +414,7 @@ end
 task :install_prod_ssl => :create_ssl_dir do
     install_certificate_authority
 
-    sh "cp -f #{ssl_prod_dir}* #{ssl_dir}"
+    sh "cp -f #{ssl_prod_dir}*.* #{ssl_dir}"
     Rake::Task[:reload_nginx].invoke
 end
 
