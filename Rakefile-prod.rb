@@ -412,6 +412,14 @@ def get_random_pwd
 end
 
 task :install_prod_ssl => :create_ssl_dir do
+    install_certificate_authority
+
     sh "cp -f #{ssl_prod_dir}* #{ssl_dir}"
     Rake::Task[:reload_nginx].invoke
+end
+
+def install_certificate_authority
+    ca_folder = File.join(ssl_prod_dir, "ca")
+    sh "sudo cp -f #{ca_folder}/* /usr/local/share/ca-certificates/"
+    sh "sudo update-ca-certificates"
 end
