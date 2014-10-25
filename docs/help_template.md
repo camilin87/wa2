@@ -37,3 +37,11 @@ Wa Api Docs {{VERSION}}
 
 - **summary** A string with a summary of the weather
 - **timestamp** The UTC time our server the response was issued
+
+#Development
+In a command line execute
+
+    rake -f Rakefile-setup-dev.rb run_debug
+Then consume the test api as follows
+
+    http://localhost:8080/t/anykey/25.86/-80.30/
