@@ -5,6 +5,7 @@ import "api_tests.rb"
 $env_data = {
     :name => "default",
     :protocol => "http",
+    :verify_certificate => false,
     :host => "localhost",
     :port => 80,
     :validate_cache => false,
@@ -26,6 +27,8 @@ def configure_environment(environment)
         set_production_env_data
     when "staging"
         set_staging_env_data
+    when "staging_ssl"
+        set_staging_ssl_env_data
     when "debug"
         set_debug_env_data
     else
@@ -36,12 +39,24 @@ end
 def set_production_env_data
     $env_data[:protocol] = "https"
     $env_data[:port] = 443
-    $env_data[:host] = "api.v1.smartweatheralerts.com"
+    $env_data[:host] = get_production_host
+    $env_data[:verify_certificate] = true
     $env_data[:validate_cache] = true
-    $env_data[:cache_params][:ttl_seconds] = 3600 - 1
+    $env_data[:cache_params][:ttl_seconds] = 10 - 1
+end
+
+def get_production_host
+    host_file = File.join(basedir, "host.txt")
+    return File.open(host_file, &:gets)
 end
 
 def set_staging_env_data
+    $env_data[:validate_cache] = true
+end
+
+def set_staging_ssl_env_data
+    $env_data[:protocol] = "https"
+    $env_data[:port] = 443
     $env_data[:validate_cache] = true
 end
 

@@ -51,7 +51,7 @@ def install_pypi_dev_dependencies
     dev_packages = [
         "pkginit", "nose", "freezegun", "coverage",
         "pylint", "pep8",
-        "python-forecastio", "Flask"
+        "requests", "python-forecastio", "Flask"
     ]
     sudo_install_pypi_packages dev_packages
 end

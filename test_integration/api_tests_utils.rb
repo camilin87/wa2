@@ -20,14 +20,22 @@ def assert_true(task, condition, error_message="")
     end
 end
 
+def get_curl_command
+    if $env_data[:verify_certificate]
+        return "curl "
+    else
+        return "curl -k "
+    end
+end
+
 def curl(url)
-    command = "curl -s -L #{url}"
+    command = "#{get_curl_command} -s -L #{url}"
     puts command
     return `#{command}`
 end
 
 def curl_headers(url)
-    command = "curl -s -I -L #{url}"
+    command = "#{get_curl_command} -s -I -L #{url}"
     puts command
     return `#{command}`
 end

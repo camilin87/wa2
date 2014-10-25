@@ -10,7 +10,7 @@ end
 
 $gitstats_dir = File.join(basedir, ".git-stats-src/")
 
-$PYTHON_VERSION = "3.4.0"
+$PYTHON_VERSION = "3.4.1"
 $PYTHON_VERSION_GIT_STATS = "2.7.6"
 
 $reports_dir = File.join(basedir, "code-reports/")
@@ -68,8 +68,12 @@ end
 
 task :reports => [
     :create_reports_dir,
-    :report_coverage, :report_pylint, :report_pep8,
-    :report_gitstats, :report_lines_of_code
+    :report_coverage,
+    :report_pylint,
+    :report_pep8,
+    :report_gitstats,
+    :api_docs,
+    :report_lines_of_code
 ]
 
 task :report_coverage => [:clean_pyc, :create_reports_dir] do
@@ -139,4 +143,12 @@ task :report_lines_of_code do
     puts "Lines of Code"
     puts "Test:       #{loc_test}"
     puts "Production: #{loc_prod}"
+end
+
+task :api_docs do
+    docs_dir = File.join(basedir, "docs")
+    Dir.chdir(docs_dir){
+        sh "rake"
+        sh "mv *-gen.md #{$reports_dir}"
+    }
 end

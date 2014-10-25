@@ -9,6 +9,7 @@ Development machines should have these
 - git
 - xquartz
 - homebrew
+- xcode-select --install # Xcode Command Line Tools
 
 > sh setup-dev.sh
 > rake -f Rakefile-setup-dev.rb install_dev_system_dependencies_mac
@@ -18,8 +19,14 @@ Deployment Dependencies
 -----------------------
 > cd ~ && wget -q https://raw.githubusercontent.com/camilin87/wa2-setup/master/setup-wa2-prod.sh -O setup-wa2-prod.sh && sh setup-wa2-prod.sh master && cd wa2
 > cd ~/wa2 && rake -f Rakefile-prod.rb install_prod_dependencies
-> cd ~/wa2/test_integration/ && rake staging && cd ..
-> cd ~/wa2 && rake -f Rakefile-prod.rb disable_debug # this should be executed only in a production environment
+> cd ~/wa2/test_integration/ && rake staging && rake staging_ssl && cd ..
+
+Production Deployment Additional Steps
+--------------------------------------
+> cd ~/wa2 && rake -f Rakefile-prod.rb install_prod_ssl
+> cd ~/wa2/test_integration/ && rake production && cd ..
+> cd ~/wa2 && rake -f Rakefile-prod.rb disable_http
+> cd ~/wa2 && rake -f Rakefile-prod.rb disable_debug
 
 Coding Standards
 ----------------

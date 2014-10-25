@@ -10,6 +10,10 @@ task :staging do |t|
     run_tests t.name
 end
 
+task :staging_ssl do |t|
+    run_tests t.name
+end
+
 task :production do |t|
     run_tests t.name
 end

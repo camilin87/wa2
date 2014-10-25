@@ -10,6 +10,7 @@
 *.bck
 .python-version
 code-reports
+ssl-config
 .git-stats-src
 uwsgi_config.ini
 newrelic.ini

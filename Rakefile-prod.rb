@@ -4,6 +4,10 @@ def webapp_path
     return File.join(basedir, "webapp/")
 end
 
+def reboot_required_path
+    return File.join(basedir, "reboot_required.tmp")
+end
+
 task :configure_pyenv_linux do
     alias_filename = "~/.bash_aliases"
     bash_profile = File.expand_path alias_filename
@@ -22,7 +26,19 @@ task :install_prod_dependencies do
 
     Rake::Task[:configure_newrelic].invoke
     Rake::Task[:configure_uwsgi].invoke
+
+    Rake::Task[:setup_self_signed_certificate_if_needed].invoke
     Rake::Task[:configure_nginx].invoke
+
+    # leave this task to the end
+    Rake::Task[:reboot_if_needed].invoke
+end
+
+task :reboot_if_needed do
+    if File.exists? reboot_required_path
+        rm reboot_required_path
+        sh "sudo reboot"
+    end
 end
 
 task :install_prod_wa_packages do
@@ -33,11 +49,20 @@ task :install_prod_wa_packages do
 end
 
 def install_prod_system_packages
+    install_latest_pip3_from_source
+
     pkg_dependencies = [
-        "python3-pip", "python3-dev",
+        "python3-dev",
         "nginx"
     ]
     install_system_dependencies_linux pkg_dependencies
+end
+
+def install_latest_pip3_from_source
+    system "sudo apt-get remove -y python3-pip"
+    sh "wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py"
+    sh "sudo python3 get-pip.py"
+    rm "get-pip.py"
 end
 
 def install_system_dependencies_linux(packages)
@@ -114,6 +139,7 @@ exec newrelic-admin run-program uwsgi #{uwsgi_config_path}
         Rake::Task[:reload_uwsgi].invoke
     else
         puts "WARNING: Reboot required to launch uwsgi"
+        write_config reboot_required_path, ""
     end
 end
 
@@ -190,23 +216,32 @@ task :disable_cache => :clear_cache do
     configure_nginx true
 end
 
-def configure_nginx(no_cache = false)
+task :disable_http => :clear_cache do
+    configure_nginx false, true
+end
+
+def configure_nginx(no_cache = false, disable_http = false)
     nginx_config = "/etc/nginx/sites-available/default"
     cache_config = get_nginx_cache_config
     if no_cache
         cache_config = ""
     end
-    config_contents = get_nginx_config_contents cache_config
-
-    system "sudo service nginx stop"
+    config_contents = get_nginx_config_contents cache_config, disable_http
 
     system "sudo mkdir -p #{nginx_cache_dir}"
     sudo_write_config nginx_config, config_contents
 
-    sh "sudo service nginx start"
+    Rake::Task[:reload_nginx].invoke
 end
 
-def get_nginx_config_contents(cache_config)
+def get_nginx_config_contents(cache_config, disable_http)
+    location_contents = get_nginx_location cache_config
+    http_server = get_nginx_http_server location_contents
+    if disable_http
+        http_server = ""
+    end
+    https_server = get_nginx_https_server location_contents
+
     return %{
         upstream uwsgicluster {
             server 127.0.0.1:3031;
@@ -214,9 +249,41 @@ def get_nginx_config_contents(cache_config)
 
         uwsgi_cache_path #{nginx_cache_dir} levels=1:2 keys_zone=one:10m max_size=2048m;
 
+        #{http_server}
+
+        #{https_server}
+    }
+end
+
+def get_nginx_https_server(location_contents)
+    return %{
+        server {
+            listen 443;
+
+            ssl on;
+            ssl_certificate #{server_crt};
+            ssl_certificate_key #{server_key}; 
+            ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+            ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+            ssl_prefer_server_ciphers on;
+
+            #{location_contents}
+        }
+    }
+end
+
+def get_nginx_http_server(location_contents)
+    return %{
         server {
             listen 80;
 
+            #{location_contents}
+        }
+    }
+end
+
+def get_nginx_location(cache_config)
+    return %{
             location ~ /(?<api_method>.+)/(?<api_key>.+)/(?<latitude>.+)/(?<longitude>.+) {
 
                 include            uwsgi_params;
@@ -241,18 +308,17 @@ def get_nginx_config_contents(cache_config)
 
                 #{cache_config}
             }
-        }
     }
 end
 
 def get_nginx_cache_config
     return %{
-        uwsgi_cache        one;
-        uwsgi_cache_key    $host$api_method$latitude$longitude;
-        uwsgi_cache_valid  200 302   60m;
-        uwsgi_cache_valid  404     1440m;
+                uwsgi_cache        one;
+                uwsgi_cache_key    $host$api_method$latitude$longitude;
+                uwsgi_cache_valid  200 302   60m;
+                uwsgi_cache_valid  404     1440m;
 
-        add_header         X-Cache $upstream_cache_status;
+                add_header         X-Cache $upstream_cache_status;
     }
 end
 
@@ -262,9 +328,98 @@ task :clear_cache do
 end
 
 task :reload_nginx do
-   sh "sudo service nginx restart" 
+   sh "sudo nginx -s reload" 
 end
 
 task :run_debug do
     `python3 webapp/app.py`
+end
+
+task :setup_self_signed_certificate_if_needed do
+    if not File.exists? server_key or not File.exists? server_crt
+        Rake::Task[:setup_self_signed_certificate].invoke true
+    else
+        puts "server_key and server_crt already exist"
+    end
+end
+
+task :create_ssl_dir do
+    system "mkdir #{ssl_dir}"
+end
+
+def get_production_host
+    host_file = File.join(basedir, "host.txt")
+    return File.open(host_file, &:gets)
+end
+
+task :setup_self_signed_certificate, [:no_reload] => [:clean_ssl_dir, :create_ssl_dir] do |t, args|
+    server_csr = File.join(ssl_dir, "server.csr")
+    config_csr = File.join(ssl_dir, "csr_config.ini")
+
+    puts "use the following password #{get_random_pwd}"
+    sh "sudo openssl genrsa -des3 -out #{server_key} 1024"
+
+    config_contents = %{
+         [ req ]
+         default_bits           = 1024
+         default_keyfile        = #{server_key}
+         distinguished_name     = req_distinguished_name
+         prompt                 = no
+         [ req_distinguished_name ]
+         C                      = US
+         ST                     = FL
+         L                      = Miami
+         O                      = CASH Productions
+         OU                     = SWA
+         CN                     = #{get_production_host}
+         emailAddress           = postmaster@cash-productions.com
+    }
+    write_config config_csr, config_contents
+
+    sh "sudo openssl req -new -key #{server_key} -out #{server_csr} -config #{config_csr}"
+
+    sh "sudo cp #{server_key} #{server_key}.org"
+    sh "sudo openssl rsa -in #{server_key}.org -out #{server_key}"
+
+    sh "sudo openssl x509 -req -days 365 -in #{server_csr} -signkey #{server_key} -out #{server_crt}"
+
+    Rake::Task[:reload_nginx].invoke unless args[:no_reload]
+end
+
+task :clean_ssl_dir do
+    rm_rf ssl_dir
+end
+
+def ssl_dir
+    return File.join(basedir, "ssl-config/")
+end
+
+def ssl_prod_dir
+    return File.join(basedir, "ssl/")
+end
+
+def server_key 
+    return File.join(ssl_dir, "server.key")
+end
+
+def server_crt 
+    return File.join(ssl_dir, "server.crt")
+end
+
+def get_random_pwd
+    o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
+    return (0...50).map { o[rand(o.length)] }.join
+end
+
+task :install_prod_ssl => :create_ssl_dir do
+    install_certificate_authority
+
+    sh "cp -f #{ssl_prod_dir}*.* #{ssl_dir}"
+    Rake::Task[:reload_nginx].invoke
+end
+
+def install_certificate_authority
+    ca_folder = File.join(ssl_prod_dir, "ca")
+    sh "sudo cp -f #{ca_folder}/* /usr/local/share/ca-certificates/"
+    sh "sudo update-ca-certificates"
 end

@@ -3,7 +3,8 @@ namespace :api_tests_cache do
         :all_urls_return_different_responses,
         :validate_cache,
         :validate_cache_for_different_api_keys,
-        :cache_expiration_header
+        :cache_expiration_header,
+        :cache_hit_header
     ]
 
     task :all_urls_return_different_responses do |t|
@@ -14,7 +15,12 @@ namespace :api_tests_cache do
 
     task :validate_cache do |t|
         cache_request_helper_path = File.join(basedir, "test/cacherequesthelper.py")
-        cache_test_output = `python #{cache_request_helper_path} "#{url_hialeah}" #{$env_data[:cache_params][:ttl_seconds]}`
+        verify_ssl = $env_data[:verify_certificate] ? "True" : "False"
+
+        cache_validation_command = %{python #{cache_request_helper_path} "#{url_hialeah}" #{$env_data[:cache_params][:ttl_seconds]} #{verify_ssl}}
+        puts cache_validation_command
+        
+        cache_test_output = `#{cache_validation_command}`
         output_is_cached = cache_test_output.include? "is_cached=True"
 
         assert_true(t, output_is_cached)
@@ -35,6 +41,14 @@ namespace :api_tests_cache do
         contains_cache_header = cache_test_output.include? "Cache-Control: public, max-age=3600"
 
         assert_true(t, contains_cache_header)
+    end
+
+    task :cache_hit_header do |t|
+        curl_headers url_hialeah
+        cache_test_output = curl_headers url_hialeah
+        contains_cache_hit_header = cache_test_output.include? "X-Cache: HIT"
+
+        assert_true(t, contains_cache_hit_header)
     end
 
     def url_hialeah
